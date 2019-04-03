@@ -11,16 +11,13 @@ import beginfunc.services.contracts.OfferService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/auctions/fetch")
 public class AuctionFetchController {
     private final AuctionService auctionService;
@@ -37,7 +34,6 @@ public class AuctionFetchController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    @ResponseBody
     public Object fetchAuctionMoreView(@PathVariable(name = "id") Integer id){
         AuctionServiceModel found = this.auctionService.findById(id);
         if(found!=null){
@@ -67,7 +63,6 @@ public class AuctionFetchController {
 
 
     @GetMapping(value = "/biddings/{id}", produces = "application/json")
-    @ResponseBody
     public Object fetchAuctionBiddings(@PathVariable(name = "id") Integer id){
         SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
 
@@ -83,7 +78,6 @@ public class AuctionFetchController {
     }
 
     @GetMapping(value = "/offers/{id}", produces = "application/json")
-    @ResponseBody
     public Object fetchAuctionOffers(@PathVariable(name = "id") Integer id){
         SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
 
@@ -97,13 +91,11 @@ public class AuctionFetchController {
     }
 
     @GetMapping(value = "/biddings/count/{id}", produces = "application/json")
-    @ResponseBody
     public Object fetchAuctionBiddingsCount(@PathVariable(name = "id") Integer id){
         return this.biddingService.getAuctionBiddingCount(id);
     }
 
     @GetMapping(value = "/offers/count/{id}", produces = "application/json")
-    @ResponseBody
     public Object fetchAuctionOffersCount(@PathVariable(name = "id") Integer id){
         Long offersCount=this.offerService.getAuctionOffersCount(id);
         return offersCount;
