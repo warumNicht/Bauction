@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/general :: header}">
+</head>
+<body>
+<div class="container-fluid">
+    <header th:insert="~{fragments/navbars :: common-nav}"></header>
+
+    <main class="mt-3">
+        <div th:replace="~{fragments/modals/modal-bidding}"></div>
+        <div th:replace="~{fragments/modals/modal-offer}"></div>
+        <div th:replace="~{fragments/modals/modal-all-biddings}"></div>
+        <div th:replace="~{fragments/modals/modal-all-offers}"></div>
+        <div th:replace="~{fragments/modals/modal-confirm-deal}"></div>
+        <div th:replace="~{fragments/modals/modal-picture}"></div>
+
+        <h1 class="text-center text-exodia" th:text="${auctionDetails.name}"></h1>
+        <hr class="bg-exodia hr-2"/>
+
+        <div class="row justify-content-between mx-0">
+
+            <div class="col-4 det-article" id="photo-main">
+                <img th:src="'/'+${auctionDetails.mainImageUrl}">
+            </div>
+
+            <div class="col-1"></div>
+
+            <div class="col-6">
+
+                <div class="row text-center mb-1">
+                    <div class="col-6">
+                        <h2>Current price:</h2>
+                    </div>
+                    <div class="col-6">
+                        <h2 style="display: inline-block"
+                            th:utext="${auctionDetails.reachedPrice + ' <span>&euro;</span>'}"></h2>
+                    </div>
+                </div>
+
+                <div class="row text-center mb-1" th:if="${auctionDetails.type=='Preserved_Price'}">
+                    <div class="col-6">
+                        <h3>Preserved price:</h3>
+                    </div>
+                    <div class="col-6">
+                        <h3 style="display: inline-block"
+                            th:if="${auctionDetails.reachedPrice>=auctionDetails.wantedPrice}"
+                            th:text="${'reached!'}"></h3>
+
+                        <h3 style="display: inline-block"
+                            th:if="${auctionDetails.reachedPrice<auctionDetails.wantedPrice}"
+                            th:text="${'Not reached yet!'}"></h3>
+                    </div>
+                </div>
+
+                <div class="row text-center mb-1" th:if="${auctionDetails.type!='Preserved_Price'}">
+                    <div class="col-6">
+                        <h3>Start price:</h3>
+                    </div>
+                    <div class="col-6">
+                        <h3 style="display: inline-block"
+                            th:utext="${auctionDetails.wantedPrice + ' <span>&euro;</span>'}"></h3>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <label for="auctionDescription">Description</label>
+                    <textarea name="description" class="form-control"
+                              id="auctionDescription" rows="2"><th:block
+                            th:text="${auctionDetails.description}"></th:block></textarea>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6 pl-0 ">
+                        <label for="auctionSeller">Seller</label>
+                        <input class="form-control" th:value="${auctionDetails.seller}"
+                               id="auctionSeller"/>
+                    </div>
+                    <div class="col-6 pr-0">
+                        <label for="auctionTown">Town:</label>
+                        <input class="form-control" th:value="${auctionDetails.town}"
+                               id="auctionTown"/>
+                    </div>
+                </div>
+
+                <div class="row text-left mb-2">
+
+                    <div class="col-6 pl-0">Remaining time:</div>
+                    <div class="col-6 pr-0">
+                        <h4 id="demo" style="display: inline-block"></h4>
+
+                    </div>
+                    <span id="demoInv" style="height: 0; visibility: hidden;"
+                          th:text="${auctionDetails.remainingTime}"></span>
+                </div>
+
+                <div class="row text-left mb-2">
+
+                    <div class="col-6 pl-0">Views:</div>
+                    <div class="col-6 pr-0">
+                        <h4 style="display: inline-block" th:text="${auctionDetails.views}"></h4>
+                    </div>
+                </div>
+
+                <div class="row" th:if="${auctionDetails.type!='Fixed_Price'}">
+                    <div class="col-6 pl-0">
+                        <button th:if="${!#strings.equals(auctionDetails.seller,#authentication.principal.username)&&auctionDetails.status=='Active'}" type="button"
+                                class="btn bg-exodia text-white"
+                                data-toggle="modal" data-target="#modalBidding">
+                            Make a bidding
+                        </button>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="row justify-content-between ml-0">
+                            <span>Biddings: </span><h4 id="biddingsCount"></h4>
+                            <button type="button" class="btn bg-exodia text-white"
+                                    th:data-id="${auctionDetails.id}"
+                                    onclick="showBiddingsModal()">
+                                View biddings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" th:if="${auctionDetails.type=='Fixed_Price'}">
+                    <div class="col-6 pl-0">
+                        <div class="row justify-content-end" th:if="${!#strings.equals(auctionDetails.seller,#authentication.principal.username)
+                        &&auctionDetails.status=='Active'}">
+                            <div class="col-5">
+                                <button  type="button"
+                                        class="btn bg-exodia text-white"
+                                        data-toggle="modal" data-target="#modalOffer">
+                                    Make a offer
+                                </button>
+                            </div>
+                            <div class="col-7 text-right">
+                                <button  type="button"
+                                        class="btn btn-success text-white"
+                                        th:utext="${'Buy now for '} + ${auctionDetails.reachedPrice} +' <span>&euro;</span>'"
+                                        onclick="showDealConfirmationModal()">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="row justify-content-between ml-0">
+                            <span>Offers: </span><h4 id="offerCount"></h4>
+                            <button type="button" class="btn bg-exodia text-white"
+                                    onclick="showOfferModal();">
+                                View offers
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3 justify-content-center">
+                    <button type="button" class="btn btn-success w-100" id="showImages"
+                            th:data-thing="${auctionDetails.productId}"
+                            th:data-auction-name="${auctionDetails.name}"
+                            onclick="showImages(this.getAttribute('data-thing'),this.getAttribute('data-auction-name'));">
+                        Show pictures
+                    </button>
+                    <button style="display: none" type="button" class="btn btn-outline-info w-100" id="hideImages"
+                            onclick="hideImages();">
+                        Hide pictures
+                    </button>
+                </div>
+
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+        <div id="auctionPictures" class="print-container container-fluid w-75 text-center">
+
+        </div>
+
+        <hr class="bg-exodia hr-2 mt-5"/>
+    </main>
+    <footer th:replace="~{fragments/general :: footer}"></footer>
+</div>
+
+<script>
+
+
+    function Get(yourUrl) {
+        let Httpreq = new XMLHttpRequest(); // a new request
+        Httpreq.open("GET", yourUrl, false);
+        Httpreq.send(null);
+        return Httpreq.responseText;
+    }
+
+    $(document).ready(() => counter());
+
+    function counter() {
+        let time = document.getElementById("demoInv").innerHTML.toString();
+        let end = new Date(time);
+        let deadline = end.getTime();
+
+        let x = setInterval(function () {
+            let now = new Date().getTime();
+            let t = end - now;
+            let days = Math.floor(t / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((t % (1000 * 60)) / 1000);
+            document.getElementById("demo").innerHTML = days + "days "
+                + hours + "h " + minutes + "m " + seconds + "s ";
+            if (t < 0) {
+                clearInterval(x);
+                document.getElementById("demo").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    }
+
+
+    const urlArr = window.location.pathname.split('/');
+    const id = urlArr[urlArr.length - 1];
+
+    $(document).ready(() => {
+        let count = JSON.parse(Get('/auctions/fetch/biddings/count/' + id));
+        $('#biddingsCount').empty().append(count);
+    });
+    $(document).ready(() => {
+        let countOffers = JSON.parse(Get('/auctions/fetch/offers/count/' + id));
+        $('#offerCount').empty().append(countOffers);
+    });
+
+
+    $(function () {
+        $("#bidding-submit").validate({
+            rules: {
+                price: {
+                    required: true,
+                    number: true,
+                    min: 0.01,
+                    pattern: "^\\d+\\.?\\d{0,2}$"
+                },
+                action: "required"
+            },
+            messages: {
+                price: {
+                    required: "Please enter some data",
+                    number: "Please enter a number",
+                    min: "Enter positive sum",
+                    pattern: "Max two fractional digits"
+
+                },
+                action: "Please provide some data"
+            }
+        });
+    });
+
+    $(function () {
+        $("#offer-submit").validate({
+            rules: {
+                offerPrice: {
+                    required: true,
+                    number: true,
+                    min: 0.01,
+                    pattern: "^\\d+\\.?\\d{0,2}$"
+                },
+                action: "required"
+            },
+            messages: {
+                offerPrice: {
+                    required: "Please enter some data",
+                    number: "Please enter a number",
+                    min: "Enter positive sum",
+                    pattern: "Max two fractional digits"
+
+                },
+                action: "Please provide some data"
+            }
+        });
+    });
+
+    function showDealConfirmationModal() {
+        $('#modalDealConfirmation').modal('show');
+    }
+
+    function showElement(elementId) {
+        let x = document.getElementById(elementId);
+        x.style.display = "block";
+    }
+
+    function hideElement(elementId) {
+        let x = document.getElementById(elementId);
+        x.style.display = "none";
+    }
+
+    function hideImages() {
+        $('#auctionPictures').empty();
+        showElement('showImages');
+        hideElement('hideImages');
+    }
+
+    function showImages(productId, auctionName) {
+        hideElement('showImages');
+        showElement('hideImages');
+
+        fetch('/images/fetch/product/' + productId)
+            .then((response) => response.json())
+            .then((json) => {
+                $('#auctionPictures').empty();
+                $('#auctionPictures').append('<h1 class="text-center text-exodia mt-2">Pictures for ' + auctionName + ':</h1>');
+
+                $('#auctionPictures').append('<div class="row mb-4 justify-content-start" id="imageHolder"></div>');
+
+                json.forEach((url) => {
+                    let currentArticle =
+                        '<article class="home-article" id="/' + url + '"\n' +
+                        '                             onclick="showImageModal(this.getAttribute(\'id\'))">\n' +
+                        '<div class="article-square">\n' +
+                        '<img src="/' + url + '">\n' +
+                        '</div>\n' +
+                        '</article>\n';
+
+                    $('#imageHolder').append(currentArticle);
+                });
+                $(document).resize();
+            })
+            .catch((err) => console.log(err));
+
+    }
+
+
+    $(window).resize(onResize);
+    $(document).ready(onResize);
+
+    function onResize() {
+        let el = $('#photo-main');
+        let square = $('.article-square');
+        el.height(el.width());
+        square.height(square.width());
+    }
+
+    function showImageModal(imageUrl) {
+        console.log(imageUrl);
+        $('#divForImage').empty();
+        $('#divForImage').append('<img src="' + imageUrl + '">');
+        $('#imageModal').modal('show');
+    }
+
+    function showBiddingsModal() {
+
+        $('#all-biddings-table').empty();
+        $('#all-biddings-table').append(
+            '<table class="table table-striped">' +
+            '<thead>' +
+            '<tr>' +
+            '<th scope="col">Username</th>' +
+            '<th scope="col">Step</th>' +
+            '<th scope="col">Reached price</th>' +
+            '<th scope="col">Submitted On</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody id="tableBiddings">');
+        console.log('before');
+
+        let json_obj = JSON.parse(Get('/auctions/fetch/biddings/' + id));
+
+        json_obj.forEach((x) => {
+            let currentRow = '<tr >' +
+                '<td>' +
+                '<a href="/users/profile/' + x.participantId + '">' + x.participantUsername + '</a>\n' +
+                '</td>' +
+                '<td class="table-reached-price">' + x.biddingStep + '\u20AC</td>' +
+                '<td class="table-reached-price-bold">' + x.reachedPrice + '\u20AC</td>' +
+                '<td>' + x.submittedOn + '</td>' +
+                '</tr>';
+
+            $('#tableBiddings').append(currentRow);
+        });
+
+        $('#all-biddings-table').append('</tbody>\n' +
+            '</table>');
+        $('#biddingModalScrollable').modal('show');
+    }
+
+
+    function showOfferModal() {
+
+        $('#all-offers-table').empty();
+        $('#all-offers-table').append(
+            '<table class="table table-striped">' +
+            '<thead>' +
+            '<tr>' +
+            '<th scope="col">Username</th>' +
+            '<th scope="col">Submitted On</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody id="tableBiddings">');
+
+
+        let json_obj = JSON.parse(Get('/auctions/fetch/offers/' + id));
+
+        json_obj.forEach((x) => {
+            let currentRow = '<tr >' +
+                '<td>' +
+                '<a href="/users/profile/' + x.participantId + '">' + x.participantUsername + '</a>\n' +
+                '</td>' +
+                '<td>' + x.submittedOn + '</td>' +
+                '</tr>';
+
+            $('#tableBiddings').append(currentRow);
+        });
+
+        $('#offerModalScrollable').modal('show');
+    }
+
+
+</script>
+
+</body>
+</html>

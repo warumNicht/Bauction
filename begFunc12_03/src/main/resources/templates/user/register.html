@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/general :: header}">
+</head>
+<body>
+<div class="container-fluid">
+    <header th:insert="~{fragments/navbars :: common-nav}"></header>
+
+    <main class="mt-3">
+        <hr class="bg-exodia hr-2"/>
+        <h1 class="text-center text-exodia">Register</h1>
+        <hr class="bg-exodia w-25 hr-2"/>
+        <form class="mx-auto w-25" th:method="post" th:action="@{/users/register}" th:object="${userRegisterModel}">
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('username')} ? 'text-danger'">
+                <label for="username" class="text-exodia">Username</label>
+                <input type="text" class="form-control"
+                       th:field="*{username}" th:text="${#bools.isTrue(userRegisterModel.username==null)?'':userRegisterModel.username}"
+                       id="username" placeholder="Username..." name="username">
+
+                <small id="usernameHelp"
+                       th:each="error : ${#fields.errors('username')}" th:utext="${error +'<br>'}">
+                </small>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('fullName')} ? 'text-danger'">
+                <label for="fullName" class="text-exodia">Full name</label>
+                <input type="text" class="form-control"
+                       th:field="*{fullName}" th:value="${userRegisterModel.fullName}"
+                       id="fullName" placeholder="Full name..." name="fullName">
+
+                <small id="fullNameHelp"
+                       th:each="error : ${#fields.errors('fullName')}" th:utext="${error +'<br>'}">
+                </small>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'text-danger'">
+                <label for="password" class="text-exodia">Password</label>
+                <input type="password" class="form-control"
+                       th:field="*{password}" th:value="${userRegisterModel.password}"
+                       id="password" placeholder="Password..." name="password">
+
+                <small id="passwordHelp"
+                       th:each="error : ${#fields.errors('password')}" th:utext="${error +'<br>'}">
+                </small>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'text-danger'">
+                <label for="confirmPassword" class="text-exodia">Confirm Password</label>
+                <input type="password" class="form-control"
+                       th:field="*{confirmPassword}" th:value="${userRegisterModel.confirmPassword}"
+                       id="confirmPassword" placeholder="Confirm Password..." name="confirmPassword">
+                <small id="confirmPasswordHelp"
+                       th:each="error : ${#fields.errors('confirmPassword')}" th:utext="${error +'<br>'}">
+                </small>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'text-danger'">
+                <label for="email" class="text-exodia">Email</label>
+                <input type="email" class="form-control"
+                       th:field="*{email}" th:value="${userRegisterModel.email}"
+                       id="email" placeholder="Email..." name="email">
+                <small id="emailHelp"
+                       th:each="error : ${#fields.errors('email')}" th:utext="${error +'<br>'}">
+                </small>
+            </div>
+
+            <hr class="bg-exodia hr-2"/>
+            <div class="button-holder mt-4 d-flex justify-content-center">
+                <button type="submit" class="btn bg-exodia text-white">Register</button>
+            </div>
+        </form>
+        <hr class="bg-exodia hr-2 mt-5"/>
+    </main>
+
+    <footer th:replace="~{fragments/general :: footer}">
+    </footer>
+</div>
+</body>
+</html>

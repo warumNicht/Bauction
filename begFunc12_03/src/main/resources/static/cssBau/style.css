@@ -1,0 +1,151 @@
+body{
+    font-family: 'Exo 2', sans-serif;
+}
+
+.bg-exodia {
+    background-color: #191970;
+}
+
+.text-exodia {
+    color: #191970;
+}
+
+.hr-2 {
+    height: 2px;
+}
+
+textarea {
+    resize: none;
+}
+
+.home-left{
+    width: 16%;
+    margin:  0 5% 2% 0;
+}
+.home-end{
+    width: 16%;
+    margin:  0 0 2% 0;
+}
+
+article.home-article{
+    border: #6c757d 1px solid;
+    width: 18%;
+    margin: 1%;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    min-width: 150px;
+    max-height: 300px;
+
+    box-shadow: 0 1px 22px 5px rgba(144,144,144,0.81)
+}
+article.home-article:hover{
+    box-shadow: -2px -1px 15px 5px #585858;
+    transform: scale(1.05);
+}
+
+
+.article-square{
+     border: #6c757d 1px solid;
+     display: inline-block;
+     text-align: center;
+     width: 90%;
+     padding: 3%;
+ }
+
+
+.article-square img{
+     max-width: 100%;
+     max-height: 100%;
+     position: relative;
+     top: 50%;
+     transform: translateY(-50%);
+ }
+
+div.div-square{
+    border: #6c757d 1px solid;
+    display: inline-block;
+    text-align: center;
+    width: 90%;
+    padding: 3%;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.helper{
+    vertical-align: middle;
+    display: inline-block;
+    height: 100%;
+}
+
+#exampleModal{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 1000px;
+}
+
+
+.modal-div{
+    width: 100%;
+}
+.det-article{
+    text-align: center;
+    border: #6c757d 2px solid;
+    border-radius: 5px;
+    box-shadow: 0 1px 22px 5px rgba(144,144,144,0.81)
+}
+.det-article:hover{
+    box-shadow: -2px -1px 15px 5px #585858;
+    transform: scale(1.02);
+}
+
+div.det-article > img{
+    object-fit: contain;
+    min-width: 90%;
+}
+
+.div-outline{
+    border: lightgray 1px solid;
+    border-radius: 4px;
+}
+
+td.table-reached-price-bold {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+td.table-reached-price {
+    font-size: 20px;
+}
+
+tr{
+    vertical-align: center;
+}
+th{
+    font-weight: bold;
+}
+
+td>div>#iconComment{
+    max-width: 60px;
+    max-height: 60px;
+    position: relative;
+    top: 0;
+    transform: translateY(0%);
+}
+
+div #divForImage >img{
+    object-fit: contain;
+    min-width: 90%;
+}
+
+
+
+

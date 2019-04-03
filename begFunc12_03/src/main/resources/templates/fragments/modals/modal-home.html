@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="auction-home-show" class="modal fade bd-example-modal-lg"
+     id="homeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg text-left">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="auction-name"></h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&#9746;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-7 pl-0" id="main-image">
+
+                        </div>
+                        <div class="col-5 pr-0">
+
+                            <div class="form-group">
+                                <label  class="col-form-label">Current price:</label>
+                                <div class="form-control" id="price">
+                                        45.89
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-form-label">Seller:</label>
+                                <div class="form-control" id="seller">
+                                    45.89
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-form-label">Expires at:</label>
+                                <div class="form-control" id="time"></div>
+                            </div>
+
+                            <div class="row justify-content-between">
+                                <div class="col-3">
+                                    <h4>Town:</h4>
+                                </div>
+                                <div class="col-9 text-right">
+                                    <h4 style="display: inline-block" id="town">Sofia</h4>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer px-0 w-100 justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <div id="details">
+                                    <a href="/auctions/details/"  class="btn btn-primary">Details</a>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Modal -->
+<div th:fragment="auction-home-all-biddings" class="modal" id="biddingModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle"
+                th:text= "${'Biddings for Auction: '}+ ${auctionDetails.name}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&#9746;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="all-biddings-table">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Step</th>
+                        <th scope="col">Reached price</th>
+                        <th scope="col">Submitted On</th>
+
+                    </tr>
+                    </thead>
+                    <tbody id="tableOffers">
+                    <tr >
+                        <td>
+                            <a href="/users/profile/id">link</a>
+                        </td>
+                        <td>rtv4</td>
+                        <td id="table-reached-price">wec</td>
+                        <td>yuo</td>
+                    </tr>
+                    <tr >
+                        <td>rtv4</td>
+                        <td>rtv4</td>
+                        <td>wec</td>
+                        <td>yuo</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
