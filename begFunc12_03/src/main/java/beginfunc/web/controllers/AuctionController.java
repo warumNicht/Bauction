@@ -22,14 +22,14 @@ import java.util.Date;
 
 @Controller
 @RequestMapping("/auctions")
-public class AuctionParticipationsController extends BaseController{
+public class AuctionController extends BaseController{
     private final AuctionService auctionService;
     private final BiddingService biddingService;
     private final OfferService offerService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AuctionParticipationsController(AuctionService auctionService, BiddingService biddingService, OfferService offerService, ModelMapper modelMapper) {
+    public AuctionController(AuctionService auctionService, BiddingService biddingService, OfferService offerService, ModelMapper modelMapper) {
         this.auctionService = auctionService;
         this.biddingService = biddingService;
         this.offerService = offerService;
@@ -54,7 +54,6 @@ public class AuctionParticipationsController extends BaseController{
         }else {
             model.setMainImageUrl(AppConstants.DEFAULT_AUCTION_MAIN_IMAGE_PATH);
         }
-        model.setSeller(found.getSeller().getUsername());
         model.setTown(found.getProduct().getTown().getName());
 
         modelAndView.addObject("auctionDetails",model);

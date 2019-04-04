@@ -11,11 +11,10 @@ public abstract class BaseCollectionProduct extends BaseProduct {
     @Column(name = "year_of_issue")
     private Integer yearOfIssue;
 
-    @Column(name = "exemplar_count")
-    private Long exemplarCount;
 
     @Column(name = "grade")
-    private PreservationGrade preservationGrade;
+    @Enumerated(value = EnumType.STRING)
+    private PreservationGrade grade;
 
     @ManyToOne
     @JoinColumn(name = "country_id",referencedColumnName = "id")
@@ -26,5 +25,29 @@ public abstract class BaseCollectionProduct extends BaseProduct {
 
     public BaseCollectionProduct(String name) {
         super(name);
+    }
+
+    public Integer getYearOfIssue() {
+        return yearOfIssue;
+    }
+
+    public void setYearOfIssue(Integer yearOfIssue) {
+        this.yearOfIssue = yearOfIssue;
+    }
+
+    public PreservationGrade getGrade() {
+        return grade;
+    }
+
+    public void setGrade(PreservationGrade grade) {
+        this.grade = grade;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 }

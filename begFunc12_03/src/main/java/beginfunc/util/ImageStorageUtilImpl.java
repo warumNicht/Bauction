@@ -94,8 +94,7 @@ public class ImageStorageUtilImpl implements ImageStorageUtil {
         String currentPictureUrlPath = String.format("%s/%s/%s",
                 this.TEMP_FOLDER_URL_PATH, AppConstants.AUCTION_PICTURES_TEMP_FOLDER_NAME, originalFilename);
 
-        PictureServiceModel currentPicture = new PictureServiceModel(currentPictureUrlPath,
-                fileExtension, size, contentType);
+        PictureServiceModel currentPicture = new PictureServiceModel();
 
         Path pictureNameAndPath = Paths.get(currentPicturePath);
         Files.write(pictureNameAndPath, content);

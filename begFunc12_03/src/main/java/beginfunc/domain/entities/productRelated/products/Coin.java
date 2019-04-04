@@ -24,6 +24,22 @@ public class Coin extends BaseMoneyCollectionProduct {
         this.diameter = diameter;
     }
 
+    public String getMetal() {
+        return metal;
+    }
+
+    public void setMetal(String metal) {
+        this.metal = metal;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
     public Double getDiameter() {
         return diameter;
     }

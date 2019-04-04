@@ -3,6 +3,8 @@ package beginfunc.web.controllers;
 import beginfunc.domain.models.bindingModels.UserRegisterBindingModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.viewModels.users.UserProfileViewModel;
+import beginfunc.domain.models.viewModels.users.UsersWaitingAuctionViewModel;
+import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +16,20 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
-public class UserRegistrationController {
+public class UserController {
     private final UserService userService;
+    private final AuctionService auctionService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserRegistrationController(UserService userService, ModelMapper modelMapper) {
+    public UserController(UserService userService, AuctionService auctionService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.auctionService = auctionService;
         this.modelMapper = modelMapper;
     }
 
@@ -75,6 +81,21 @@ public class UserRegistrationController {
         modelAndView.addObject("userProfile",profileViewModel);
         modelAndView.addObject("message", emailMessage);
         modelAndView.setViewName("user/user-profile");
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/auctions/waiting")
+    public ModelAndView viewWaitingAuctions(@PathVariable(name = "id") Integer  id,ModelAndView modelAndView){
+
+        List<UsersWaitingAuctionViewModel> waitingAuctionViewModels = this.auctionService.getWaitingAuctionsOfUser(id).stream()
+                .map(a -> {
+                    UsersWaitingAuctionViewModel model = this.modelMapper.map(a, UsersWaitingAuctionViewModel.class);
+                    model.setName(a.getProduct().getName());
+                    return model;
+                })
+                .collect(Collectors.toList());
+        modelAndView.addObject("waitingAuctions", waitingAuctionViewModels);
+        modelAndView.setViewName("user/waiting-auctions");
         return modelAndView;
     }
 }

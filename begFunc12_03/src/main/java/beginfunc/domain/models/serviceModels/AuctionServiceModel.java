@@ -2,6 +2,7 @@ package beginfunc.domain.models.serviceModels;
 
 import beginfunc.domain.entities.enums.AuctionStatus;
 import beginfunc.domain.entities.enums.AuctionType;
+import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 
 import java.math.BigDecimal;

@@ -9,7 +9,8 @@ public class AuctionDetailsViewModel extends BaseViewModel {
     private String mainImageUrl;
     private BigDecimal reachedPrice;
     private BigDecimal wantedPrice;
-    private String seller;
+    private AuctionDetailsBuyerViewModel seller;
+    private AuctionDetailsBuyerViewModel buyer;
     private String town;
     private String remainingTime;
     private Integer views;
@@ -50,12 +51,21 @@ public class AuctionDetailsViewModel extends BaseViewModel {
         this.wantedPrice = wantedPrice;
     }
 
-    public String getSeller() {
+
+    public AuctionDetailsBuyerViewModel getSeller() {
         return seller;
     }
 
-    public void setSeller(String seller) {
+    public void setSeller(AuctionDetailsBuyerViewModel seller) {
         this.seller = seller;
+    }
+
+    public AuctionDetailsBuyerViewModel getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(AuctionDetailsBuyerViewModel buyer) {
+        this.buyer = buyer;
     }
 
     public String getTown() {

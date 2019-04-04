@@ -34,36 +34,30 @@ public class AuctionFetchController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public Object fetchAuctionMoreView(@PathVariable(name = "id") Integer id){
+    public Object fetchAuctionMoreView(@PathVariable(name = "id") Integer id) {
         AuctionServiceModel found = this.auctionService.findById(id);
-        if(found!=null){
-            AuctionHomeMoreViewModel model = this.modelMapper.map(found, AuctionHomeMoreViewModel.class);
-            model.setName(found.getProduct().getName());
-            if(found.getEndDate()!=null){
-                SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-                String endDate = format.format(found.getEndDate());
-                model.setExpiresAt(endDate);}
-
-            if(found.getReachedPrice()==null){
-                model.setCurrentPrice("0.00 "+'\u20ac');
-            }else {
-                model.setCurrentPrice(String.format("%.2f ", found.getReachedPrice())+'\u20ac');
-            }
-            if(found.getProduct().getMainPicture()!=null){
-                model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
-            }else {
-                model.setMainImageUrl(AppConstants.DEFAULT_AUCTION_MAIN_IMAGE_PATH);
-            }
-            model.setSeller(found.getSeller().getUsername());
-            model.setTown(found.getProduct().getTown().getName());
-            return model;
+        AuctionHomeMoreViewModel model = this.modelMapper.map(found, AuctionHomeMoreViewModel.class);
+        model.setName(found.getProduct().getName());
+        if (found.getEndDate() != null) {
+            SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+            String endDate = format.format(found.getEndDate());
+            model.setExpiresAt(endDate);
         }
-        return null;
+        model.setCurrentPrice(String.format("%.2f ", found.getReachedPrice()) + '\u20ac');
+
+        if (found.getProduct().getMainPicture() != null) {
+            model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
+        } else {
+            model.setMainImageUrl(AppConstants.DEFAULT_AUCTION_MAIN_IMAGE_PATH);
+        }
+        model.setSeller(found.getSeller().getUsername());
+        model.setTown(found.getProduct().getTown().getName());
+        return model;
     }
 
 
     @GetMapping(value = "/biddings/{id}", produces = "application/json")
-    public Object fetchAuctionBiddings(@PathVariable(name = "id") Integer id){
+    public Object fetchAuctionBiddings(@PathVariable(name = "id") Integer id) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
 
         List<AuctionBiddingViewModel> biddingViewModels = this.biddingService.findAllBiddingsOfAuction(id).stream()
@@ -78,7 +72,7 @@ public class AuctionFetchController {
     }
 
     @GetMapping(value = "/offers/{id}", produces = "application/json")
-    public Object fetchAuctionOffers(@PathVariable(name = "id") Integer id){
+    public Object fetchAuctionOffers(@PathVariable(name = "id") Integer id) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
 
         List<AuctionOfferViewModel> offers = this.offerService.findAllOffersOfAuction(id).stream()
@@ -91,13 +85,12 @@ public class AuctionFetchController {
     }
 
     @GetMapping(value = "/biddings/count/{id}", produces = "application/json")
-    public Object fetchAuctionBiddingsCount(@PathVariable(name = "id") Integer id){
+    public Object fetchAuctionBiddingsCount(@PathVariable(name = "id") Integer id) {
         return this.biddingService.getAuctionBiddingCount(id);
     }
 
     @GetMapping(value = "/offers/count/{id}", produces = "application/json")
-    public Object fetchAuctionOffersCount(@PathVariable(name = "id") Integer id){
-        Long offersCount=this.offerService.getAuctionOffersCount(id);
-        return offersCount;
+    public Object fetchAuctionOffersCount(@PathVariable(name = "id") Integer id) {
+        return this.offerService.getAuctionOffersCount(id);
     }
 }

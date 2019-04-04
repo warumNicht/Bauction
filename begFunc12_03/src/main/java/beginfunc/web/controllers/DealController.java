@@ -80,7 +80,6 @@ public class DealController extends BaseController {
     public Object fetchUsersDealComments(@PathVariable(name = "id") Integer userId) {
         List<DealServiceModel> deals= this.dealService.allDealCommentsOfUser(userId);
         List<RecentDealCommentViewModel> commentsDeals=new ArrayList<>();
-
         for (DealServiceModel deal : deals) {
             RecentDealCommentViewModel dealViewModel = this.modelMapper.map(deal, RecentDealCommentViewModel.class);
             dealViewModel.setAuctionName(deal.getAuction().getProduct().getName());

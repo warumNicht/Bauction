@@ -1,10 +1,13 @@
-package beginfunc.domain.models.serviceModels;
+package beginfunc.domain.models.serviceModels.products;
 
 import beginfunc.domain.entities.productRelated.Picture;
+import beginfunc.domain.models.serviceModels.BaseServiceModel;
+import beginfunc.domain.models.serviceModels.PictureServiceModel;
+import beginfunc.domain.models.serviceModels.TownServiceModel;
 
 import java.util.List;
 
-public class BaseProductServiceModel extends BaseServiceModel{
+public class BaseProductServiceModel extends BaseServiceModel {
     private String name;
     private String description;
     private TownServiceModel town;

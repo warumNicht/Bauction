@@ -40,4 +40,8 @@ public interface AuctionRepository extends JpaRepository<Auction,Integer> {
             "WHERE a.id LIKE :id")
     void increaseCurrentPrice(@Param(value = "id") Integer id,
                               @Param(value = "biddingStep")  BigDecimal biddingStep);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.seller.id LIKE :id AND a.status='Waiting'")
+    List<Auction> getWaitingAuctionsOfUser(@Param(value = "id") Integer userId);
 }

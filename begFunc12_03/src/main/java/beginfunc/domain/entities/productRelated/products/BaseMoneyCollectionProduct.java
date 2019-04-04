@@ -15,4 +15,12 @@ public abstract class BaseMoneyCollectionProduct extends BaseCollectionProduct {
     public BaseMoneyCollectionProduct(String name) {
         super(name);
     }
+
+    public Double getNominalValue() {
+        return nominalValue;
+    }
+
+    public void setNominalValue(Double nominalValue) {
+        this.nominalValue = nominalValue;
+    }
 }

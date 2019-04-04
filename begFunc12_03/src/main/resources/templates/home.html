@@ -22,7 +22,7 @@
 
 
                     <div class="article-square">
-                        <img th:src="'/'+ ${auction.mainImageUrl}"/>
+                        <img th:src="${auction.mainImageUrl}"/>
                     </div>
                     <div th:text="${auction.name}"></div>
                     <div th:text="${auction.currentPrice}"></div>
@@ -55,7 +55,7 @@
         let x = JSON.parse(Get('/auctions/fetch/' + id));
 
         $("#auction-name").empty().append(x.name);
-        $("#main-image").empty().append('<img class="modal-div" src="/' + x.mainImageUrl + '"/>');
+        $("#main-image").empty().append('<img class="modal-div" src="' + x.mainImageUrl + '"/>');
         $("#price").empty().append(x.currentPrice);
         $("#seller").empty().append(x.seller);
         $("#time").empty().append(x.expiresAt);

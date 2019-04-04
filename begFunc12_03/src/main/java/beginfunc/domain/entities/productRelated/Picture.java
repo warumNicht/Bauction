@@ -10,20 +10,16 @@ public class Picture extends BaseEntity {
     @Column(name = "path")
     private String path;
 
-    @Column(name = "extension")
-    private String extension;
-
-    @Column(name = "size")
-    private Double size;
-
-    @Column(name = "content_type")
-    private String contentType;
-
     @ManyToOne
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private BaseProduct product;
 
+    public Picture() {
+    }
 
+    public Picture(String path) {
+        this.path = path;
+    }
 
     public String getPath() {
         return path;
@@ -31,30 +27,6 @@ public class Picture extends BaseEntity {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
-
-    public Double getSize() {
-        return size;
-    }
-
-    public void setSize(Double size) {
-        this.size = size;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 
     public BaseProduct getProduct() {

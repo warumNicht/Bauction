@@ -20,6 +20,17 @@
         </div>
         <hr class="bg-exodia hr-2"/>
 
+        <div class="col">
+            <div class="row justify-content-around">
+
+                    <a th:href="@{/users/{id}/auctions/waiting(id=${userProfile.id})}" class="btn bg-exodia text-white">View waiting auctions</a>
+                    <a th:href="@{/users/}" class="btn bg-exodia text-white">View waiting auctions</a>
+
+
+            </div>
+
+        </div>
+
         <div class="row" th:if="${#authentication.principal.id==userProfile.id}">
 
             <div class="container col-11" th:if="${message!=null}">
@@ -27,8 +38,8 @@
             </div>
 
             <div class="container col-11">
-                <h1 class="mt-4 mb-4 text-center">New deals to interact</h1>
-                <h4 class="mt-4 mb-4 text-center">Establish contact with the other participant.
+                <h1 class="mt-4 mb-4 text-center" id="recentDealsHeader">New deals to interact</h1>
+                <h4 class="mt-4 mb-4 text-center" id="recentDealsSubHeader">Establish contact with the other participant.
                     Write comments to the deal after completion.</h4>
 
                 <table class="table" id="tableRecentDeals">
@@ -43,7 +54,7 @@
 
         <div class="row" th:if="${#authentication.principal.id==userProfile.id}">
             <div class="container col-11">
-                <h1 class="mt-4 mb-4 text-center">Recent offers to your auctions</h1>
+                <h1 class="mt-4 mb-4 text-center" id="recentOffersHeader">Recent offers to your auctions</h1>
 
                 <table class="table" id="tableOffers">
                     <thead id="tableOffersHead">
@@ -57,7 +68,7 @@
 
         <div class="row">
             <div class="container col-11">
-                <h1 class="mt-4 mb-4 text-center">Comments to recent deals</h1>
+                <h1 class="mt-4 mb-4 text-center" id="recentCommentsHeader">Comments to recent deals</h1>
 
                 <table class="table" id="tableComments">
                     <thead id="tableCommentsHead">
@@ -83,52 +94,57 @@
         .then((response) => response.json())
         .then((json) => {
 
-            $('#tableOffersHead').append(
-                '<tr>\n' +
-                '<th scope="col">#</th>\n' +
-                '<th scope="col">From</th>\n' +
-                '<th scope="col">Auction</th>\n' +
-                '<th scope="col">Offered price</th>\n' +
-                '<th scope="col">Is accepted</th>\n' +
-                '<th scope="col"></th>\n' +
-                '<th scope="col">Expiration time</th>\n' +
-                '</tr>');
-            $('#tableOffersBody').empty();
-            let index = 1;
+            if (json.length === 0) {
+                $('#recentOffersHeader').empty();
+                $('#recentOffersHeader').append('There are no recent offers');
+            }else {
+                $('#tableOffersHead').append(
+                    '<tr>\n' +
+                    '<th scope="col">#</th>\n' +
+                    '<th scope="col">From</th>\n' +
+                    '<th scope="col">Auction</th>\n' +
+                    '<th scope="col">Offered price</th>\n' +
+                    '<th scope="col">Is accepted</th>\n' +
+                    '<th scope="col"></th>\n' +
+                    '<th scope="col">Expiration time</th>\n' +
+                    '</tr>');
+                $('#tableOffersBody').empty();
+                let index = 1;
 
-            json.forEach((o) => {
+                json.forEach((o) => {
 
-                let currentRow = '      <tr>\n' +
-                    '<th scope="row">' + index++ + '</th>\n' +
-                    '<td >' +
-                    '<a style="width: 95%" href="/users/profile/' + o.participant.id + '" class="btn btn-outline-info">' + o.participant.username + '</a>\n' +
-                    '</td>\n' +
-                    '<td>' +
-                    '<a style="width: 95%" href="/auctions/details/' + o.auction.id + '">' + o.auction.name + '</a>\n' +
-                    '</td>\n' +
-                    '<td>' + o.offeredPrice + ' &euro;</td>\n';
+                    let currentRow = '      <tr>\n' +
+                        '<th scope="row">' + index++ + '</th>\n' +
+                        '<td >' +
+                        '<a style="width: 95%" href="/users/profile/' + o.participant.id + '" class="btn btn-outline-info">' + o.participant.username + '</a>\n' +
+                        '</td>\n' +
+                        '<td>' +
+                        '<a style="width: 95%" href="/auctions/details/' + o.auction.id + '">' + o.auction.name + '</a>\n' +
+                        '</td>\n' +
+                        '<td>' + o.offeredPrice + ' &euro;</td>\n';
 
-                if(o.accepted){
-                    currentRow+='<td>YES</td>';
-                }else {
-                    currentRow+='<td>NO</td>';
-                }
-                if(o.valid){
-                    currentRow+= '<td style="min-width: 200px; text-align: center">\n' +
-                        '<a style="width: 95%" href="/offers/accept/' + o.id + '" class="btn btn-outline-info">Accept the offer</a>\n' +
-                        '</td>';
-                }else {
-                    currentRow+= '<td style="min-width: 200px; text-align: center">Not acceptable' +
-                        '</td>';
-                }
-                currentRow+=
+                    if(o.accepted){
+                        currentRow+='<td>YES</td>';
+                    }else {
+                        currentRow+='<td>NO</td>';
+                    }
+                    if(o.valid){
+                        currentRow+= '<td style="min-width: 200px; text-align: center">\n' +
+                            '<a style="width: 95%" href="/offers/accept/' + o.id + '" class="btn btn-outline-info">Accept the offer</a>\n' +
+                            '</td>';
+                    }else {
+                        currentRow+= '<td style="min-width: 200px; text-align: center">Not acceptable' +
+                            '</td>';
+                    }
+                    currentRow+=
 
-                    '<td >' + o.expirationTime +'</td>\n' +
-                    '</tr>';
+                        '<td >' + o.expirationTime +'</td>\n' +
+                        '</tr>';
 
-                $('#tableOffersBody').append(currentRow);
-            });
+                    $('#tableOffersBody').append(currentRow);
+                });
 
+            }
 
         })
         .catch((err) => console.log(err));
@@ -136,65 +152,67 @@
     fetch('/deals/comments/fetch/' + id)
         .then((response) => response.json())
         .then((json) => {
+            if (json.length === 0) {
+                $('#recentCommentsHeader').empty();
+                $('#recentCommentsHeader').append('There are no comments');
+            }else {
+                $('#tableCommentsHead').append(
+                    '<tr>\n' +
+                    '<th scope="col">#</th>\n' +
+                    '<th scope="col">Note</th>\n' +
+                    '<th scope="col">Comment</th>\n' +
+                    '<th scope="col">User\'s role</th>\n' +
+                    '<th scope="col">Date</th>\n' +
+                    '<th scope="col">Author</th>\n' +
+                    '<th scope="col">Auction</th>\n' +
+                    '</tr>');
+                $('#tableCommentsBody').empty();
+                let index = 1;
 
-            $('#tableCommentsHead').append(
-                '<tr>\n' +
-                '<th scope="col">#</th>\n' +
-                '<th scope="col">Note</th>\n' +
-                '<th scope="col">Comment</th>\n' +
-                '<th scope="col">User\'s role</th>\n' +
-                '<th scope="col">Date</th>\n' +
-                '<th scope="col">Author</th>\n' +
-                '<th scope="col">Auction</th>\n' +
-                '</tr>');
-            $('#tableCommentsBody').empty();
-            let index = 1;
+                json.forEach((d) => {
+                    console.log(d);
+                    let yourRole;
+                    let partnerRole;
+                    let partnerId;
+                    let partnerName;
 
-            json.forEach((d) => {
-                console.log(d);
-                let yourRole;
-                let partnerRole;
-                let partnerId;
-                let partnerName;
+                    if (d.seller.id == id) {
+                        yourRole = 'Seller';
+                        partnerRole = 'Buyer';
+                        partnerId = d.buyer.id;
+                        partnerName = d.buyer.username;
+                    } else {
+                        yourRole = 'Buyer';
+                        partnerRole = 'Seller';
+                        partnerId = d.seller.id;
+                        partnerName = d.seller.username;
+                    }
 
-                if (d.seller.id == id) {
-                    yourRole = 'Seller';
-                    partnerRole = 'Buyer';
-                    partnerId = d.buyer.id;
-                    partnerName = d.buyer.username;
-                } else {
-                    yourRole = 'Buyer';
-                    partnerRole = 'Seller';
-                    partnerId = d.seller.id;
-                    partnerName = d.seller.username;
-                }
+                    let currentRow = '      <tr>\n' +
+                        '<th scope="row">' + index++ + '</th>\n' +
+                        '<td >\n<div>' +
+                        '<img id="iconComment" src="/static-images/' + d.estimation + '.png">' +
+                        '</div>' +
+                        '</td>\n' +
+                        '<td>' + d.content + '</td>\n' +
+                        '<td>' + yourRole + '</td>\n' +
+                        '<td>\n' + d.dateTime + '</td>\n' +
+                        '<td style="min-width: 200px; text-align: center">\n' +
+                        '<div>\n' +
+                        '<a style="width: 95%" href="/users/profile/' + partnerId + '" class="btn btn-outline-info">' + partnerName + '</a>\n' +
+                        '</div>\n' +
+                        '<div>(' + partnerRole + ')</div>\n' +
+                        '</td>\n' +
+                        '<td style="min-width: 200px">\n' +
+                        '  <div>\n' +
+                        '<a style="width: 95%" href="/auctions/details/' + d.auctionId + '">' + d.auctionName + '</a>\n' +
+                        '</div>\n' +
+                        '</td>\n' +
+                        '</tr>';
 
-                let currentRow = '      <tr>\n' +
-                    '<th scope="row">' + index++ + '</th>\n' +
-                    '<td >\n<div>' +
-                    '<img id="iconComment" src="/static-images/' + d.estimation + '.png">' +
-                    '</div>' +
-                    '</td>\n' +
-                    '<td>' + d.content + '</td>\n' +
-                    '<td>' + yourRole + '</td>\n' +
-                    '<td>\n' + d.dateTime + '</td>\n' +
-                    '<td style="min-width: 200px; text-align: center">\n' +
-                    '<div>\n' +
-                    '<a style="width: 95%" href="/users/profile/' + partnerId + '" class="btn btn-outline-info">' + partnerName + '</a>\n' +
-                    '</div>\n' +
-                    '<div>(' + partnerRole + ')</div>\n' +
-                    '</td>\n' +
-                    '<td style="min-width: 200px">\n' +
-                    '  <div>\n' +
-                    '<a style="width: 95%" href="/auctions/details/' + d.auctionId + '">' + d.auctionName + '</a>\n' +
-                    '</div>\n' +
-                    '</td>\n' +
-                    '</tr>';
-
-                $('#tableCommentsBody').append(currentRow);
-            });
-
-
+                    $('#tableCommentsBody').append(currentRow);
+                });
+            }
         })
         .catch((err) => console.log(err));
 
@@ -202,81 +220,89 @@
     fetch('/deals/fetch/' + id)
         .then((response) => response.json())
         .then((json) => {
-            $('#tableHead').append(
-                '<tr>\n' +
-                '<th scope="col">#</th>\n' +
-                '<th scope="col">Deal time</th>\n' +
-                '<th scope="col">Price</th>\n' +
-                '<th scope="col">Auction</th>\n' +
-                '<th scope="col">Your role</th>\n' +
-                '<th scope="col">Partner</th>\n' +
-                '<th scope="col">Write comment</th>\n' +
-                '<th scope="col">Send email</th>\n' +
-                '</tr>\n');
-            $('#tableRecentDealsBody').empty();
-            let index = 1;
-            json.forEach((d) => {
-                console.log(d);
-                let yourRole;
-                let partnerRole;
-                let partnerId;
-                let partnerName;
-                let hasPartnerComment = false;
-                console.log(d.hasSellerComment);
-                console.log(d.hasBuyerComment);
-                if (d.seller.id == id) {
-                    yourRole = 'Seller';
-                    partnerRole = 'Buyer';
-                    partnerId = d.buyer.id;
-                    partnerName = d.buyer.username;
-                    if (d.hasSellerComment) {
-                        hasPartnerComment = true;
+
+            if (json.length === 0) {
+                $('#recentDealsSubHeader').empty();
+                $('#recentDealsHeader').empty();
+                $('#recentDealsHeader').append('There are no deals');
+            }else {
+                $('#tableHead').append(
+                    '<tr>\n' +
+                    '<th scope="col">#</th>\n' +
+                    '<th scope="col">Deal time</th>\n' +
+                    '<th scope="col">Price</th>\n' +
+                    '<th scope="col">Auction</th>\n' +
+                    '<th scope="col">Your role</th>\n' +
+                    '<th scope="col">Partner</th>\n' +
+                    '<th scope="col">Write comment</th>\n' +
+                    '<th scope="col">Send email</th>\n' +
+                    '</tr>\n');
+                $('#tableRecentDealsBody').empty();
+                let index = 1;
+                json.forEach((d) => {
+                    console.log(d);
+                    let yourRole;
+                    let partnerRole;
+                    let partnerId;
+                    let partnerName;
+                    let hasPartnerComment = false;
+                    console.log(d.hasSellerComment);
+                    console.log(d.hasBuyerComment);
+                    if (d.seller.id == id) {
+                        yourRole = 'Seller';
+                        partnerRole = 'Buyer';
+                        partnerId = d.buyer.id;
+                        partnerName = d.buyer.username;
+                        if (d.hasSellerComment) {
+                            hasPartnerComment = true;
+                        }
+                    } else {
+                        yourRole = 'Buyer';
+                        partnerRole = 'Seller';
+                        partnerId = d.seller.id;
+                        partnerName = d.seller.username;
+                        if (d.hasBuyerComment) {
+                            hasPartnerComment = true;
+                        }
                     }
-                } else {
-                    yourRole = 'Buyer';
-                    partnerRole = 'Seller';
-                    partnerId = d.seller.id;
-                    partnerName = d.seller.username;
-                    if (d.hasBuyerComment) {
-                        hasPartnerComment = true;
+
+                    let currentRow = '<tr>\n' +
+                        '<th scope="row">' + index++ + '</th>\n' +
+                        '<td>' + d.dateTime + '</td>\n' +
+                        '<td>' + d.dealPrice + ' &euro;</td>\n' +
+                        '<td>\n' +
+                        '<a href="/auctions/details/' + d.auctionId + '">' + d.auctionName + '</a>\n' +
+                        '</td>\n' +
+                        '<td>' + yourRole + '</td>\n' +
+                        '<td>\n' +
+                        '<a href="/users/profile/' + partnerId + '">' + partnerName + '</a>\n' +
+                        '<div>(' + partnerRole + ')</div>' +
+                        '</td>\n' +
+                        '<td>\n';
+                    if (!hasPartnerComment) {
+                        currentRow += '<form action="/comments/write/' + d.id + '" method="GET">' +
+                            '<button class="btn btn-outline-info">Comment ' + partnerRole + '</button>\n' +
+                            '<input type="hidden" name="partnerRole" value="' + partnerRole + '" /> ' +
+                            '</form>';
+                    } else {
+                        currentRow += 'Comment is submitted'
                     }
-                }
+                    currentRow +=
+                        '</td>\n' +
+                        '<td>\n' +
+                        '<form action="/emails/write/' + partnerId + '" method="GET">' +
+                        '<button class="btn btn-success">Email to ' + partnerRole + '</button>' +
+                        '<input type="hidden" name="auctionName" value="' + d.auctionName + '" /> ' +
+                        '</form>' +
+                        '</td>\n' +
+                        '</tr>';
 
-                let currentRow = '<tr>\n' +
-                    '<th scope="row">' + index++ + '</th>\n' +
-                    '<td>' + d.dateTime + '</td>\n' +
-                    '<td>' + d.dealPrice + ' &euro;</td>\n' +
-                    '<td>\n' +
-                    '<a href="/auctions/details/' + d.auctionId + '">' + d.auctionName + '</a>\n' +
-                    '</td>\n' +
-                    '<td>' + yourRole + '</td>\n' +
-                    '<td>\n' +
-                    '<a href="/users/profile/' + partnerId + '">' + partnerName + '</a>\n' +
-                    '<div>(' + partnerRole + ')</div>' +
-                    '</td>\n' +
-                    '<td>\n';
-                if (!hasPartnerComment) {
-                    currentRow += '<form action="/comments/write/' + d.id + '" method="GET">' +
-                        '<button class="btn btn-outline-info">Comment ' + partnerRole + '</button>\n' +
-                        '<input type="hidden" name="partnerRole" value="' + partnerRole + '" /> ' +
-                        '</form>';
-                } else {
-                    currentRow += 'Comment is submitted'
-                }
-                currentRow +=
-                    '</td>\n' +
-                    '<td>\n' +
-                    '<form action="/emails/write/' + partnerId + '" method="GET">' +
-                    '<button class="btn btn-success">Email to ' + partnerRole + '</button>' +
-                    '<input type="hidden" name="auctionName" value="' + d.auctionName + '" /> ' +
-                    '</form>' +
-                    '</td>\n' +
-                    '</tr>';
+                    $('#tableRecentDealsBody').append(currentRow);
+                });
 
-                $('#tableRecentDealsBody').append(currentRow);
-            });
+                $('#userRecentDeals').append('</table>');
+            }
 
-            $('#userRecentDeals').append('</table>');
         })
         .catch((err) => console.log(err));
 </script>

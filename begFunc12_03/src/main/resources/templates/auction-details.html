@@ -21,7 +21,7 @@
         <div class="row justify-content-between mx-0">
 
             <div class="col-4 det-article" id="photo-main">
-                <img th:src="'/'+${auctionDetails.mainImageUrl}">
+                <img th:src="${auctionDetails.mainImageUrl}">
             </div>
 
             <div class="col-1"></div>
@@ -30,7 +30,8 @@
 
                 <div class="row text-center mb-1">
                     <div class="col-6">
-                        <h2>Current price:</h2>
+                        <h2 th:if="${auctionDetails.status=='Active'}">Current price:</h2>
+                        <h2 th:if="${auctionDetails.status=='Finished'}">Final price:</h2>
                     </div>
                     <div class="col-6">
                         <h2 style="display: inline-block"
@@ -73,7 +74,7 @@
                 <div class="row mb-3">
                     <div class="col-6 pl-0 ">
                         <label for="auctionSeller">Seller</label>
-                        <input class="form-control" th:value="${auctionDetails.seller}"
+                        <input class="form-control" th:value="${auctionDetails.seller.username}"
                                id="auctionSeller"/>
                     </div>
                     <div class="col-6 pr-0">
@@ -83,15 +84,25 @@
                     </div>
                 </div>
 
-                <div class="row text-left mb-2">
-
+                <div class="row text-left mb-2" th:if="${auctionDetails.status=='Active'}">
                     <div class="col-6 pl-0">Remaining time:</div>
                     <div class="col-6 pr-0">
                         <h4 id="demo" style="display: inline-block"></h4>
-
                     </div>
                     <span id="demoInv" style="height: 0; visibility: hidden;"
                           th:text="${auctionDetails.remainingTime}"></span>
+                </div>
+
+                <div class="row text-left mb-2" th:if="${auctionDetails.status=='Finished'}">
+                    <div class="col-6 pl-0">
+                        <h4 style="display: inline-block">Finished</h4>
+                    </div>
+                    <div class="col-6 pr-0">
+                        <h4 style="display: inline-block; margin-right: 10px">Buyer: </h4>
+                        <h4 style="display: inline-block" th:if="${auctionDetails.buyer==null}" th:text="${' No'}"></h4>
+                        <a style="font-size: 24px" th:if="auctionDetails.buyer!=null"
+                           th:href="@{/users/profile/{id}(id=${auctionDetails.buyer.id})}" th:text="${auctionDetails.buyer.username}"></a>
+                    </div>
                 </div>
 
                 <div class="row text-left mb-2">
@@ -104,7 +115,7 @@
 
                 <div class="row" th:if="${auctionDetails.type!='Fixed_Price'}">
                     <div class="col-6 pl-0">
-                        <button th:if="${!#strings.equals(auctionDetails.seller,#authentication.principal.username)&&auctionDetails.status=='Active'}" type="button"
+                        <button th:if="${!#strings.equals(auctionDetails.seller.username,#authentication.principal.username)&&auctionDetails.status=='Active'}" type="button"
                                 class="btn bg-exodia text-white"
                                 data-toggle="modal" data-target="#modalBidding">
                             Make a bidding
@@ -112,6 +123,7 @@
                     </div>
 
                     <div class="col-6">
+
                         <div class="row justify-content-between ml-0">
                             <span>Biddings: </span><h4 id="biddingsCount"></h4>
                             <button type="button" class="btn bg-exodia text-white"
@@ -125,7 +137,7 @@
 
                 <div class="row" th:if="${auctionDetails.type=='Fixed_Price'}">
                     <div class="col-6 pl-0">
-                        <div class="row justify-content-end" th:if="${!#strings.equals(auctionDetails.seller,#authentication.principal.username)
+                        <div class="row justify-content-end" th:if="${!#strings.equals(auctionDetails.seller.username,#authentication.principal.username)
                         &&auctionDetails.status=='Active'}">
                             <div class="col-5">
                                 <button  type="button"
@@ -309,10 +321,10 @@
 
                 json.forEach((url) => {
                     let currentArticle =
-                        '<article class="home-article" id="/' + url + '"\n' +
+                        '<article class="home-article" id="' + url + '"\n' +
                         '                             onclick="showImageModal(this.getAttribute(\'id\'))">\n' +
                         '<div class="article-square">\n' +
-                        '<img src="/' + url + '">\n' +
+                        '<img src="' + url + '">\n' +
                         '</div>\n' +
                         '</article>\n';
 
