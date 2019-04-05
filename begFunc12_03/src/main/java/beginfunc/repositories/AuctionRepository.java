@@ -14,23 +14,23 @@ import java.util.List;
 
 @Repository
 
-public interface AuctionRepository extends JpaRepository<Auction,Integer> {
+public interface AuctionRepository extends JpaRepository<Auction,String> {
 
-    List<Auction> findAllByStatusIsLikeOrStatusIsLike(AuctionStatus statusActive,AuctionStatus statusFinished);
+    List<Auction> findAllByStatus(AuctionStatus status);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE Auction a " +
             "SET a.views=a.views+1 " +
             "WHERE a.id LIKE :id")
-    void increaseViews(@Param(value = "id") Integer id);
+    void increaseViews(@Param(value = "id") String id);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE Auction a " +
             "SET a.status= :status " +
             "WHERE a.id LIKE :id")
-    void updateStatus(@Param(value = "id") Integer id, @Param(value = "status") AuctionStatus status);
+    void updateStatus(@Param(value = "id") String id, @Param(value = "status") AuctionStatus status);
 
 
     @Modifying
@@ -38,10 +38,10 @@ public interface AuctionRepository extends JpaRepository<Auction,Integer> {
     @Query(value = "UPDATE Auction a " +
             "SET a.reachedPrice=a.reachedPrice+ :biddingStep " +
             "WHERE a.id LIKE :id")
-    void increaseCurrentPrice(@Param(value = "id") Integer id,
+    void increaseCurrentPrice(@Param(value = "id") String id,
                               @Param(value = "biddingStep")  BigDecimal biddingStep);
 
     @Query(value = "SELECT a FROM Auction a " +
             "WHERE a.seller.id LIKE :id AND a.status='Waiting'")
-    List<Auction> getWaitingAuctionsOfUser(@Param(value = "id") Integer userId);
+    List<Auction> getWaitingAuctionsOfUser(@Param(value = "id") String userId);
 }

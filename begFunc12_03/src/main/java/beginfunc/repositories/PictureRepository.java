@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PictureRepository extends JpaRepository<Picture,Integer> {
+public interface PictureRepository extends JpaRepository<Picture,String> {
 
     @Query(value = "SELECT p FROM Picture p " +
-            "WHERE p.product.id = :productId")
-    List<Picture> findAllByProductId(@Param("productId") Integer productId);
+            "WHERE p.product.id LIKE :productId")
+    List<Picture> findAllByProductId(@Param("productId") String productId);
 }

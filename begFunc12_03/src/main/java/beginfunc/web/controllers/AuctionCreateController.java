@@ -22,6 +22,8 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Controller
 public class AuctionCreateController extends BaseController{
@@ -106,12 +108,13 @@ public class AuctionCreateController extends BaseController{
     }
 
     private File convert(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
-        convFile.createNewFile();
-        FileOutputStream fos = new FileOutputStream(convFile);
+
+        File convertedFile = File.createTempFile("temp-file", file.getOriginalFilename());
+
+        FileOutputStream fos = new FileOutputStream(convertedFile);
         fos.write(file.getBytes());
         fos.close();
-        return convFile;
+        return convertedFile;
     }
 
 

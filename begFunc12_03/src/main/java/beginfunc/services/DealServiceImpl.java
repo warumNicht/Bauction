@@ -27,7 +27,7 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public DealServiceModel findDealById(Integer id) {
+    public DealServiceModel findDealById(String id) {
         Deal deal = this.dealRepository.findById(id).orElse(null);
         if(deal!=null){
             return this.modelMapper.map(deal,DealServiceModel.class);
@@ -42,7 +42,7 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public List<DealServiceModel> allRecentDealsOfUser(Integer userId) {
+    public List<DealServiceModel> allRecentDealsOfUser(String userId) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_YEAR, -5);
@@ -61,7 +61,7 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public List<DealServiceModel> allDealCommentsOfUser(Integer userId) {
+    public List<DealServiceModel> allDealCommentsOfUser(String userId) {
         List<Deal> deals = this.dealRepository.allDealsWithCommentOfUser(userId);
         return deals.stream()
                 .map(d->this.modelMapper.map(d,DealServiceModel.class))

@@ -1,6 +1,5 @@
 package beginfunc.web.filters;
 
-import beginfunc.domain.models.bindingModels.UserRegisterBindingModel;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.servlet.*;

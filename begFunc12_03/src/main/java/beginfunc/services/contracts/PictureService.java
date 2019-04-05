@@ -5,7 +5,7 @@ import beginfunc.domain.models.serviceModels.PictureServiceModel;
 import java.util.List;
 
 public interface PictureService {
-    List<PictureServiceModel> findAllByProductId(Integer productId);
+    List<PictureServiceModel> findAllByProductId(String productId);
 
     void renamePicture(PictureServiceModel pictureServiceModel);
 }

@@ -12,23 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface OfferRepository extends JpaRepository<Offer,Integer> {
+public interface OfferRepository extends JpaRepository<Offer,String> {
 
     @Query(value = "SELECT o FROM Offer o " +
             "WHERE o.auction.id LIKE :id " +
             "ORDER BY o.submittedOn DESC")
-    List<Offer> findAllOffersOfAuction(@Param(value = "id")Integer auctionId);
+    List<Offer> findAllOffersOfAuction(@Param(value = "id")String auctionId);
 
     @Query(value = "SELECT COUNT(o) FROM Offer o " +
             "WHERE o.auction.id LIKE :id " +
             "GROUP BY o.auction.id")
-    Long getAuctionOfferCount(@Param(value = "id") Integer id);
+    Long getAuctionOfferCount(@Param(value = "id") String id);
 
     @Query(value = "SELECT o FROM Offer o " +
             "WHERE o.auction.seller.id LIKE :id " +
             "AND o.expirationTime> current_date " +
             "ORDER BY o.auction.product.name, o.offeredPrice DESC,o.submittedOn")
-    List<Offer> findAllActiveOffersToUser(@Param(value = "id") Integer userId);
+    List<Offer> findAllActiveOffersToUser(@Param(value = "id") String userId);
 
 
     @Modifying
@@ -36,5 +36,5 @@ public interface OfferRepository extends JpaRepository<Offer,Integer> {
     @Query(value = "UPDATE Offer o " +
             "SET o.isValid=false " +
             "WHERE o.auction.id LIKE :id")
-    void invalidateOffersOfAuctionById(@Param(value = "id") int auctionId);
+    void invalidateOffersOfAuctionById(@Param(value = "id") String auctionId);
 }

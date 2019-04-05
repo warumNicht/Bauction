@@ -7,11 +7,13 @@ import java.util.List;
 public interface OfferService {
     boolean registerOffer(OfferServiceModel offerServiceModel);
 
-    List<OfferServiceModel> findAllOffersOfAuction(Integer auctionId);
+    List<OfferServiceModel> findAllOffersOfAuction(String auctionId);
 
-    List<OfferServiceModel> findAllActiveOffersToUser(Integer userId);
+    List<OfferServiceModel> findAllActiveOffersToUser(String userId);
 
-    Long getAuctionOffersCount(Integer id);
+    Long getAuctionOffersCount(String id);
 
-    OfferServiceModel acceptOffer(Integer offerId);
+    OfferServiceModel acceptOffer(String offerId);
+
+    void invalidateOffersOfAuction(String id);
 }

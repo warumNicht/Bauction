@@ -1,10 +1,21 @@
 package beginfunc.services;
 
+import beginfunc.domain.entities.auctionRelated.Auction;
 import beginfunc.domain.entities.auctionRelated.Offer;
+import beginfunc.domain.entities.productRelated.products.BankNote;
+import beginfunc.domain.entities.productRelated.products.BaseProduct;
+import beginfunc.domain.entities.productRelated.products.Coin;
+import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.participations.OfferServiceModel;
+import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
+import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
+import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
 import beginfunc.repositories.OfferRepository;
 import beginfunc.services.contracts.OfferService;
+import org.modelmapper.AbstractConverter;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +30,7 @@ public class OfferServiceImpl implements OfferService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper) {
+    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, ModelMapper modelMapper2) {
         this.offerRepository = offerRepository;
         this.modelMapper = modelMapper;
     }
@@ -44,14 +55,14 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<OfferServiceModel> findAllOffersOfAuction(Integer auctionId) {
+    public List<OfferServiceModel> findAllOffersOfAuction(String auctionId) {
         return this.offerRepository.findAllOffersOfAuction(auctionId).stream()
                 .map(o->this.modelMapper.map(o,OfferServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OfferServiceModel> findAllActiveOffersToUser(Integer userId) {
+    public List<OfferServiceModel> findAllActiveOffersToUser(String userId) {
         List<Offer> offers=this.offerRepository.findAllActiveOffersToUser(userId);
         return offers.stream().map(o->this.modelMapper
                 .map(o,OfferServiceModel.class))
@@ -59,17 +70,28 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Long getAuctionOffersCount(Integer id) {
+    public Long getAuctionOffersCount(String id) {
         Long auctionOfferCount = this.offerRepository.getAuctionOfferCount(id);
         return auctionOfferCount==null ? 0 : auctionOfferCount;
     }
 
     @Override
-    public OfferServiceModel acceptOffer(Integer offerId) {
+    public OfferServiceModel acceptOffer(String offerId) {
         Offer offer = this.offerRepository.findById(offerId).orElse(null);
         offer.setAccepted(true);
         Offer accepted = this.offerRepository.save(offer);
         this.offerRepository.invalidateOffersOfAuctionById(offer.getAuction().getId());
-        return this.modelMapper.map(accepted,OfferServiceModel.class);
+
+        AuctionServiceModel auction = this.modelMapper.map(accepted.getAuction(), AuctionServiceModel.class);
+        OfferServiceModel map = this.modelMapper.map(accepted, OfferServiceModel.class);
+        map.setAuction(auction);
+        return map;
     }
+
+    @Override
+    public void invalidateOffersOfAuction(String id) {
+        this.offerRepository.invalidateOffersOfAuctionById(id);
+    }
+
+
 }

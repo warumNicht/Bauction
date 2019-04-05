@@ -1,6 +1,7 @@
 package beginfunc.web.controllers;
 
 import beginfunc.constants.AppConstants;
+import beginfunc.constants.StaticImagesConstants;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.participations.OfferServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
@@ -37,7 +38,7 @@ public class AuctionController extends BaseController{
     }
 
     @GetMapping("/details/{id}")
-    public ModelAndView  auctionDetails(@PathVariable(name = "id") Integer id, ModelAndView modelAndView){
+    public ModelAndView  auctionDetails(@PathVariable(name = "id") String id, ModelAndView modelAndView){
         this.auctionService.increaseAuctionViews(id);
 
         AuctionServiceModel found = this.auctionService.findById(id);
@@ -52,7 +53,7 @@ public class AuctionController extends BaseController{
         if(found.getProduct().getMainPicture()!=null){
             model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
         }else {
-            model.setMainImageUrl(AppConstants.DEFAULT_AUCTION_MAIN_IMAGE_PATH);
+            model.setMainImageUrl("/"+StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
         }
         model.setTown(found.getProduct().getTown().getName());
 
@@ -63,7 +64,7 @@ public class AuctionController extends BaseController{
 
 
     @PostMapping("/bidding/{id}")
-    public ModelAndView makeBidding(@PathVariable(name = "id") Integer id, ModelAndView modelAndView,
+    public ModelAndView makeBidding(@PathVariable(name = "id") String id, ModelAndView modelAndView,
                                     @RequestParam("price") BigDecimal biddingStep){
         AuctionServiceModel auction = this.auctionService.findById(id);
         UserServiceModel participant = this.modelMapper.map(super.getLoggedInUser(),UserServiceModel.class);
@@ -80,7 +81,7 @@ public class AuctionController extends BaseController{
     }
 
     @PostMapping("/offers/{id}")
-    public ModelAndView makeOffer(@PathVariable(name = "id") Integer id, ModelAndView modelAndView,
+    public ModelAndView makeOffer(@PathVariable(name = "id") String id, ModelAndView modelAndView,
                                     @RequestParam("offerPrice") BigDecimal offeredPrice){
         AuctionServiceModel auction = this.auctionService.findById(id);
         UserServiceModel participant = this.modelMapper.map(super.getLoggedInUser(),UserServiceModel.class);

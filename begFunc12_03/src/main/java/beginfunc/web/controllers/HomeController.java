@@ -1,6 +1,7 @@
 package beginfunc.web.controllers;
 
 import beginfunc.constants.AppConstants;
+import beginfunc.constants.StaticImagesConstants;
 import beginfunc.domain.models.viewModels.home.AuctionHomeViewModel;
 import beginfunc.services.contracts.AuctionService;
 import org.modelmapper.ModelMapper;
@@ -44,7 +45,7 @@ public class HomeController {
                     }
                     homeViewModel.setName(name);
                     if(a.getProduct().getMainPicture()==null){
-                        homeViewModel.setMainImageUrl(AppConstants.DEFAULT_AUCTION_MAIN_IMAGE_PATH);
+                        homeViewModel.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
                     }else {
                         homeViewModel.setMainImageUrl(a.getProduct().getMainPicture().getPath());
                     }

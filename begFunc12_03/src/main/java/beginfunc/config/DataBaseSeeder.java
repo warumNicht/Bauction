@@ -42,10 +42,12 @@ public class DataBaseSeeder {
             this.roleRepository.saveAndFlush(user);
         }
 
-//        if(this.categoryRepository.count()==0){
-//            this.categoryRepository.saveAndFlush(new Category("Coins"));
-//            this.categoryRepository.saveAndFlush(new Category("Books"));
-//            this.categoryRepository.saveAndFlush(new Category("Banknotes"));
-//        }
+        if(this.categoryRepository.count()==0){
+            this.categoryRepository.saveAndFlush(new Category("Books"));
+            this.categoryRepository.saveAndFlush(new Category("AutoParts"));
+            this.categoryRepository.saveAndFlush(new Category("Allgemein"));
+            this.categoryRepository.saveAndFlush(new Category("Coins"));
+            this.categoryRepository.saveAndFlush(new Category("Banknotes"));
+        }
     }
 }

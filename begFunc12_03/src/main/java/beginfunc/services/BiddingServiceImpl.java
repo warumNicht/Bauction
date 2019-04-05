@@ -34,7 +34,7 @@ public class BiddingServiceImpl implements BiddingService {
     }
 
     @Override
-    public List<BiddingServiceModel> findAllBiddingsOfAuction(Integer auctionId) {
+    public List<BiddingServiceModel> findAllBiddingsOfAuction(String auctionId) {
         List<BiddingServiceModel> biddings = this.biddingRepository.findAllBiddingsOfAuction(auctionId).stream()
                 .map(b -> this.modelMapper.map(b, BiddingServiceModel.class))
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class BiddingServiceImpl implements BiddingService {
     }
 
     @Override
-    public Long getAuctionBiddingCount(Integer id) {
+    public Long getAuctionBiddingCount(String id) {
         Long count=this.biddingRepository.getAuctionBiddingCount(id);
         return count==null ? 0 : count;
     }

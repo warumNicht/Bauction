@@ -30,7 +30,7 @@ public class CommentController extends BaseController {
     }
 
     @GetMapping("/write/{id}")
-    public ModelAndView writeComment(@PathVariable(name = "id") Integer dealId, @ModelAttribute(name = "model") CommentBindingModel model,
+    public ModelAndView writeComment(@PathVariable(name = "id") String dealId, @ModelAttribute(name = "model") CommentBindingModel model,
                                      @Param(value = "partnerRole") String partnerRole, ModelAndView modelAndView) {
         DealServiceModel deal = this.dealService.findDealById(dealId);
         SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
@@ -44,7 +44,7 @@ public class CommentController extends BaseController {
     }
 
     @PostMapping("/write/{id}")
-    public ModelAndView writeCommentPost(@PathVariable(name = "id") Integer dealId,
+    public ModelAndView writeCommentPost(@PathVariable(name = "id") String dealId,
                                          @Valid @ModelAttribute(name = "model") CommentBindingModel model,
                                          BindingResult bindingResult,
                                          @Param(value = "partnerRole") String partnerRole,

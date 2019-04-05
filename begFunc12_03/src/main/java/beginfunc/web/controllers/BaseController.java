@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public abstract class BaseController {
 
-    protected Integer getLoggedInUserId() {
+    protected String getLoggedInUserId() {
         Authentication authentication = this.getAuthentication();
         if(authentication==null){
             return null;

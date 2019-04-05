@@ -16,17 +16,17 @@ public interface AuctionService {
 
     List<AuctionServiceModel> findAllActivesAuctions();
 
-    AuctionServiceModel findById(Integer id);
+    AuctionServiceModel findById(String id);
 
-    boolean increaseAuctionViews(Integer id);
+    boolean increaseAuctionViews(String id);
 
-    void increaseCurrentPrice(Integer id, BigDecimal biddingStep);
+    void increaseCurrentPrice(String id, BigDecimal biddingStep);
 
     void updateAuction (AuctionServiceModel model);
 
-    void updateAuctionStatus (Integer id, AuctionStatus status);
+    void updateAuctionStatus (String id, AuctionStatus status);
 
-    List<AuctionServiceModel> getWaitingAuctionsOfUser(Integer userId);
+    List<AuctionServiceModel> getWaitingAuctionsOfUser(String userId);
 
     AuctionServiceModel createAuction(AuctionCreateBindingModel model, BaseCollectionBindingModel coin,
                        HttpSession session, UserServiceModel user) throws IOException;

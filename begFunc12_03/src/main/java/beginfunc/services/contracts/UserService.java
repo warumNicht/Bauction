@@ -8,5 +8,5 @@ public interface UserService extends UserDetailsService {
 
     UserServiceModel loginUser(UserServiceModel userServiceModel);
 
-    UserServiceModel findUserById(Integer id);
+    UserServiceModel findUserById(String id);
 }

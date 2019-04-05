@@ -19,7 +19,7 @@ public class ImageController {
     }
 
     @GetMapping(value = "/fetch/product/{id}", produces = "application/json")
-    public Object getImagesOfAuction(@PathVariable(name = "id") Integer id){
+    public Object getImagesOfAuction(@PathVariable(name = "id") String  id){
         List<String> urls = this.pictureService.findAllByProductId(id).stream()
                 .map(image -> image.getPath())
                 .collect(Collectors.toList());

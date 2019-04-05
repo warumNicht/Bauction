@@ -17,7 +17,7 @@ public class AuctionDetailsViewModel extends BaseViewModel {
     private String description;
     private String status;
     private String type;
-    private Integer productId;
+    private String productId;
 
     public String getName() {
         return name;
@@ -117,11 +117,11 @@ public class AuctionDetailsViewModel extends BaseViewModel {
     }
 
 
-    public Integer getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 }

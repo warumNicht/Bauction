@@ -23,7 +23,7 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public List<PictureServiceModel> findAllByProductId(Integer productId) {
+    public List<PictureServiceModel> findAllByProductId(String productId) {
         List<Picture> allByProductId = this.pictureRepository.findAllByProductId(productId);
         return allByProductId.stream()
                 .map(p->this.modelMapper.map(p,PictureServiceModel.class))

@@ -1,7 +1,7 @@
 package beginfunc.domain.entities.productRelated.products;
 
 import beginfunc.domain.entities.enums.PreservationGrade;
-import beginfunc.domain.entities.productRelated.Country;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,9 +16,8 @@ public abstract class BaseCollectionProduct extends BaseProduct {
     @Enumerated(value = EnumType.STRING)
     private PreservationGrade grade;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id",referencedColumnName = "id")
-    private Country country;
+    @Column(name = "country")
+    private String country;
 
     public BaseCollectionProduct() {
     }
@@ -43,11 +42,11 @@ public abstract class BaseCollectionProduct extends BaseProduct {
         this.grade = grade;
     }
 
-    public Country getCountry() {
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 }

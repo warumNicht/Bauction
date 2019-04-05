@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @GetMapping("/profile/{id}")
-    public ModelAndView profile(@PathVariable(name = "id") Integer  id,
+    public ModelAndView profile(@PathVariable(name = "id") String   id,
                                 @ModelAttribute("message") String emailMessage, ModelAndView modelAndView){
         UserServiceModel userById = this.userService.findUserById(id);
         UserProfileViewModel profileViewModel = this.modelMapper.map(userById, UserProfileViewModel.class);
@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/auctions/waiting")
-    public ModelAndView viewWaitingAuctions(@PathVariable(name = "id") Integer  id,ModelAndView modelAndView){
+    public ModelAndView viewWaitingAuctions(@PathVariable(name = "id") String id,ModelAndView modelAndView){
 
         List<UsersWaitingAuctionViewModel> waitingAuctionViewModels = this.auctionService.getWaitingAuctionsOfUser(id).stream()
                 .map(a -> {

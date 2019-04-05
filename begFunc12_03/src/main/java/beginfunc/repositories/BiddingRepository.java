@@ -8,14 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BiddingRepository extends JpaRepository<Bidding, Integer> {
+public interface BiddingRepository extends JpaRepository<Bidding, String> {
     @Query(value = "SELECT b FROM Bidding b " +
             "WHERE b.auction.id LIKE :id " +
             "ORDER BY b.submittedOn DESC")
-    List<Bidding> findAllBiddingsOfAuction(@Param(value = "id")Integer auctionId);
+    List<Bidding> findAllBiddingsOfAuction(@Param(value = "id")String auctionId);
 
     @Query(value = "SELECT COUNT(b) FROM Bidding b " +
             "WHERE b.auction.id LIKE :id " +
             "GROUP BY b.auction.id")
-    Long getAuctionBiddingCount(@Param(value = "id") Integer id);
+    Long getAuctionBiddingCount(@Param(value = "id") String id);
 }

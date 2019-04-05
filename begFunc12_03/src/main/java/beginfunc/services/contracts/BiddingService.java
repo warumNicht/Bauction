@@ -7,7 +7,7 @@ import java.util.List;
 public interface BiddingService {
     boolean registerBidding(BiddingServiceModel biddingServiceModel);
 
-    List<BiddingServiceModel> findAllBiddingsOfAuction(Integer auctionId);
+    List<BiddingServiceModel> findAllBiddingsOfAuction(String auctionId);
 
-    Long getAuctionBiddingCount(Integer id);
+    Long getAuctionBiddingCount(String id);
 }

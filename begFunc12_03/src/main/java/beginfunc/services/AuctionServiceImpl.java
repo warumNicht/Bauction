@@ -53,16 +53,13 @@ public class AuctionServiceImpl implements AuctionService {
 
         AuctionServiceModel auctionToSave = this.modelMapper.map(model, AuctionServiceModel.class);
         BaseProductServiceModel product=this.productService.createProduct(model, collectionBindingModel, session);
-
+        auctionToSave.setProduct(product);
         auctionToSave.setSeller(user);
         auctionToSave.setCategory(this.categoryService.findByName(model.getCategory()));
         this.setAuctionPrices(auctionToSave, model);
         this.setAuctionStatus(auctionToSave, model);
 
         Auction auction = this.modelMapper.map(auctionToSave, Auction.class);
-        BaseProduct productBase=this.createBaseProductEntity(product);
-
-        auction.setProduct(productBase);
         this.correctModelMappersBug(auction);
         Auction savedAuction = this.auctionRepository.saveAndFlush(auction);
         return this.modelMapper.map(savedAuction, AuctionServiceModel.class);
@@ -71,7 +68,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionServiceModel> findAllActivesAuctions() {
         List<AuctionServiceModel> allActives = this.auctionRepository
-                .findAllByStatusIsLikeOrStatusIsLike(AuctionStatus.Active,AuctionStatus.Finished)
+                .findAllByStatus(AuctionStatus.Active)
                 .stream()
                 .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
@@ -79,7 +76,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<AuctionServiceModel> getWaitingAuctionsOfUser(Integer userId) {
+    public List<AuctionServiceModel> getWaitingAuctionsOfUser(String userId) {
         List<Auction> waitingAuctionsOfUser = this.auctionRepository.getWaitingAuctionsOfUser(userId);
         return waitingAuctionsOfUser.stream()
                 .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
@@ -87,7 +84,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public AuctionServiceModel findById(Integer id) {
+    public AuctionServiceModel findById(String id) {
         Auction found = this.auctionRepository.findById(id).orElse(null);
         if(found!=null){
             AuctionServiceModel auctionServiceModel = this.modelMapper.map(found, AuctionServiceModel.class);
@@ -97,7 +94,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public boolean increaseAuctionViews(Integer id) {
+    public boolean increaseAuctionViews(String id) {
         try {
             this.auctionRepository.increaseViews(id);
             return true;
@@ -108,7 +105,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public void increaseCurrentPrice(Integer id, BigDecimal biddingStep) {
+    public void increaseCurrentPrice(String id, BigDecimal biddingStep) {
         this.auctionRepository.increaseCurrentPrice(id,biddingStep);
     }
 
@@ -119,7 +116,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public void updateAuctionStatus(Integer id, AuctionStatus status) {
+    public void updateAuctionStatus(String id, AuctionStatus status) {
         this.auctionRepository.updateStatus(id,status);
     }
 

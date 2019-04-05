@@ -40,7 +40,7 @@ public class OfferController extends BaseController {
 
     @GetMapping(value = "/fetch/{id}", produces = "application/json")
     @ResponseBody
-    public Object fetchUsersOffersToInteract(@PathVariable(name = "id") Integer userId) {
+    public Object fetchUsersOffersToInteract(@PathVariable(name = "id") String  userId) {
 
         return this.offerService.findAllActiveOffersToUser(userId).stream()
                 .map(o->{
@@ -52,7 +52,7 @@ public class OfferController extends BaseController {
     }
 
     @GetMapping("/accept/{id}")
-    public ModelAndView acceptOffer(@PathVariable(name = "id") Integer offerId, ModelAndView modelAndView){
+    public ModelAndView acceptOffer(@PathVariable(name = "id") String  offerId, ModelAndView modelAndView){
         OfferServiceModel acceptedOffer = this.offerService.acceptOffer(offerId);
         UserServiceModel seller = this.modelMapper.map(super.getLoggedInUser(), UserServiceModel.class);
         DealServiceModel deal=new DealServiceModel(new Date(),acceptedOffer.getOfferedPrice(),

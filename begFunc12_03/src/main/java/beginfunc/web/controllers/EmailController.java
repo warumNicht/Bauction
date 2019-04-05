@@ -26,7 +26,7 @@ public class EmailController extends BaseController {
     }
 
     @GetMapping("/write/{id}")
-    public ModelAndView writeEmail(@PathVariable(name = "id") Integer recipientId,
+    public ModelAndView writeEmail(@PathVariable(name = "id") String recipientId,
                                    @Param(value = "auctionName") String auctionName, ModelAndView modelAndView){
         String partnerUsername = this.userService.findUserById(recipientId).getUsername();
         modelAndView.addObject("recipientId" ,recipientId);
@@ -37,7 +37,7 @@ public class EmailController extends BaseController {
     }
 
     @PostMapping("/write/{id}")
-    public ModelAndView writeEmailPost(@PathVariable(name = "id") Integer recipientId,
+    public ModelAndView writeEmailPost(@PathVariable(name = "id") String  recipientId,
                                        @Param(value = "subject") String subject,
                                        @Param(value = "content") String content,
                                        RedirectAttributes redirectAttributes, ModelAndView modelAndView){

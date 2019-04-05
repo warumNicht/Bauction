@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceModel findUserById(Integer id) {
+    public UserServiceModel findUserById(String id) {
         User user = this.userRepository.findById(id).orElse(null);
         if(user==null){
             return null;

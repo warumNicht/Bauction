@@ -49,8 +49,6 @@ public class AdminController {
         if(!this.categoryService.addCategory(categoryServiceModel)){
             throw new IllegalArgumentException("Category creation failed");
         }
-        String currentCategoryFolderPath = AppConstants.UPLOAD_FOLDER_PATH + "/" + categoryServiceModel.getName();
-        new File(currentCategoryFolderPath).mkdir();
         modelAndView.setViewName("redirect:/admin/create/category");
         return modelAndView;
     }
