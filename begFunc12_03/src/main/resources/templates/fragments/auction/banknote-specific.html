@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div id="banknoteSpecific" style="display: none" class="mb-5">
+    <div class="row justify-content-around">
+        <div class="col-5" th:classappend="${#fields.hasErrors('banknote.width')} ? 'text-danger'">
+            <label for="width">Width</label>
+            <input type="number" step="1" class="form-control" th:field="${banknote.width}"
+                   id="width" placeholder="Width..." name="width">
+
+            <small id="widthHelp"
+                   th:each="error : ${#fields.errors('banknote.width')}" th:utext="${error +'<br>'}">
+
+            </small>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-5" th:classappend="${#fields.hasErrors('banknote.length')} ? 'text-danger'">
+            <label for="length">Length</label>
+            <input type="number" step="1" class="form-control" th:field="${banknote.length}"
+                   id="length" placeholder="Length..." name="length">
+
+            <small id="lengthHelp"
+                   th:each="error : ${#fields.errors('banknote.length')}" th:utext="${error +'<br>'}">
+            </small>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

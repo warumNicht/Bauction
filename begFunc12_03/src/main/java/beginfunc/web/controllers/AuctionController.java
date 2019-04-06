@@ -1,6 +1,5 @@
 package beginfunc.web.controllers;
 
-import beginfunc.constants.AppConstants;
 import beginfunc.constants.StaticImagesConstants;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.participations.OfferServiceModel;
@@ -10,7 +9,6 @@ import beginfunc.domain.models.viewModels.auctions.AuctionDetailsViewModel;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.BiddingService;
 import beginfunc.services.contracts.OfferService;
-import beginfunc.services.contracts.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,9 +56,10 @@ public class AuctionController extends BaseController{
         model.setTown(found.getProduct().getTown().getName());
 
         modelAndView.addObject("auctionDetails",model);
-        modelAndView.setViewName("auction-details");
+        modelAndView.setViewName("auction/auction-details");
         return modelAndView;
     }
+
 
 
     @PostMapping("/bidding/{id}")

@@ -22,7 +22,7 @@ public class BaseProduct extends BaseEntity {
     @JoinColumn(name = "town_id",referencedColumnName = "id")
     private Town town;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "main_picture_id")
     private Picture mainPicture;
 

@@ -7,13 +7,14 @@ import beginfunc.domain.entities.productRelated.products.BankNote;
 import beginfunc.domain.entities.productRelated.products.BaseProduct;
 import beginfunc.domain.entities.productRelated.products.Coin;
 import beginfunc.domain.models.bindingModels.AuctionCreateBindingModel;
+import beginfunc.domain.models.bindingModels.AuctionEditBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.BanknoteBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.BaseCollectionBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.CoinBindingModel;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
+import beginfunc.domain.models.serviceModels.CategoryServiceModel;
 import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
 import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
-import beginfunc.domain.models.serviceModels.PictureServiceModel;
 import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.repositories.AuctionRepository;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +66,27 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    public void editAuction(AuctionServiceModel auctionToEdit, AuctionEditBindingModel model,
+                            CoinBindingModel coin, BanknoteBindingModel banknote,
+                            File mainImage, File[] files) throws IOException {
+        BaseProductServiceModel changedProduct=
+                this.productService.getChangedProduct(auctionToEdit, model,coin, banknote, mainImage, files);
+        changedProduct.setId(auctionToEdit.getProduct().getId());
+        auctionToEdit.setProduct(changedProduct);
+        auctionToEdit.setType(AuctionType.valueOf(model.getType()));
+        auctionToEdit.setWantedPrice(model.getWantedPrice());
+
+        if(!model.getCategory().equals(auctionToEdit.getCategory().getName())){
+            CategoryServiceModel editedCategory = this.categoryService.findByName(model.getCategory());
+            auctionToEdit.setCategory(editedCategory);
+        }
+        Auction auction = this.modelMapper.map(auctionToEdit, Auction.class);
+        this.correctModelMappersBug(auction);
+        this.auctionRepository.save(auction);
+        System.out.println();
+    }
+
+    @Override
     public List<AuctionServiceModel> findAllActivesAuctions() {
         List<AuctionServiceModel> allActives = this.auctionRepository
                 .findAllByStatus(AuctionStatus.Active)
@@ -99,7 +120,6 @@ public class AuctionServiceImpl implements AuctionService {
             this.auctionRepository.increaseViews(id);
             return true;
         }catch (Exception e){
-            e.printStackTrace();
             return false;
         }
     }
@@ -136,7 +156,7 @@ public class AuctionServiceImpl implements AuctionService {
         }else {
             auctionToSave.setStatus(AuctionStatus.Active);
             auctionToSave.setStartDate(new Date());
-            auctionToSave.setEndDate(getDateAfter7Days());
+            auctionToSave.setEndDate(getDateAfterDays(7));
         }
     }
 
@@ -161,10 +181,10 @@ public class AuctionServiceImpl implements AuctionService {
         }
     }
 
-    private Date getDateAfter7Days() {
+    private Date getDateAfterDays(int days) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DAY_OF_YEAR, 7);
+        cal.add(Calendar.DAY_OF_YEAR, days);
         return cal.getTime();
     }
 }

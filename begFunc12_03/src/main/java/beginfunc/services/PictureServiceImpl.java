@@ -31,8 +31,21 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
+    public List<PictureServiceModel> findAllByWithoutMain(String productId) {
+        List<Picture> allByProductIdWithoutMain = this.pictureRepository.findAllByProductIdWithoutMain(productId);
+        return allByProductIdWithoutMain.stream()
+                .map(p->this.modelMapper.map(p,PictureServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void renamePicture(PictureServiceModel pictureServiceModel) {
         Picture picture = this.modelMapper.map(pictureServiceModel, Picture.class);
         this.pictureRepository.save(picture);
+    }
+
+    @Override
+    public void deleteImage(String imageId) {
+        this.pictureRepository.deleteById(imageId);
     }
 }

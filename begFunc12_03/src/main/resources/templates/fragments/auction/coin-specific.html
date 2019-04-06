@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div id="coinSpecific" style="display: none" class="mb-5">
+    <div class="row justify-content-around"
+         th:classappend="${#fields.hasErrors('coin.metal')} ? 'text-danger'">
+        <div class="col-5">
+            <label for="metal">Metal</label>
+            <input type="text" class="form-control" th:field="${coin.metal}"
+                   id="metal" placeholder="Metal..." name="metal">
+
+            <small id="metalHelp"
+                   th:each="error : ${#fields.errors('coin.metal')}" th:utext="${error +'<br>'}">
+
+            </small>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-2" th:classappend="${#fields.hasErrors('coin.weight')} ? 'text-danger'">
+            <label for="weight">Weight</label>
+            <input type="number" step="0.01" class="form-control" th:field="${coin.weight}"
+                   id="weight" placeholder="Weight..." name="weight">
+
+            <small id="weightHelp"
+                   th:each="error : ${#fields.errors('coin.weight')}" th:utext="${error +'<br>'}">
+            </small>
+        </div>
+
+        <div class="col-1"></div>
+        <div class="col-2" th:classappend="${#fields.hasErrors('coin.diameter')} ? 'text-danger'">
+            <label for="diameter">Diameter</label>
+            <input type="number" step="0.01" class="form-control" th:field="${coin.diameter}"
+                   id="diameter" placeholder="Diam..." name="diameter">
+
+            <small id="diameterHelp"
+                   th:each="error : ${#fields.errors('coin.diameter')}" th:utext="${error +'<br>'}">
+
+            </small>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

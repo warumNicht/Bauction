@@ -15,4 +15,10 @@ public interface PictureRepository extends JpaRepository<Picture,String> {
     @Query(value = "SELECT p FROM Picture p " +
             "WHERE p.product.id LIKE :productId")
     List<Picture> findAllByProductId(@Param("productId") String productId);
+
+    @Query(value = "SELECT p FROM Picture p " +
+            "WHERE p.product.id LIKE :productId " +
+            "AND p.id NOT LIKE p.product.mainPicture.id " +
+            "OR p.product.mainPicture IS NULL ")
+    List<Picture> findAllByProductIdWithoutMain(@Param("productId") String productId);
 }

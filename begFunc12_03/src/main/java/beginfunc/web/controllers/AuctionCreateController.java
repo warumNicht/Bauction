@@ -1,19 +1,20 @@
 package beginfunc.web.controllers;
 
 import beginfunc.domain.models.bindingModels.AuctionCreateBindingModel;
+import beginfunc.domain.models.bindingModels.AuctionEditBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.BanknoteBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.CoinBindingModel;
 
+import beginfunc.domain.models.serviceModels.AuctionServiceModel;
+import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
+import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.services.contracts.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletException;
@@ -22,8 +23,6 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @Controller
 public class AuctionCreateController extends BaseController{
@@ -50,8 +49,7 @@ public class AuctionCreateController extends BaseController{
 
         modelAndView.addObject("auctionCreateModel",model);
         modelAndView.addObject("coin",coin);
-        modelAndView.addObject("categories",this.categoryService.findAllCategories());
-        modelAndView.setViewName("auction-create");
+        modelAndView.setViewName("auction/auction-create");
         return modelAndView;
     }
 
@@ -80,8 +78,7 @@ public class AuctionCreateController extends BaseController{
             modelAndView.addObject("auctionCreateModel",model);
             modelAndView.addObject("coin",coin);
             modelAndView.addObject("banknote",banknote);
-            modelAndView.addObject("categories",this.categoryService.findAllCategories());
-            modelAndView.setViewName("auction-create");
+            modelAndView.setViewName("auction/auction-create");
             return modelAndView;
         }else {
             if(model.getCategory().equals("Coins")){
@@ -96,10 +93,72 @@ public class AuctionCreateController extends BaseController{
         return modelAndView;
     }
 
+    @GetMapping("/auctions/edit/{id}")
+    public ModelAndView editAuction(ModelAndView modelAndView,
+                                      @PathVariable(value = "id") String id,
+                                      @ModelAttribute(name = "auctionCreateModel") AuctionEditBindingModel model,
+                                      @ModelAttribute(name = "coin") CoinBindingModel coin,
+                                    @ModelAttribute(name = "banknote") BanknoteBindingModel banknote) throws IOException, ServletException {
 
+        AuctionServiceModel found = this.auctionService.findById(id);
+        this.fillViewWithModels(found,modelAndView);
+
+        modelAndView.addObject("auctionId",id);
+        modelAndView.setViewName("auction/auction-edit");
+        return modelAndView;
+    }
+
+    @PostMapping("/auctions/edit/{id}")
+    public ModelAndView editAuctionPost(@PathVariable(value = "id") String id,
+                                        @Valid @ModelAttribute(name = "auctionCreateModel") AuctionEditBindingModel model,
+                                        BindingResult bindingResult,
+                                        @Valid @ModelAttribute(name = "coin") CoinBindingModel coin, BindingResult coinBindingResult,
+                                        @Valid @ModelAttribute(name = "banknote") BanknoteBindingModel banknote,
+                                        BindingResult banknoteBindingResult,
+                                        @RequestParam("mainImage") MultipartFile mainImage,
+                                        @RequestParam("files") MultipartFile[] files, ModelAndView modelAndView)  throws IOException, ServletException {
+
+        if(bindingResult.hasErrors()||model.getCategory().equals("Coins")&&coinBindingResult.hasErrors()||
+                model.getCategory().equals("Banknotes")&&banknoteBindingResult.hasErrors()){
+            modelAndView.addObject("auctionCreateModel",model);
+            modelAndView.addObject("coin",coin);
+            modelAndView.addObject("banknote",banknote);
+            modelAndView.addObject("auctionId",id);
+            modelAndView.setViewName("auction/auction-edit");
+            return modelAndView;
+        }
+        AuctionServiceModel auctionToEdit = this.auctionService.findById(id);
+        this.auctionService.editAuction(auctionToEdit, model, coin, banknote,
+                this.convert(mainImage), this.convertMultipartArray(files));
+        modelAndView.setViewName("redirect:/auctions/edit/" + id);
+        return modelAndView;
+    }
+
+    private void fillViewWithModels(AuctionServiceModel found, ModelAndView modelAndView) {
+        AuctionEditBindingModel model=this.modelMapper.map(found, AuctionEditBindingModel.class);
+        model.setName(found.getProduct().getName());
+        model.setCategory(found.getCategory().getName());
+        model.setDescription(found.getProduct().getDescription());
+        model.setTown(found.getProduct().getTown().getName());
+        modelAndView.addObject("auctionCreateModel",model);
+
+        if (found.getProduct() instanceof CoinServiceModel){
+            CoinBindingModel coin=this.modelMapper.map(found.getProduct(),CoinBindingModel.class);
+            modelAndView.addObject("coin",coin);
+        }else if(found.getProduct() instanceof BanknoteServiceModel){
+            BanknoteBindingModel banknote =this.modelMapper.map(found.getProduct(),BanknoteBindingModel.class);
+            modelAndView.addObject("banknote",banknote);
+            CoinBindingModel coin=this.modelMapper.map(found.getProduct(),CoinBindingModel.class);
+            modelAndView.addObject("coin",coin);
+        }
+    }
 
 
     private File[] convertMultipartArray(MultipartFile[] files) throws IOException {
+        if(files==null||files.length==0||
+                files[0].getOriginalFilename().equals("")){
+            return null;
+        }
         File[] res=new File[files.length];
         for (int i = 0; i < files.length; i++) {
             res[i]=this.convert(files[i]);
@@ -108,7 +167,9 @@ public class AuctionCreateController extends BaseController{
     }
 
     private File convert(MultipartFile file) throws IOException {
-
+        if(file.getOriginalFilename().equals("")){
+            return null;
+        }
         File convertedFile = File.createTempFile("temp-file", file.getOriginalFilename());
 
         FileOutputStream fos = new FileOutputStream(convertedFile);

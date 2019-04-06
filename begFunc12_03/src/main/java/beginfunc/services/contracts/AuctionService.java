@@ -2,12 +2,16 @@ package beginfunc.services.contracts;
 
 import beginfunc.domain.entities.enums.AuctionStatus;
 import beginfunc.domain.models.bindingModels.AuctionCreateBindingModel;
+import beginfunc.domain.models.bindingModels.AuctionEditBindingModel;
+import beginfunc.domain.models.bindingModels.collectionProducts.BanknoteBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.BaseCollectionBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.CoinBindingModel;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,4 +35,5 @@ public interface AuctionService {
     AuctionServiceModel createAuction(AuctionCreateBindingModel model, BaseCollectionBindingModel coin,
                        HttpSession session, UserServiceModel user) throws IOException;
 
+    void editAuction(AuctionServiceModel auctionToEdit, AuctionEditBindingModel model, CoinBindingModel coin, BanknoteBindingModel banknote, File main, File[] files) throws IOException;
 }
