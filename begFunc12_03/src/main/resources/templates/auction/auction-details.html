@@ -99,13 +99,13 @@
                     </div>
                     <div class="col-6 pr-0">
                         <h4 style="display: inline-block; margin-right: 10px">Buyer: </h4>
-                        <h4 style="display: inline-block" th:if="${auctionDetails.buyer==null}" th:text="${' No'}"></h4>
-                        <a style="font-size: 24px" th:if="auctionDetails.buyer!=null"
-                           th:href="@{/users/profile/{id}(id=${auctionDetails.buyer.id})}" th:text="${auctionDetails.buyer.username}"></a>
+                        <h4 style="display: inline-block" th:if="${auctionDetails.buyer.id==null}" th:text="${' No'}"></h4>
+                            <a style="font-size: 24px" th:if="auctionDetails.buyer.id!=null"
+                               th:href="@{/users/profile/{id}(id=${auctionDetails.buyer.id})}" th:text="${auctionDetails.buyer.username}"></a>
                     </div>
                 </div>
 
-                <div class="row text-left mb-2">
+                <div class="row text-left mb-2" th:if="${auctionDetails.status!='Finished'}">
 
                     <div class="col-6 pl-0">Views:</div>
                     <div class="col-6 pr-0">
@@ -178,9 +178,10 @@
                         Hide pictures
                     </button>
                 </div>
-
             </div>
+
             <div class="col-1"></div>
+            <div class="col-1" th:if="${auctionDetails.status=='Finished'}"></div>
         </div>
 
         <div th:replace="~{fragments/auction/auction-details-collection}"></div>
@@ -199,7 +200,7 @@
 </div>
 
 <script>
-
+    onResize();
 
     function Get(yourUrl) {
         let Httpreq = new XMLHttpRequest(); // a new request
@@ -258,13 +259,13 @@
                 let y = document.getElementById('coinDetails');
                 y.style.display = "flex";
                 $('#metal').append(json.metal);
-                $('#weight').append(json.weight);
-                $('#diameter').append(json.diameter);
+                $('#weight').append(json.weight+ ' g');
+                $('#diameter').append(json.diameter+ ' mm');
             }else {
                 let z = document.getElementById('banknoteDetails');
                 z.style.display = "flex";
-                $('#length').append(json.length);
-                $('#width').append(json.width);
+                $('#length').append(json.length+ ' mm');
+                $('#width').append(json.width+ ' mm');
             }
         }
     });
@@ -412,18 +413,14 @@
                 '<td class="table-reached-price-bold">' + x.reachedPrice + '\u20AC</td>' +
                 '<td>' + x.submittedOn + '</td>' +
                 '</tr>';
-
             $('#tableBiddings').append(currentRow);
         });
-
         $('#all-biddings-table').append('</tbody>\n' +
             '</table>');
         $('#biddingModalScrollable').modal('show');
     }
 
-
     function showOfferModal() {
-
         $('#all-offers-table').empty();
         $('#all-offers-table').append(
             '<table class="table table-striped">' +
@@ -435,9 +432,7 @@
             '</thead>' +
             '<tbody id="tableBiddings">');
 
-
         let json_obj = JSON.parse(Get('/auctions/fetch/offers/' + id));
-
         json_obj.forEach((x) => {
             let currentRow = '<tr >' +
                 '<td>' +
@@ -448,11 +443,8 @@
 
             $('#tableBiddings').append(currentRow);
         });
-
         $('#offerModalScrollable').modal('show');
     }
-
-
 </script>
 
 </body>

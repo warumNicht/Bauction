@@ -12,6 +12,7 @@ import beginfunc.domain.models.viewModels.auctions.AuctionOfferViewModel;
 import beginfunc.domain.models.viewModels.auctions.collectionDetails.AuctionBanknoteViewDetailsModel;
 import beginfunc.domain.models.viewModels.auctions.collectionDetails.AuctionCoinViewDetailsModel;
 import beginfunc.domain.models.viewModels.home.AuctionHomeMoreViewModel;
+import beginfunc.domain.models.viewModels.home.AuctionHomeViewModel;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.BiddingService;
 import beginfunc.services.contracts.OfferService;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,5 +115,42 @@ public class AuctionFetchController {
             return banknoteViewDetailsModel;
         }
         return null;
+    }
+
+    @GetMapping(value = "/user/{id}/actives", produces = "application/json")
+    public Object fetchActiveAuctionsOfUser(@PathVariable(name = "id") String userId) {
+        List<AuctionServiceModel> actives= this.auctionService.getActiveAuctionsOfUser(userId);
+        return this.mapAuctionServiceModels(actives);
+    }
+
+    @GetMapping(value = "/user/{id}/finishedWithDeal", produces = "application/json")
+    public Object fetchFinishedAuctionsOfUserWithDeal(@PathVariable(name = "id") String userId) {
+        List<AuctionServiceModel> actives= this.auctionService.getFinishedAuctionsOfUserWithDeal(userId);
+        return this.mapAuctionServiceModels(actives);
+    }
+
+    @GetMapping(value = "/user/{id}/finishedWithoutDeal", produces = "application/json")
+    public Object fetchFinishedAuctionsOfUserWithoutDeal(@PathVariable(name = "id") String userId) {
+        List<AuctionServiceModel> actives= this.auctionService.getFinishedAuctionsOfUserWithoutDeal(userId);
+        return this.mapAuctionServiceModels(actives);
+    }
+
+    private List<AuctionHomeViewModel> mapAuctionServiceModels(List<AuctionServiceModel> auctionServiceModels){
+        return auctionServiceModels.stream()
+                .map(a->{
+                    AuctionHomeViewModel homeViewModel = this.modelMapper.map(a,AuctionHomeViewModel.class);
+                    String name = a.getProduct().getName();
+                    if(name.length()>=19){
+                        name=name.substring(0,18) + "...";
+                    }
+                    homeViewModel.setName(name);
+                    if(a.getProduct().getMainPicture()==null){
+                        homeViewModel.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+                    }else {
+                        homeViewModel.setMainImageUrl(a.getProduct().getMainPicture().getPath());
+                    }
+                    homeViewModel.setCurrentPrice(String.format("%.2f ", a.getReachedPrice()) +'\u20ac');
+                    return homeViewModel;
+                }).collect(Collectors.toList());
     }
 }

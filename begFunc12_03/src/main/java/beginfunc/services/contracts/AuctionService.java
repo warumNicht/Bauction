@@ -40,4 +40,10 @@ public interface AuctionService {
     void startAuction(AuctionServiceModel auction);
 
     void deleteById(String id);
+
+    List<AuctionServiceModel> getActiveAuctionsOfUser(String userId);
+
+    List<AuctionServiceModel> getFinishedAuctionsOfUserWithDeal(String userId);
+
+    List<AuctionServiceModel> getFinishedAuctionsOfUserWithoutDeal(String userId);
 }

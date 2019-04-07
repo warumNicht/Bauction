@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -44,4 +45,21 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
     @Query(value = "SELECT a FROM Auction a " +
             "WHERE a.seller.id LIKE :id AND a.status='Waiting'")
     List<Auction> getWaitingAuctionsOfUser(@Param(value = "id") String userId);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.status='Active' " +
+            "AND a.seller.id LIKE :id")
+    List<Auction>  getActiveAuctionsOfUser(@Param(value = "id") String userId);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.status='Finished' " +
+            "AND a.seller.id LIKE :id " +
+            "AND a.buyer IS NOT NULL ")
+    List<Auction> getFinishedAuctionsOfUserWithDeal(@Param(value = "id")String userId);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.status='Finished' " +
+            "AND a.seller.id LIKE :id " +
+            "AND a.buyer IS NULL ")
+    List<Auction> getFinishedAuctionsOfUserWithoutDeal(@Param(value = "id") String userId);
 }

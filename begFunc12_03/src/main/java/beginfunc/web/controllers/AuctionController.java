@@ -5,6 +5,7 @@ import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.participations.OfferServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.serviceModels.participations.BiddingServiceModel;
+import beginfunc.domain.models.viewModels.auctions.AuctionDetailsBuyerViewModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionDetailsViewModel;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.BiddingService;
@@ -41,6 +42,10 @@ public class AuctionController extends BaseController{
 
         AuctionServiceModel found = this.auctionService.findById(id);
         AuctionDetailsViewModel model = this.modelMapper.map(found, AuctionDetailsViewModel.class);
+
+        if(model.getBuyer()==null){
+            model.setBuyer(new AuctionDetailsBuyerViewModel());
+        }
 
         model.setName(found.getProduct().getName());
         model.setDescription(found.getProduct().getDescription());

@@ -106,6 +106,27 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    public List<AuctionServiceModel> getActiveAuctionsOfUser(String userId) {
+        return this.auctionRepository.getActiveAuctionsOfUser(userId).stream()
+                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AuctionServiceModel> getFinishedAuctionsOfUserWithDeal(String userId) {
+        return this.auctionRepository.getFinishedAuctionsOfUserWithDeal(userId).stream()
+                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AuctionServiceModel> getFinishedAuctionsOfUserWithoutDeal(String userId) {
+        return this.auctionRepository.getFinishedAuctionsOfUserWithoutDeal(userId).stream()
+                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<AuctionServiceModel> findAllActivesAuctions() {
         List<AuctionServiceModel> allActives = this.auctionRepository
                 .findAllByStatus(AuctionStatus.Active)
