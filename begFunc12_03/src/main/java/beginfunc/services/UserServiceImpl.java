@@ -13,6 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -66,9 +69,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserServiceModel> findAllUsersWithoutTheLoggedIn(String loggedInId) {
+        return this.userRepository.findAllUsersExceptLoggedIn(loggedInId).stream()
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
+    }
+
+    @Override
+    public UserServiceModel updateUser(UserServiceModel toEdit) {
+        try {
+            User user = this.modelMapper.map(toEdit, User.class);
+            User updated = this.userRepository.save(user);
+            return this.modelMapper.map(updated, UserServiceModel.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void giveRolesToRoot(User user) {

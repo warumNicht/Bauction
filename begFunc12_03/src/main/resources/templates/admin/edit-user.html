@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/general :: header}">
+</head>
+<body>
+
+<div class="container-fluid">
+    <header th:insert="~{fragments/navbars :: common-nav}"></header>
+
+
+    <main class="mt-3">
+        <hr class="bg-exodia hr-2"/>
+
+        <div class="container">
+            <h1 class="mt-4 mb-4 text-center" th:text="${'User '+ userToEdit.username +'''s roles:'}">User </h1>
+
+            <div class="row justify-content-between">
+                <div class="col-5">
+                    <h2 class="text-center">Remove roles</h2>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Role</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody >
+                        <tr th:each="role, iter : ${userToEdit.authorities}">
+                            <th scope="row" th:text="${iter.index+1}"></th>
+                            <td th:text="${role}"></td>
+
+                            <td th:with="isRolePermanent=${role=='USER'||role=='ROOT'}">
+                                <form th:action="@{/admin/users/{id}/roles/remove(id=${userToEdit.id})}" th:method="post"
+                                      th:if="${!isRolePermanent}">
+                                    <input type="hidden" name="role" th:value="${role}"/>
+                                    <button  class="btn btn-danger w-100">Remove Role</button>
+                                </form>
+                                <p th:if="${isRolePermanent}" th:text="${'This role is permanent'}"></p>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-4" th:with="expr_result = ${!#lists.contains(userToEdit.authorities,'ADMIN')
+                || !#lists.contains(userToEdit.authorities,'MODERATOR')}">
+                    <h2>Add roles</h2>
+
+                    <form th:action="@{/admin/users/{id}/roles/add(id=${userToEdit.id})}" th:method="post" th:if="${expr_result}">
+                        <div class="row mb-5">
+                            <select name="role" class="form-control" id="inputVirusMagnitude">
+                                <option th:if="${!#lists.contains(userToEdit.authorities,'ADMIN')}"
+                                        th:value="${'ADMIN'}" th:text="${'ADMIN'}"></option>
+
+                                <option th:if="${!#lists.contains(userToEdit.authorities,'MODERATOR')}"
+                                        th:value="${'MODERATOR'}" th:text="${'MODERATOR'}"></option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <button  class="btn btn-success w-100">Add Role</button>
+                        </div>
+
+                    </form>
+                    <div th:if="${!expr_result}">
+                        <h4 class="row text-center mt-4">No roles to add</h4>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <hr class="bg-exodia hr-2 mt-5 mb-4"/>
+        <div class="row justify-content-center">
+            <a th:href="@{/admin/users/all}" class="btn btn-primary w-25">All Users</a>
+        </div>
+        <hr class="bg-exodia hr-2 mt-4"/>
+    </main>
+    <footer th:replace="~{fragments/general :: footer}">
+    </footer>
+</div>
+
+</body>
+</html>

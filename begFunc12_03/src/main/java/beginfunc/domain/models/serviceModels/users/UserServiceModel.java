@@ -3,7 +3,9 @@ package beginfunc.domain.models.serviceModels.users;
 import beginfunc.domain.models.serviceModels.BaseServiceModel;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserServiceModel extends BaseServiceModel {
     private String username;
@@ -63,5 +65,21 @@ public class UserServiceModel extends BaseServiceModel {
 
     public void setAuthorities(Set<RoleServiceModel> authorities) {
         this.authorities = authorities;
+    }
+
+    public String getPrimordialRole(){
+        List<String> roles = this.authorities.stream()
+                .map(a -> a.getAuthority())
+                .collect(Collectors.toList());
+        if(roles.contains("ROLE_ROOT")){
+            return "ROOT";
+        }
+        if(roles.contains("ROLE_ADMIN")){
+            return "ADMIN";
+        }
+        if(roles.contains("ROLE_MODERATOR")){
+            return "MODERATOR";
+        }
+        return "USER";
     }
 }
