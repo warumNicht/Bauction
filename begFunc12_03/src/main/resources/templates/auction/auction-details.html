@@ -183,76 +183,7 @@
             <div class="col-1"></div>
         </div>
 
-        <div id="collectionDetails" class="row justify-content-between mx-0">
-
-            <div class="col-4 mt-5">
-                <div class="row mb-2">
-                    <div class="col-1"></div>
-                    <div class="col-5">
-                        Year of issue:
-                    </div>
-                    <div class="col-1"></div>
-                    <div class="col-5 form-control">
-                        2018
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-5">
-                        Nominal value:
-                    </div>
-                    <div class="col-1"></div>
-                    <div class="col-5 form-control">
-                        10
-                    </div>
-                </div>
-            </div>
-            <div class="col-1 mt-5"></div>
-            <div class="col-6 mt-5">
-
-                <div class="row mb-2">
-
-                    <div class="col-1 pl-0">
-                        Grade:
-                    </div>
-                    <div class="col-3 form-control">
-                        Very Fine
-                    </div>
-
-                    <div class="col-2">
-                        Country:
-                    </div>
-                    <div class="col-6 form-control">
-                        Bulgaria
-                    </div>
-                </div>
-                <div class="row mb-2">
-
-                    <div class="col-1 pl-0">
-                        Metal:
-                    </div>
-                    <div class="col-3 form-control">
-                        Ag 500/1000
-                    </div>
-
-                    <div class="col-2">
-                        Wight:
-                    </div>
-                    <div class="col-2 form-control">
-                        23,33g
-                    </div>
-                    <div class="col-2">
-                        Diameter:
-                    </div>
-                    <div class="col-2 form-control">
-                        38,61mm
-                    </div>
-                </div>
-
-
-            </div>
-            <div class="col-1 mt-5"></div>
-        </div>
+        <div th:replace="~{fragments/auction/auction-details-collection}"></div>
 
         <div id="auctionPictures" class="print-container container-fluid w-75 text-center">
             <div class="row" id="commonCollectionFields">
@@ -311,6 +242,31 @@
     $(document).ready(() => {
         let countOffers = JSON.parse(Get('/auctions/fetch/offers/count/' + id));
         $('#offerCount').empty().append(countOffers);
+    });
+
+    $(document).ready(() => {
+        let json=JSON.parse(Get('/auctions/fetch/collectionDetails/' + id));
+        if(json!=null){
+            let x = document.getElementById('collectionDetails');
+            x.style.display = "flex";
+            $('#grade').append(json.grade);
+            $('#country').append(json.country);
+            $('#nominal').append(json.nominal);
+            $('#year').append(json.year);
+
+            if(json.metal!=undefined){
+                let y = document.getElementById('coinDetails');
+                y.style.display = "flex";
+                $('#metal').append(json.metal);
+                $('#weight').append(json.weight);
+                $('#diameter').append(json.diameter);
+            }else {
+                let z = document.getElementById('banknoteDetails');
+                z.style.display = "flex";
+                $('#length').append(json.length);
+                $('#width').append(json.width);
+            }
+        }
     });
 
 

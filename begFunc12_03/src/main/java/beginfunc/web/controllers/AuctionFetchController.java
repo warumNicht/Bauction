@@ -2,9 +2,15 @@ package beginfunc.web.controllers;
 
 import beginfunc.constants.AppConstants;
 import beginfunc.constants.StaticImagesConstants;
+import beginfunc.domain.entities.productRelated.products.Coin;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
+import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
+import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
+import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionBiddingViewModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionOfferViewModel;
+import beginfunc.domain.models.viewModels.auctions.collectionDetails.AuctionBanknoteViewDetailsModel;
+import beginfunc.domain.models.viewModels.auctions.collectionDetails.AuctionCoinViewDetailsModel;
 import beginfunc.domain.models.viewModels.home.AuctionHomeMoreViewModel;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.BiddingService;
@@ -93,5 +99,19 @@ public class AuctionFetchController {
     @GetMapping(value = "/offers/count/{id}", produces = "application/json")
     public Object fetchAuctionOffersCount(@PathVariable(name = "id") String id) {
         return this.offerService.getAuctionOffersCount(id);
+    }
+
+    @GetMapping(value = "/collectionDetails/{id}", produces = "application/json")
+    public Object fetchAuctionCollectionDetails(@PathVariable(name = "id") String id) {
+        AuctionServiceModel found = this.auctionService.findById(id);
+        BaseProductServiceModel product = found.getProduct();
+        if(product instanceof CoinServiceModel){
+            AuctionCoinViewDetailsModel coinViewDetailsModel = this.modelMapper.map(product, AuctionCoinViewDetailsModel.class);
+            return coinViewDetailsModel;
+        }else if(product instanceof BanknoteServiceModel){
+            AuctionBanknoteViewDetailsModel banknoteViewDetailsModel = this.modelMapper.map(product, AuctionBanknoteViewDetailsModel.class);
+            return banknoteViewDetailsModel;
+        }
+        return null;
     }
 }

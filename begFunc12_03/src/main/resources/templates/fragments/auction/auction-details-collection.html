@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div id="collectionDetails" class="row justify-content-between mx-0" style="display: none">
+
+    <div class="col-4 mt-5">
+        <div class="row mb-2">
+            <div class="col-1"></div>
+            <div class="col-5" >
+                Year of issue:
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5 form-control" id="year">
+                2018
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-5">
+                Nominal value:
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5 form-control" id="nominal">
+                10
+            </div>
+        </div>
+    </div>
+    <div class="col-1 mt-5"></div>
+
+    <div class="col-6 mt-5">
+        <div class="row mb-2">
+            <div class="col-1 pl-0">
+                Grade:
+            </div>
+            <div class="col-3 form-control" id="grade">
+            </div>
+
+            <div class="col-2">
+                Country:
+            </div>
+            <div class="col-6 form-control" id="country">
+            </div>
+        </div>
+        <div class="row mb-2" id="coinDetails" style="display:none">
+
+            <div class="col-1 pl-0">
+                Metal:
+            </div>
+            <div class="col-3 form-control" id="metal"></div>
+
+            <div class="col-2">
+                Weight:
+            </div>
+            <div class="col-2 form-control" id="weight"></div>
+
+            <div class="col-2">
+                Diameter:
+            </div>
+            <div class="col-2 form-control" id="diameter"></div>
+        </div>
+
+        <div class="row mb-2" id="banknoteDetails" style="display: none">
+            <div class="col-1 pl-0">
+                Length:
+            </div>
+            <div class="col-3 form-control" id="length"></div>
+
+            <div class="col-2">
+                Width:
+            </div>
+            <div class="col-6 form-control" id="width"></div>
+        </div>
+
+    </div>
+    <div class="col-1 mt-5"></div>
+</div>
+
+</body>
+</html>
