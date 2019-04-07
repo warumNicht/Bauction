@@ -26,7 +26,7 @@ public class BaseProduct extends BaseEntity {
     @JoinColumn(name = "main_picture_id")
     private Picture mainPicture;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<Picture> pictures;
 
 

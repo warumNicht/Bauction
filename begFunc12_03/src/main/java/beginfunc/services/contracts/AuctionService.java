@@ -36,4 +36,8 @@ public interface AuctionService {
                        HttpSession session, UserServiceModel user) throws IOException;
 
     void editAuction(AuctionServiceModel auctionToEdit, AuctionEditBindingModel model, CoinBindingModel coin, BanknoteBindingModel banknote, File main, File[] files) throws IOException;
+
+    void startAuction(AuctionServiceModel auction);
+
+    void deleteById(String id);
 }

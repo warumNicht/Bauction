@@ -12,4 +12,7 @@ public interface PictureService {
     void renamePicture(PictureServiceModel pictureServiceModel);
 
     void deleteImage(String imageId);
+
+    void savePicture(PictureServiceModel pictureServiceModel);
+
 }

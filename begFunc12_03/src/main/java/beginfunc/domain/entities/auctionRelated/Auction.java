@@ -42,7 +42,7 @@ public  class Auction extends BaseEntity {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private BaseProduct product;
 

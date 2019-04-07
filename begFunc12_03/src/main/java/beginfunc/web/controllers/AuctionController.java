@@ -79,6 +79,14 @@ public class AuctionController extends BaseController{
         return modelAndView;
     }
 
+    @PostMapping("/start/{id}")
+    public ModelAndView startAuction(@PathVariable(name = "id") String id, ModelAndView modelAndView){
+        AuctionServiceModel auction = this.auctionService.findById(id);
+        this.auctionService.startAuction(auction);
+        modelAndView.setViewName("redirect:/home");
+        return modelAndView;
+    }
+
     @PostMapping("/offers/{id}")
     public ModelAndView makeOffer(@PathVariable(name = "id") String id, ModelAndView modelAndView,
                                     @RequestParam("offerPrice") BigDecimal offeredPrice){

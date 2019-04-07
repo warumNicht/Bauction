@@ -18,4 +18,5 @@ public interface ProductService {
     BaseProductServiceModel getChangedProduct(AuctionServiceModel auctionToEdit, AuctionEditBindingModel model,
                                               CoinBindingModel coin, BanknoteBindingModel banknote,
                                               File mainImage, File[] files) throws IOException ;
+
 }

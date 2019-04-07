@@ -14,14 +14,12 @@ import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
 import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
 import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
 import beginfunc.repositories.BaseProductRepository;
-import beginfunc.repositories.PictureRepository;
 import beginfunc.services.contracts.CloudinaryService;
 import beginfunc.services.contracts.PictureService;
 import beginfunc.services.contracts.ProductService;
 import beginfunc.services.contracts.TownService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
@@ -32,15 +30,15 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final BaseProductRepository baseProductRepository;
-    private final PictureRepository pictureRepository;
     private final TownService townService;
     private final PictureService pictureService;
     private final CloudinaryService cloudinaryService;
     private final ModelMapper modelMapper;
 
-    public ProductServiceImpl(BaseProductRepository baseProductRepository, PictureRepository pictureRepository, TownService townService, PictureService pictureService, CloudinaryService cloudinaryService, ModelMapper modelMapper) {
+    public ProductServiceImpl(BaseProductRepository baseProductRepository,
+                              TownService townService, PictureService pictureService,
+                              CloudinaryService cloudinaryService, ModelMapper modelMapper) {
         this.baseProductRepository = baseProductRepository;
-        this.pictureRepository = pictureRepository;
         this.townService = townService;
         this.pictureService = pictureService;
         this.cloudinaryService = cloudinaryService;
@@ -90,15 +88,9 @@ public class ProductServiceImpl implements ProductService {
             List<PictureServiceModel> productPictures = this.createProductPictures(files);
             for (PictureServiceModel picture : productPictures) {
                 Picture picture1 = this.modelMapper.map(picture, Picture.class);
-//                currentProduct.getPictures().add(picture1);
                 picture1.setProduct(currentProduct);
-                Picture picture2 = this.pictureRepository.saveAndFlush(picture1);
+                this.pictureService.savePicture(this.modelMapper.map(picture1,PictureServiceModel.class));
             }
-//            for (Picture picture : currentProduct.getPictures()) {
-//                picture.setProduct(currentProduct);
-//                Picture picture1 = this.pictureRepository.saveAndFlush(picture);
-//                System.out.println();
-//            }
         }
         return product;
     }
@@ -113,15 +105,15 @@ public class ProductServiceImpl implements ProductService {
         }
         if(pictureToDelId!=null){
             currentProduct.getMainPicture().setProduct(null);
+            currentProduct.setMainPicture(null);
             String del=pictureToDelId;
             List<Picture> remainingPictures = currentProduct.getPictures().stream()
                     .filter(p -> !p.getId().equals(del))
                     .collect(Collectors.toList());
-            currentProduct.setMainPicture(null);
-            currentProduct.setPictures(remainingPictures);
 
+            currentProduct.setPictures(remainingPictures);
             this.baseProductRepository.save(currentProduct);
-            this.pictureService.deleteImage(pictureToDelId);
+//            this.pictureService.deleteImage(pictureToDelId);
         }
         PictureServiceModel productMainImage = this.createPicture(mainImage);
         product.setMainPicture(productMainImage);

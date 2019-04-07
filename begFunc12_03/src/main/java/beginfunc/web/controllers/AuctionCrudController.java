@@ -25,19 +25,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Controller
-public class AuctionCreateController extends BaseController{
+@RequestMapping("/auctions")
+public class AuctionCrudController extends BaseController{
     private final AuctionService auctionService;
-    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AuctionCreateController(AuctionService auctionService, CategoryService categoryService, ModelMapper modelMapper) {
+    public AuctionCrudController(AuctionService auctionService, ModelMapper modelMapper) {
         this.auctionService = auctionService;
-        this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/auctions/create")
+    @GetMapping("/create")
     public ModelAndView createAuction(ModelAndView modelAndView,
                        @ModelAttribute(name = "auctionCreateModel") AuctionCreateBindingModel model,
                                       @ModelAttribute(name = "coin") CoinBindingModel coin,
@@ -53,7 +52,7 @@ public class AuctionCreateController extends BaseController{
         return modelAndView;
     }
 
-    @PostMapping("/auctions/create")
+    @PostMapping("/create")
     public ModelAndView createAuctionPost(ModelAndView modelAndView,
                                    @Valid @ModelAttribute(name = "auctionCreateModel") AuctionCreateBindingModel model,
                                    BindingResult bindingResult,
@@ -93,7 +92,26 @@ public class AuctionCreateController extends BaseController{
         return modelAndView;
     }
 
-    @GetMapping("/auctions/edit/{id}")
+    @GetMapping("/delete/{id}")
+    public ModelAndView deleteAuction(ModelAndView modelAndView, @PathVariable(value = "id") String id,
+                                      @ModelAttribute(name = "auctionCreateModel") AuctionEditBindingModel model,
+                                      @ModelAttribute(name = "coin") CoinBindingModel coin,
+                                      @ModelAttribute(name = "banknote") BanknoteBindingModel banknote){
+        AuctionServiceModel found = this.auctionService.findById(id);
+        this.fillViewWithModels(found,modelAndView);
+        modelAndView.addObject("auctionId",id);
+        modelAndView.setViewName("auction/auction-delete");
+        return modelAndView;
+    }
+
+    @PostMapping("/delete/{id}")
+    public ModelAndView deleteAuctionPost(ModelAndView modelAndView, @PathVariable(value = "id") String id){
+        this.auctionService.deleteById(id);
+        modelAndView.setViewName("redirect:/users/" + super.getLoggedInUserId() + "/auctions/waiting");
+        return modelAndView;
+    }
+
+    @GetMapping("/edit/{id}")
     public ModelAndView editAuction(ModelAndView modelAndView,
                                       @PathVariable(value = "id") String id,
                                       @ModelAttribute(name = "auctionCreateModel") AuctionEditBindingModel model,
@@ -108,7 +126,7 @@ public class AuctionCreateController extends BaseController{
         return modelAndView;
     }
 
-    @PostMapping("/auctions/edit/{id}")
+    @PostMapping("/edit/{id}")
     public ModelAndView editAuctionPost(@PathVariable(value = "id") String id,
                                         @Valid @ModelAttribute(name = "auctionCreateModel") AuctionEditBindingModel model,
                                         BindingResult bindingResult,

@@ -40,7 +40,8 @@ public class AuctionServiceImpl implements AuctionService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AuctionServiceImpl(AuctionRepository auctionRepository, ProductService productService, CategoryService categoryService, ModelMapper modelMapper) {
+    public AuctionServiceImpl(AuctionRepository auctionRepository, ProductService productService,
+                              CategoryService categoryService, ModelMapper modelMapper) {
         this.auctionRepository = auctionRepository;
         this.productService = productService;
         this.categoryService = categoryService;
@@ -83,6 +84,24 @@ public class AuctionServiceImpl implements AuctionService {
         Auction auction = this.modelMapper.map(auctionToEdit, Auction.class);
         this.correctModelMappersBug(auction);
         this.auctionRepository.save(auction);
+        System.out.println();
+    }
+
+    @Override
+    public void startAuction(AuctionServiceModel auction) {
+        auction.setStatus(AuctionStatus.Active);
+        auction.setStartDate(new Date());
+        auction.setEndDate(this.getDateAfterDays(7));
+        this.updateAuction(auction);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        Auction auction = this.auctionRepository.findById(id).orElse(null);
+        String productId = auction.getProduct().getId();
+//        this.productService.deleteMainPictureOfProduct(productId);
+//        this.productService.deletePicturesOfProduct(productId);
+        this.auctionRepository.deleteById(id);
         System.out.println();
     }
 

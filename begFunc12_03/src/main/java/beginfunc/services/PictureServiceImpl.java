@@ -48,4 +48,10 @@ public class PictureServiceImpl implements PictureService {
     public void deleteImage(String imageId) {
         this.pictureRepository.deleteById(imageId);
     }
+
+    @Override
+    public void savePicture(PictureServiceModel pictureServiceModel) {
+        this.pictureRepository.save(this.modelMapper.map(pictureServiceModel,Picture.class));
+    }
+
 }

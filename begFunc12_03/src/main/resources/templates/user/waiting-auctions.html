@@ -21,6 +21,7 @@
                             <th scope="col">Auction</th>
                             <th scope="col"></th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                             </tr>
                         </thead>
 
@@ -29,10 +30,15 @@
                             <td th:text="${index.index+1}"></td>
                             <td th:text="${auction.name}"></td>
                             <td>
-                                <button type="submit" class="btn btn-warning">Start Now</button>
+                                <form th:action="@{/auctions/start/{id}(id=${auction.id})}" th:method="post">
+                                    <button type="submit" class="btn btn-warning">Start Now</button>
+                                </form>
                             </td>
                             <td>
                                 <a th:href="@{/auctions/edit/{id}(id=${auction.id})}" class="btn btn-primary">Edit Auction</a>
+                            </td>
+                            <td>
+                                <a th:href="@{/auctions/delete/{id}(id=${auction.id})}" class="btn btn-danger">Delete Auction</a>
                             </td>
                         </tr>
                         </tbody>
