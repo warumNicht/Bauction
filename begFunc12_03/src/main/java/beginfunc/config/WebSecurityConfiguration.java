@@ -1,5 +1,6 @@
 package beginfunc.config;
 
+import beginfunc.constants.AppConstants;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/", "/users/login", "/users/register").permitAll()
+                    .antMatchers( "/admin/users/edit/"+AppConstants.ROOT_USER_ID).access("hasRole('NOBODY')")
                     .antMatchers( "/admin/**").access("hasAnyRole('ROOT','ADMIN')")
 
 

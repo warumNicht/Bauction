@@ -1,5 +1,6 @@
 package beginfunc.services;
 
+import beginfunc.constants.AppConstants;
 import beginfunc.domain.entities.User;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.repositories.RoleRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(this.encoder.encode(user.getPassword()));
 
         if(this.userRepository.count()==0){
-            this.giveRolesToRoot(user);
+            this.userRepository.insertRootUser(AppConstants.ROOT_USER_ID,user.getUsername(),
+                    user.getFullName(), user.getPassword(),user.getEmail(), new Date());
+
+            User rootUser = this.userRepository.findById(AppConstants.ROOT_USER_ID).orElse(null);
+            this.giveRolesToRoot(rootUser);
+            this.userRepository.save(rootUser);
+            return true;
         }else {
             user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
         }

@@ -25,7 +25,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "registration_date")
     private Date registrationDate;
 
-    @ManyToMany(targetEntity = Role.class,fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))

@@ -1,5 +1,6 @@
 package beginfunc.web.controllers;
 
+import beginfunc.constants.AppConstants;
 import beginfunc.domain.models.bindingModels.UserRegisterBindingModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.viewModels.users.UserProfileViewModel;
