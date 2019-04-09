@@ -1,5 +1,6 @@
 package beginfunc.web.controllers;
 
+import beginfunc.domain.entities.User;
 import beginfunc.domain.models.bindingModels.AuctionCreateBindingModel;
 import beginfunc.domain.models.bindingModels.AuctionEditBindingModel;
 import beginfunc.domain.models.bindingModels.collectionProducts.BanknoteBindingModel;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/auctions")
@@ -107,7 +109,12 @@ public class AuctionCrudController extends BaseController{
     @PostMapping("/delete/{id}")
     public ModelAndView deleteAuctionPost(ModelAndView modelAndView, @PathVariable(value = "id") String id){
         this.auctionService.deleteById(id);
-        modelAndView.setViewName("redirect:/users/" + super.getLoggedInUserId() + "/auctions/waiting");
+        User loggedInUser = super.getLoggedInUser();
+        if(loggedInUser.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_MODERATOR"))){
+            modelAndView.setViewName("redirect:/moderator/auctions/finished");
+        }else {
+            modelAndView.setViewName("redirect:/users/" + super.getLoggedInUserId() + "/auctions/waiting");
+        }
         return modelAndView;
     }
 

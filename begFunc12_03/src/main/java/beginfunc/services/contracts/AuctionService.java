@@ -18,7 +18,7 @@ import java.util.List;
 
 public interface AuctionService {
 
-    List<AuctionServiceModel> findAllActivesAuctions();
+    List<AuctionServiceModel> findAllAuctionsByStatus(AuctionStatus status);
 
     AuctionServiceModel findById(String id);
 

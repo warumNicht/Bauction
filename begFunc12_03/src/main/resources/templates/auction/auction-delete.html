@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/general :: header}">
 </head>
 <body>
@@ -24,7 +25,12 @@
                     <button disabled type="submit" id="delButton" class="btn btn-danger w-100">Delete</button>
                 </div>
                 <div class="col-1"></div>
-                <div class="col-5">
+
+                <div class="col-5" sec:authorize="hasRole('ROLE_MODERATOR')">
+                    <a th:href="@{/moderator/auctions/finished}"  class="btn btn-primary w-100">Cancel</a>
+                </div>
+
+                <div class="col-5" sec:authorize="!hasRole('ROLE_MODERATOR')">
                     <a th:href="@{/users/{id}/auctions/waiting(id=${#authentication.principal.id})}" id="cancelButton"  class="btn btn-primary w-100">Cancel</a>
                 </div>
             </div>
@@ -34,6 +40,8 @@
         <hr class="bg-exodia hr-2 mt-5"/>
     </main>
 
+
+    <script type="text/javascript" th:src="@{/js/auctions/auction-edit.js}"></script>
     <script th:inline="javascript">
 
         $(document).ready(function () {
@@ -83,83 +91,6 @@
                 showCollectionFields();
             }
         });
-
-
-
-
-
-        function showCollectionFields() {
-            let element = document.getElementById('category');
-            let category = element.options[element.selectedIndex].text;
-            let collectionDiv = document.getElementById('collectionFields');
-
-
-            if (category === 'Coins' || category === 'Banknotes') {
-                // element.disabled = true;
-                $('#collectionTitle').empty();
-                collectionDiv.style.display = "block";
-                let coinSpecific = document.getElementById('coinSpecific');
-                let banknoteSpecific = document.getElementById('banknoteSpecific');
-
-                if (category === 'Coins') {
-                    $('#collectionTitle').append('Coin specifications:');
-                    coinSpecific.style.display = "block";
-                    banknoteSpecific.style.display = "none";
-                } else {
-                    $('#collectionTitle').append('Banknote specifications:');
-                    coinSpecific.style.display = "none";
-                    banknoteSpecific.style.display = "block";
-                }
-
-            } else {
-                collectionDiv.style.display = "none";
-            }
-        }
-
-        const urlArr = window.location.pathname.split('/');
-        const id = urlArr[urlArr.length - 1];
-
-        let mainImage = document.getElementById('insertMainImage');
-        mainImage.style.display = "block";
-
-        let allImages = document.getElementById('insertImages');
-        allImages.style.display = "block";
-
-
-        fetch('/images/fetch/main/'+id)
-            .then((response) => response.json())
-            .then((json) => {
-                $('#mainToInsert').append('<img class="edit-main-image" src="'+ json[0] + '" alt="">');
-            })
-            .catch((err) => console.log(err));
-
-
-        fetch('/images/fetch/auction/' + id)
-            .then((response) => response.json())
-            .then((json) => {
-                $('#imagesTitle').empty();
-                if (json.length === 0) {
-                    $('#imagesTitle').append('No images');
-                } else {
-                    $('#imagesTitle').append('Images');
-                    json.forEach((image) => {
-                        let currentArticle =
-                            '<div class="mb-3 mt-5">\n' +
-                            '<div class="row justify-content-center mb-3">\n' +
-                            '<div class="col-2"></div>\n' +
-                            '<div class="col-8">\n' +
-                            '<img class="edit-main-image" src="' + image.path + '" alt="">\n' +
-                            '</div>\n' +
-                            '<div class="col-2"></div>\n';
-
-                        $('#allImages').append(currentArticle);
-                    });
-                }
-
-            })
-            .catch((err) => console.log(err));
-
-
     </script>
 
     <footer th:replace="~{fragments/general :: footer}">

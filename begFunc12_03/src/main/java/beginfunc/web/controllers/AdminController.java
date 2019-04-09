@@ -77,7 +77,7 @@ public class AdminController extends BaseController{
     }
 
     @GetMapping("/users/edit/{id}")
-    public ModelAndView edit(@PathVariable(name = "id") String id, ModelAndView modelAndView){
+    public ModelAndView editRole(@PathVariable(name = "id") String id, ModelAndView modelAndView){
         UserServiceModel toEdit = this.userService.findUserById(id);
         UserPermissionEditViewModel editViewModel =
                 this.modelMapper.map(toEdit, UserPermissionEditViewModel.class);
@@ -102,7 +102,7 @@ public class AdminController extends BaseController{
         if(updated==null){
             throw new IllegalArgumentException("Removing role failed!");
         }
-        modelAndView.setViewName("redirect:/admin/users/edit/" + id);
+        modelAndView.setViewName("redirect:/moderator/users/edit/" + id);
         return modelAndView;
     }
 
@@ -117,9 +117,10 @@ public class AdminController extends BaseController{
         if(updated==null){
             throw new IllegalArgumentException("Adding role failed!");
         }
-        modelAndView.setViewName("redirect:/admin/users/edit/" + id);
+        modelAndView.setViewName("redirect:/moderator/users/edit/" + id);
         return modelAndView;
     }
+
 
     @ExceptionHandler({DuplicatedCategoryException.class})
     public ModelAndView handleDuplicatedUsername( DuplicatedCategoryException e) {

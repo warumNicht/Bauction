@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class EditDeleteAuctionInterceptor extends BaseController implements HandlerInterceptor {
+public class PreventUsersEditNotYourAuctionsInterceptor extends BaseController implements HandlerInterceptor {
     private final AuctionService auctionService;
 
     @Autowired
-    public EditDeleteAuctionInterceptor(AuctionService auctionService) {
+    public PreventUsersEditNotYourAuctionsInterceptor(AuctionService auctionService) {
         this.auctionService = auctionService;
     }
 

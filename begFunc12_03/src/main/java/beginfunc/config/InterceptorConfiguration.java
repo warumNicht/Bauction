@@ -1,6 +1,6 @@
 package beginfunc.config;
 
-import beginfunc.web.interceptors.EditDeleteAuctionInterceptor;
+import beginfunc.web.interceptors.PreventUsersEditNotYourAuctionsInterceptor;
 import beginfunc.web.interceptors.PreventSellerParticipateInHisAuctionsInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -9,11 +9,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
     private final PreventSellerParticipateInHisAuctionsInterceptor preventSellerParticipateInHisAuctionsInterceptor;
-    private final EditDeleteAuctionInterceptor editDeleteAuctionInterceptor;
+    private final PreventUsersEditNotYourAuctionsInterceptor preventUsersEditNotYourAuctionsInterceptor;
 
-    public InterceptorConfiguration(PreventSellerParticipateInHisAuctionsInterceptor preventSellerParticipateInHisAuctionsInterceptor, EditDeleteAuctionInterceptor editDeleteAuctionInterceptor) {
+    public InterceptorConfiguration(PreventSellerParticipateInHisAuctionsInterceptor preventSellerParticipateInHisAuctionsInterceptor, PreventUsersEditNotYourAuctionsInterceptor preventUsersEditNotYourAuctionsInterceptor) {
         this.preventSellerParticipateInHisAuctionsInterceptor = preventSellerParticipateInHisAuctionsInterceptor;
-        this.editDeleteAuctionInterceptor = editDeleteAuctionInterceptor;
+        this.preventUsersEditNotYourAuctionsInterceptor = preventUsersEditNotYourAuctionsInterceptor;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(this.preventSellerParticipateInHisAuctionsInterceptor)
                 .addPathPatterns("/auctions/bidding/*","/auctions/offers/*");
 
-        registry.addInterceptor(this.editDeleteAuctionInterceptor)
+        registry.addInterceptor(this.preventUsersEditNotYourAuctionsInterceptor)
                 .addPathPatterns("/auctions/edit/*","/auctions/delete/*");
     }
 }

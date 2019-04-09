@@ -64,30 +64,7 @@
 
         $('#homeModal').modal('show');
     }
-
-
-    function onResize() {
-        let el = $('.article-square');
-        el.height(el.width());
-    }
-
-    $(window).resize(onResize);
-    $(document).ready(onResize);
-
-    // let cw = $('#main-image').width();
-    // $('#main-image').css({
-    //     'height': cw
-    // });
-    function onClick() {
-        let article = $('.article-square');
-        $('.article-square').css({
-            'box-shadow': 'box-shadow: -2px -1px 15px 5px #585858;'
-        });
-    }
-
-    $(document).ready(onResize);
-
-
 </script>
+<script type="text/javascript" th:src="@{/js/home/home.js}"></script>
 </body>
 </html>

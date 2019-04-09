@@ -63,6 +63,17 @@
                 </div>
             </li>
 
+            <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_MODERATOR')">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="moderatorNavbarDropdown"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Moderator
+                </a>
+                <div class="dropdown-menu" aria-labelledby="AdmNavbarDropdown">
+                    <a class="dropdown-item" th:href="@{/moderator/auctions/actives}">Edit actives auctions</a>
+                    <a class="dropdown-item" th:href="@{/moderator/auctions/finished}">Finished auctions</a>
+                </div>
+            </li>
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="UserNavbarDropdown2"
                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

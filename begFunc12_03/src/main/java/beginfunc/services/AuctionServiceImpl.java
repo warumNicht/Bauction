@@ -135,9 +135,9 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<AuctionServiceModel> findAllActivesAuctions() {
+    public List<AuctionServiceModel> findAllAuctionsByStatus(AuctionStatus status) {
         return this.auctionRepository
-                .findAllByStatus(AuctionStatus.Active).stream()
+                .findAllByStatus(status).stream()
                 .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
     }
