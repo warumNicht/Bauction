@@ -1,8 +1,11 @@
 package beginfunc.services;
 
 import beginfunc.constants.AppConstants;
+import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.domain.entities.User;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
+import beginfunc.error.DuplicatedUserException;
+import beginfunc.error.UserNotFoundException;
 import beginfunc.repositories.RoleRepository;
 import beginfunc.repositories.UserRepository;
 import beginfunc.services.contracts.UserService;
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean registerUser(UserServiceModel userServiceModel) {
+    public void registerUser(UserServiceModel userServiceModel) {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(this.encoder.encode(user.getPassword()));
 
@@ -45,17 +48,13 @@ public class UserServiceImpl implements UserService {
             User rootUser = this.userRepository.findById(AppConstants.ROOT_USER_ID).orElse(null);
             this.giveRolesToRoot(rootUser);
             this.userRepository.save(rootUser);
-            return true;
-        }else {
-            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
         }
-
         try {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
             this.userRepository.saveAndFlush(user);
-            return true;
         }catch (Exception e){
-            e.printStackTrace();
-            return false;
+            throw new DuplicatedUserException(
+                    String.format(ErrorMessagesConstants.DUPLICATED_USERNAME_MESSAGE,user.getUsername()));
         }
     }
 
@@ -69,10 +68,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserServiceModel findUserById(String id) {
-        User user = this.userRepository.findById(id).orElse(null);
-        if(user==null){
-            return null;
-        }
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_USER_ID_MESSAGE));
         return this.modelMapper.map(user,UserServiceModel.class);
     }
 
@@ -84,9 +81,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         return this.userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
+                .orElseThrow(() -> new UserNotFoundException(
+                        String.format(ErrorMessagesConstants.NOT_EXISTENT_USERNAME_MESSAGE,username)));
     }
 
     @Override

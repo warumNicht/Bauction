@@ -25,6 +25,15 @@
             <div class="button-holder d-flex justify-content-center">
                 <button type="submit" class="btn bg-exodia text-white">Login</button>
             </div>
+
+
+
+            <th:block th:if="${param.error}">
+                <div class="text-center mt-3" style="color: red; font-size: 20px;font-weight: bold"
+                     th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
+                    <!--Bad Credentials-->
+                </div>
+            </th:block>
         </form>
         <hr class="bg-exodia hr-2 mt-5"/>
     </main>

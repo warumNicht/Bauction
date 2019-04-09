@@ -1,5 +1,6 @@
 package beginfunc.services;
 
+import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.domain.entities.auctionRelated.Auction;
 import beginfunc.domain.entities.enums.AuctionStatus;
 import beginfunc.domain.entities.enums.AuctionType;
@@ -17,6 +18,7 @@ import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
 import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
 import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
+import beginfunc.error.AuctionNotFoundException;
 import beginfunc.repositories.AuctionRepository;
 import beginfunc.services.contracts.*;
 import org.modelmapper.ModelMapper;
@@ -97,12 +99,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void deleteById(String id) {
-        Auction auction = this.auctionRepository.findById(id).orElse(null);
-        String productId = auction.getProduct().getId();
-//        this.productService.deleteMainPictureOfProduct(productId);
-//        this.productService.deletePicturesOfProduct(productId);
+        Auction auction = this.auctionRepository.findById(id)
+                .orElseThrow(() -> new AuctionNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_AUCTION_MESSAGE));
         this.auctionRepository.deleteById(id);
-        System.out.println();
     }
 
     @Override
@@ -127,6 +126,13 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    public String getAuctionSellerId(String auctionId) {
+        Auction auction = this.auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new AuctionNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_AUCTION_MESSAGE));
+        return auction.getSeller().getId();
+    }
+
+    @Override
     public List<AuctionServiceModel> findAllActivesAuctions() {
         List<AuctionServiceModel> allActives = this.auctionRepository
                 .findAllByStatus(AuctionStatus.Active)
@@ -146,12 +152,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public AuctionServiceModel findById(String id) {
-        Auction found = this.auctionRepository.findById(id).orElse(null);
-        if(found!=null){
-            AuctionServiceModel auctionServiceModel = this.modelMapper.map(found, AuctionServiceModel.class);
-            return auctionServiceModel;
-        }
-        return null;
+        Auction found = this.auctionRepository.findById(id)
+                .orElseThrow(() -> new AuctionNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_AUCTION_MESSAGE));
+        return this.modelMapper.map(found, AuctionServiceModel.class);
     }
 
     @Override

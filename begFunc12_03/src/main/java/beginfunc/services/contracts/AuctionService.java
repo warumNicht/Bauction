@@ -46,4 +46,6 @@ public interface AuctionService {
     List<AuctionServiceModel> getFinishedAuctionsOfUserWithDeal(String userId);
 
     List<AuctionServiceModel> getFinishedAuctionsOfUserWithoutDeal(String userId);
+
+    String getAuctionSellerId(String auctionId);
 }

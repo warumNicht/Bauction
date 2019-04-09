@@ -47,10 +47,9 @@ public class AppBeansConfiguration {
                 = new FilterRegistrationBean<>();
 
         registrationBean.setFilter(new LoggedInUserFilter());
-        registrationBean.addUrlPatterns("/login");
+        registrationBean.addUrlPatterns("/users/login");
         registrationBean.addUrlPatterns("/");
-        registrationBean.addUrlPatterns("/register");
-
+        registrationBean.addUrlPatterns("/users/register");
         return registrationBean;
     }
 

@@ -1,7 +1,9 @@
 package beginfunc.services;
 
+import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.domain.entities.auctionRelated.Category;
 import beginfunc.domain.models.serviceModels.CategoryServiceModel;
+import beginfunc.error.DuplicatedCategoryException;
 import beginfunc.repositories.CategoryRepository;
 import beginfunc.services.contracts.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -23,17 +25,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean addCategory(CategoryServiceModel categoryServiceModel) {
+    public void addCategory(CategoryServiceModel categoryServiceModel) {
         if(this.categoryRepository.existsByName(categoryServiceModel.getName())){
-            throw new IllegalArgumentException("Category exists!");
+            throw new DuplicatedCategoryException(String.format(ErrorMessagesConstants.DUPLICATED_CATEGORY_MESSAGE,
+                    categoryServiceModel.getName()));
         }
-        try {
-            Category category = this.modelMapper.map(categoryServiceModel, Category.class);
-            this.categoryRepository.saveAndFlush(category);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+        Category category = this.modelMapper.map(categoryServiceModel, Category.class);
+        this.categoryRepository.saveAndFlush(category);
     }
 
     @Override

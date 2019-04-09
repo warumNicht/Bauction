@@ -5,6 +5,8 @@ import beginfunc.domain.models.bindingModels.UserRegisterBindingModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.viewModels.users.UserProfileViewModel;
 import beginfunc.domain.models.viewModels.users.UsersWaitingAuctionViewModel;
+import beginfunc.error.DuplicatedUserException;
+import beginfunc.error.UserNotFoundException;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.UserService;
 import org.modelmapper.ModelMapper;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
-public class UserController {
+public class UserController{
     private final UserService userService;
     private final AuctionService auctionService;
     private final ModelMapper modelMapper;
@@ -58,9 +60,7 @@ public class UserController {
         UserServiceModel userToRegister = this.modelMapper.map(model, UserServiceModel.class);
         userToRegister.setRegistrationDate(new Date());
 
-        if(!this.userService.registerUser(userToRegister)){
-            throw new IllegalArgumentException("User registration failed!");
-        }
+        this.userService.registerUser(userToRegister);
         modelAndView.setViewName("redirect:/login");
         return modelAndView;
     }
@@ -97,6 +97,22 @@ public class UserController {
                 .collect(Collectors.toList());
         modelAndView.addObject("waitingAuctions", waitingAuctionViewModels);
         modelAndView.setViewName("user/waiting-auctions");
+        return modelAndView;
+    }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public ModelAndView handleUserNotFound( UserNotFoundException e) {
+        ModelAndView modelAndView = new ModelAndView("error/error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
+        return modelAndView;
+    }
+
+    @ExceptionHandler({DuplicatedUserException.class})
+    public ModelAndView handleDuplicatedUsername( DuplicatedUserException e) {
+        ModelAndView modelAndView = new ModelAndView("error/error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
         return modelAndView;
     }
 }

@@ -6,6 +6,8 @@ import beginfunc.domain.models.serviceModels.users.RoleServiceModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.viewModels.users.UserPermissionAllViewModel;
 import beginfunc.domain.models.viewModels.users.UserPermissionEditViewModel;
+import beginfunc.error.DuplicatedCategoryException;
+import beginfunc.error.DuplicatedUserException;
 import beginfunc.services.contracts.CategoryService;
 import beginfunc.services.contracts.RoleService;
 import beginfunc.services.contracts.UserService;
@@ -53,9 +55,8 @@ public class AdminController extends BaseController{
             return modelAndView;
         }
         CategoryServiceModel categoryServiceModel = this.modelMapper.map(model, CategoryServiceModel.class);
-        if(!this.categoryService.addCategory(categoryServiceModel)){
-            throw new IllegalArgumentException("Category creation failed");
-        }
+        this.categoryService.addCategory(categoryServiceModel);
+
         modelAndView.setViewName("redirect:/admin/create/category");
         return modelAndView;
     }
@@ -118,6 +119,14 @@ public class AdminController extends BaseController{
             throw new IllegalArgumentException("Adding role failed!");
         }
         modelAndView.setViewName("redirect:/admin/users/edit/" + id);
+        return modelAndView;
+    }
+
+    @ExceptionHandler({DuplicatedCategoryException.class})
+    public ModelAndView handleDuplicatedUsername( DuplicatedCategoryException e) {
+        ModelAndView modelAndView = new ModelAndView("error/error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
         return modelAndView;
     }
 

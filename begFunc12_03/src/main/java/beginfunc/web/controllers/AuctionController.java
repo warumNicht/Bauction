@@ -7,6 +7,7 @@ import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.serviceModels.participations.BiddingServiceModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionDetailsBuyerViewModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionDetailsViewModel;
+import beginfunc.error.AuctionNotFoundException;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.BiddingService;
 import beginfunc.services.contracts.OfferService;
@@ -38,9 +39,9 @@ public class AuctionController extends BaseController{
 
     @GetMapping("/details/{id}")
     public ModelAndView  auctionDetails(@PathVariable(name = "id") String id, ModelAndView modelAndView){
+        AuctionServiceModel found = this.auctionService.findById(id);
         this.auctionService.increaseAuctionViews(id);
 
-        AuctionServiceModel found = this.auctionService.findById(id);
         AuctionDetailsViewModel model = this.modelMapper.map(found, AuctionDetailsViewModel.class);
 
         if(model.getBuyer()==null){
@@ -103,6 +104,8 @@ public class AuctionController extends BaseController{
         modelAndView.setViewName("redirect:/auctions/details/" + id);
         return modelAndView;
     }
+
+
 
     private String getFormedDateDifference(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("MMM d', 'yyyy HH:mm:ss");
