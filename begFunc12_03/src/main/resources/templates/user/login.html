@@ -15,11 +15,13 @@
         <form class="mx-auto w-25" th:method="post" th:action="@{/users/login}">
             <div class="form-group">
                 <label for="username" class="text-exodia">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Username..." name="username">
+                <input type="text" class="form-control" id="username" placeholder="Username..." name="username"
+                       required pattern="^.{3,50}$" title="Please enter between 3 and 50 characters">
             </div>
             <div class="form-group">
                 <label for="password" class="text-exodia">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password..." name="password">
+                <input type="password" class="form-control" id="password" placeholder="Password..." name="password"
+                    pattern="^.{4,}$"   required title="Please enter at least 4 characters">
             </div>
             <hr class="bg-exodia hr-2"/>
             <div class="button-holder d-flex justify-content-center">

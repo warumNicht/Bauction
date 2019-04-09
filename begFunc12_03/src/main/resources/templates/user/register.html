@@ -17,7 +17,8 @@
                 <label for="username" class="text-exodia">Username</label>
                 <input type="text" class="form-control"
                        th:field="*{username}"
-                       id="username" placeholder="Username..." name="username">
+                       id="username" placeholder="Username..." name="username"
+                       required pattern="^.{3,50}$" title="Please enter between 3 and 50 characters">
 
                 <small id="usernameHelp"
                        th:each="error : ${#fields.errors('username')}" th:utext="${error +'<br>'}">
@@ -30,7 +31,8 @@
                 <label for="fullName" class="text-exodia">Full name</label>
                 <input type="text" class="form-control"
                        th:field="*{fullName}" th:value="${userRegisterModel.fullName}"
-                       id="fullName" placeholder="Full name..." name="fullName">
+                       id="fullName" placeholder="Full name..." name="fullName"
+                       required pattern="^.{5,80}$" title="Please enter between 5 and 80 characters">
 
                 <small id="fullNameHelp"
                        th:each="error : ${#fields.errors('fullName')}" th:utext="${error +'<br>'}">
@@ -41,7 +43,8 @@
                 <label for="password" class="text-exodia">Password</label>
                 <input type="password" class="form-control"
                        th:field="*{password}" th:value="${userRegisterModel.password}"
-                       id="password" placeholder="Password..." name="password">
+                       id="password" placeholder="Password..." name="password"
+                       pattern="^.{4,}$"   required title="Please enter at least 4 characters">
                 <div style="color: red" th:if="${errorPasswords!=null}" th:text="${errorPasswords}"></div>
                 <small id="passwordHelp"
                        th:each="error : ${#fields.errors('password')}" th:utext="${error +'<br>'}">
@@ -52,7 +55,8 @@
                 <label for="confirmPassword" class="text-exodia">Confirm Password</label>
                 <input type="password" class="form-control"
                        th:field="*{confirmPassword}" th:value="${userRegisterModel.confirmPassword}"
-                       id="confirmPassword" placeholder="Confirm Password..." name="confirmPassword">
+                       id="confirmPassword" placeholder="Confirm Password..." name="confirmPassword"
+                       pattern="^.{4,}$"   required title="Please enter at least 4 characters">
                 <small id="confirmPasswordHelp"
                        th:each="error : ${#fields.errors('confirmPassword')}" th:utext="${error +'<br>'}">
                 </small>
@@ -62,7 +66,7 @@
                 <label for="email" class="text-exodia">Email</label>
                 <input type="email" class="form-control"
                        th:field="*{email}" th:value="${userRegisterModel.email}"
-                       id="email" placeholder="Email..." name="email">
+                       id="email" placeholder="Email..." name="email" required>
                 <small id="emailHelp"
                        th:each="error : ${#fields.errors('email')}" th:utext="${error +'<br>'}">
                 </small>

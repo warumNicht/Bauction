@@ -18,7 +18,8 @@
                 <label for="name">Category name</label>
                 <input type="text" class="form-control"
                        th:field="*{name}"  th:value="${categoryBindingModel.name}"
-                       id="name" placeholder="Category..." name="name">
+                       id="name" placeholder="Category..." name="name"
+                       required pattern="^.{2,}$"  title="Please enter at least 2 characters">
 
                 <small id="usernameHelp"
                        th:each="error : ${#fields.errors('name')}" th:utext="${error +'<br>'}">

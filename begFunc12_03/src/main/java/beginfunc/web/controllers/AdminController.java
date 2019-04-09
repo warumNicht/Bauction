@@ -7,7 +7,6 @@ import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.viewModels.users.UserPermissionAllViewModel;
 import beginfunc.domain.models.viewModels.users.UserPermissionEditViewModel;
 import beginfunc.error.DuplicatedCategoryException;
-import beginfunc.error.DuplicatedUserException;
 import beginfunc.services.contracts.CategoryService;
 import beginfunc.services.contracts.RoleService;
 import beginfunc.services.contracts.UserService;
@@ -42,7 +41,7 @@ public class AdminController extends BaseController{
     public ModelAndView addCategory(@ModelAttribute(name = "categoryBindingModel")CategoryBindingModel model,
                                     ModelAndView modelAndView){
         modelAndView.addObject("categoryBindingModel", model);
-        modelAndView.setViewName("add-category");
+        modelAndView.setViewName("admin/add-category");
         return modelAndView;
     }
 
@@ -51,7 +50,7 @@ public class AdminController extends BaseController{
                                         BindingResult bindingResult, ModelAndView modelAndView){
         if(bindingResult.hasErrors()){
             modelAndView.addObject("categoryBindingModel", model);
-            modelAndView.setViewName("add-category");
+            modelAndView.setViewName("admin/add-category");
             return modelAndView;
         }
         CategoryServiceModel categoryServiceModel = this.modelMapper.map(model, CategoryServiceModel.class);
