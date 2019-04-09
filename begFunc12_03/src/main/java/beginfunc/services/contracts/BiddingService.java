@@ -5,7 +5,7 @@ import beginfunc.domain.models.serviceModels.participations.BiddingServiceModel;
 import java.util.List;
 
 public interface BiddingService {
-    boolean registerBidding(BiddingServiceModel biddingServiceModel);
+    void registerBidding(BiddingServiceModel biddingServiceModel);
 
     List<BiddingServiceModel> findAllBiddingsOfAuction(String auctionId);
 

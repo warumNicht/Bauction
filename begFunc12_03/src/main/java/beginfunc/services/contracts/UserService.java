@@ -16,4 +16,6 @@ public interface UserService extends UserDetailsService {
     List<UserServiceModel> findAllUsersWithoutTheLoggedIn(String loggedInId);
 
     UserServiceModel updateUser(UserServiceModel toEdit);
+
+    boolean existsUserByUsername(String username);
 }

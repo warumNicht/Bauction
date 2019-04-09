@@ -23,14 +23,9 @@ public class BiddingServiceImpl implements BiddingService {
     }
 
     @Override
-    public boolean registerBidding(BiddingServiceModel biddingServiceModel) {
-        try {
-            Bidding bidding = this.modelMapper.map(biddingServiceModel, Bidding.class);
-            this.biddingRepository.saveAndFlush(bidding);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    public void registerBidding(BiddingServiceModel biddingServiceModel) {
+        Bidding bidding = this.modelMapper.map(biddingServiceModel, Bidding.class);
+        this.biddingRepository.saveAndFlush(bidding);
     }
 
     @Override
@@ -43,7 +38,7 @@ public class BiddingServiceImpl implements BiddingService {
 
     @Override
     public Long getAuctionBiddingCount(String id) {
-        Long count=this.biddingRepository.getAuctionBiddingCount(id);
-        return count==null ? 0 : count;
+        Long count = this.biddingRepository.getAuctionBiddingCount(id);
+        return count == null ? 0 : count;
     }
 }

@@ -1,6 +1,7 @@
 package beginfunc.web.controllers;
 
 import beginfunc.constants.AppConstants;
+import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.domain.models.bindingModels.UserRegisterBindingModel;
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.viewModels.users.UserProfileViewModel;
@@ -53,9 +54,18 @@ public class UserController{
             modelAndView.setViewName("user/register");
             return modelAndView;
         }
-
         if(!model.getPassword().equals(model.getConfirmPassword())){
-            throw new IllegalArgumentException("Not matching passwords!");
+            modelAndView.addObject("userRegisterModel",model);
+            modelAndView.addObject("errorPasswords",ErrorMessagesConstants.NO_MATCHING_PASSWORDS_MESSAGE);
+            modelAndView.setViewName("user/register");
+            return modelAndView;
+        }
+        if(this.userService.existsUserByUsername(model.getUsername())){
+            modelAndView.addObject("userRegisterModel",model);
+            modelAndView.addObject("duplicatedUsername",
+                    String.format(ErrorMessagesConstants.DUPLICATED_USERNAME_MESSAGE, model.getUsername()));
+            modelAndView.setViewName("user/register");
+            return modelAndView;
         }
         UserServiceModel userToRegister = this.modelMapper.map(model, UserServiceModel.class);
         userToRegister.setRegistrationDate(new Date());

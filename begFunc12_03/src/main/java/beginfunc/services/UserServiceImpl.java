@@ -41,21 +41,16 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPassword(this.encoder.encode(user.getPassword()));
 
-        if(this.userRepository.count()==0){
-            this.userRepository.insertRootUser(AppConstants.ROOT_USER_ID,user.getUsername(),
-                    user.getFullName(), user.getPassword(),user.getEmail(), new Date());
+        if (this.userRepository.count() == 0) {
+            this.userRepository.insertRootUser(AppConstants.ROOT_USER_ID, user.getUsername(),
+                    user.getFullName(), user.getPassword(), user.getEmail(), new Date());
 
             User rootUser = this.userRepository.findById(AppConstants.ROOT_USER_ID).orElse(null);
             this.giveRolesToRoot(rootUser);
             this.userRepository.save(rootUser);
         }
-        try {
-            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
-            this.userRepository.saveAndFlush(user);
-        }catch (Exception e){
-            throw new DuplicatedUserException(
-                    String.format(ErrorMessagesConstants.DUPLICATED_USERNAME_MESSAGE,user.getUsername()));
-        }
+        user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
+        this.userRepository.saveAndFlush(user);
     }
 
     @Override
@@ -70,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel findUserById(String id) {
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_USER_ID_MESSAGE));
-        return this.modelMapper.map(user,UserServiceModel.class);
+        return this.modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
@@ -84,18 +79,20 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) {
         return this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(
-                        String.format(ErrorMessagesConstants.NOT_EXISTENT_USERNAME_MESSAGE,username)));
+                        String.format(ErrorMessagesConstants.NOT_EXISTENT_USERNAME_MESSAGE, username)));
     }
 
     @Override
     public UserServiceModel updateUser(UserServiceModel toEdit) {
-        try {
-            User user = this.modelMapper.map(toEdit, User.class);
-            User updated = this.userRepository.save(user);
-            return this.modelMapper.map(updated, UserServiceModel.class);
-        } catch (Exception e) {
-            return null;
-        }
+        User user = this.modelMapper.map(toEdit, User.class);
+        User updated = this.userRepository.save(user);
+        return this.modelMapper.map(updated, UserServiceModel.class);
+    }
+
+    @Override
+    public boolean existsUserByUsername(String username) {
+        User user = this.userRepository.findByUsername(username).orElse(null);
+        return user != null;
     }
 
     private void giveRolesToRoot(User user) {

@@ -158,13 +158,8 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public boolean increaseAuctionViews(String id) {
-        try {
-            this.auctionRepository.increaseViews(id);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    public void increaseAuctionViews(String id) {
+        this.auctionRepository.increaseViews(id);
     }
 
     @Override

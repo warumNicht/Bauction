@@ -3,6 +3,7 @@ package beginfunc.services;
 import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.domain.entities.auctionRelated.Category;
 import beginfunc.domain.models.serviceModels.CategoryServiceModel;
+import beginfunc.error.CategoryNotFoundException;
 import beginfunc.error.DuplicatedCategoryException;
 import beginfunc.repositories.CategoryRepository;
 import beginfunc.services.contracts.CategoryService;
@@ -44,10 +45,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryServiceModel findByName(String name) {
-        Category category = this.categoryRepository.findByName(name).orElse(null);
-        if(category==null){
-            throw new IllegalArgumentException("Category not found");
-        }
+        Category category = this.categoryRepository.findByName(name)
+                .orElseThrow(()->new CategoryNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_CATEGORY_MESSAGE));
         return this.modelMapper.map(category,CategoryServiceModel.class);
     }
 }

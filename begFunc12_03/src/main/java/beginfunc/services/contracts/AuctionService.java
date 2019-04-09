@@ -22,7 +22,7 @@ public interface AuctionService {
 
     AuctionServiceModel findById(String id);
 
-    boolean increaseAuctionViews(String id);
+    void increaseAuctionViews(String id);
 
     void increaseCurrentPrice(String id, BigDecimal biddingStep);
 

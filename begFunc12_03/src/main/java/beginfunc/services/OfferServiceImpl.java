@@ -36,15 +36,10 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public boolean registerOffer(OfferServiceModel offerServiceModel) {
-        try {
-            Offer offer = this.modelMapper.map(offerServiceModel, Offer.class);
-            offer.setExpirationTime(this.getTimeAfter24H());
-            this.offerRepository.saveAndFlush(offer);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+    public void registerOffer(OfferServiceModel offerServiceModel) {
+        Offer offer = this.modelMapper.map(offerServiceModel, Offer.class);
+        offer.setExpirationTime(this.getTimeAfter24H());
+        this.offerRepository.saveAndFlush(offer);
     }
 
     private Date getTimeAfter24H() {
@@ -57,22 +52,22 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public List<OfferServiceModel> findAllOffersOfAuction(String auctionId) {
         return this.offerRepository.findAllOffersOfAuction(auctionId).stream()
-                .map(o->this.modelMapper.map(o,OfferServiceModel.class))
+                .map(o -> this.modelMapper.map(o, OfferServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<OfferServiceModel> findAllActiveOffersToUser(String userId) {
-        List<Offer> offers=this.offerRepository.findAllActiveOffersToUser(userId);
-        return offers.stream().map(o->this.modelMapper
-                .map(o,OfferServiceModel.class))
+        List<Offer> offers = this.offerRepository.findAllActiveOffersToUser(userId);
+        return offers.stream().map(o -> this.modelMapper
+                .map(o, OfferServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Long getAuctionOffersCount(String id) {
         Long auctionOfferCount = this.offerRepository.getAuctionOfferCount(id);
-        return auctionOfferCount==null ? 0 : auctionOfferCount;
+        return auctionOfferCount == null ? 0 : auctionOfferCount;
     }
 
     @Override

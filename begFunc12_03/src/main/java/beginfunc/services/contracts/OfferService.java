@@ -5,7 +5,7 @@ import beginfunc.domain.models.serviceModels.participations.OfferServiceModel;
 import java.util.List;
 
 public interface OfferService {
-    boolean registerOffer(OfferServiceModel offerServiceModel);
+    void registerOffer(OfferServiceModel offerServiceModel);
 
     List<OfferServiceModel> findAllOffersOfAuction(String auctionId);
 
