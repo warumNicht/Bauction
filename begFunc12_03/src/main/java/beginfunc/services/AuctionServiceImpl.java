@@ -1,5 +1,6 @@
 package beginfunc.services;
 
+import beginfunc.constants.AppConstants;
 import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.domain.entities.auctionRelated.Auction;
 import beginfunc.domain.entities.enums.AuctionStatus;
@@ -23,6 +24,7 @@ import beginfunc.repositories.AuctionRepository;
 import beginfunc.services.contracts.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -134,12 +136,19 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionServiceModel> findAllActivesAuctions() {
-        List<AuctionServiceModel> allActives = this.auctionRepository
-                .findAllByStatus(AuctionStatus.Active)
-                .stream()
+        return this.auctionRepository
+                .findAllByStatus(AuctionStatus.Active).stream()
                 .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
-        return allActives;
+    }
+
+    @Override
+    public List<AuctionServiceModel> findAllActivesAuctionsExceedingEndDate() {
+        List<AuctionServiceModel> auctionServiceModels =
+                this.auctionRepository.findAllActivesAuctionsExceedingEndDate().stream()
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
+                .collect(Collectors.toList());
+        return auctionServiceModels;
     }
 
     @Override
@@ -177,6 +186,11 @@ public class AuctionServiceImpl implements AuctionService {
     public void updateAuctionStatus(String id, AuctionStatus status) {
         this.auctionRepository.updateStatus(id,status);
     }
+
+//    @Scheduled(fixedRate = 5000)
+//    private void scheduleTaskWithFixedRate() {
+//       this.increaseAuctionViews("dd0b50ab-fac5-4c77-9bcc-12c80ca7614c");
+//    }
 
     private BaseProduct createBaseProductEntity(BaseProductServiceModel product) {
         if(product instanceof CoinServiceModel){

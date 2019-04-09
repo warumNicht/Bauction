@@ -107,8 +107,7 @@
     }
 
     $(document).ready(onResize);
-    const urlArr = window.location.pathname.split('/');
-    const id = urlArr[urlArr.length - 1];
+
 
     fetch('/offers/fetch/' + id)
         .then((response) => response.json())

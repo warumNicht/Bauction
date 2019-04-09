@@ -46,11 +46,11 @@
                     <div class="col-6">
                         <h3 style="display: inline-block"
                             th:if="${auctionDetails.reachedPrice>=auctionDetails.wantedPrice}"
-                            th:text="${'reached!'}"></h3>
+                            th:text="${'Reached!'}"></h3>
 
                         <h3 style="display: inline-block"
                             th:if="${auctionDetails.reachedPrice<auctionDetails.wantedPrice}"
-                            th:text="${'Not reached yet!'}"></h3>
+                            th:text="${'Not reached!'}"></h3>
                     </div>
                 </div>
 

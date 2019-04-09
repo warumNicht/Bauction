@@ -26,7 +26,7 @@ public interface OfferRepository extends JpaRepository<Offer,String> {
 
     @Query(value = "SELECT o FROM Offer o " +
             "WHERE o.auction.seller.id LIKE :id " +
-            "AND o.expirationTime> current_date " +
+            "AND o.expirationTime> current_time " +
             "ORDER BY o.auction.product.name, o.offeredPrice DESC,o.submittedOn")
     List<Offer> findAllActiveOffersToUser(@Param(value = "id") String userId);
 

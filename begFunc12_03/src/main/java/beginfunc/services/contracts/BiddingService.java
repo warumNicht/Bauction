@@ -10,4 +10,6 @@ public interface BiddingService {
     List<BiddingServiceModel> findAllBiddingsOfAuction(String auctionId);
 
     Long getAuctionBiddingCount(String id);
+
+    BiddingServiceModel findHighestBiddingOfAuction(String id);
 }

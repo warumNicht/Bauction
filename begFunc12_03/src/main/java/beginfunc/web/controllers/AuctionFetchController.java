@@ -57,7 +57,7 @@ public class AuctionFetchController {
         if (found.getProduct().getMainPicture() != null) {
             model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
         } else {
-            model.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+            model.setMainImageUrl("/"+StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
         }
         model.setSeller(found.getSeller().getUsername());
         model.setTown(found.getProduct().getTown().getName());
@@ -145,7 +145,7 @@ public class AuctionFetchController {
                     }
                     homeViewModel.setName(name);
                     if(a.getProduct().getMainPicture()==null){
-                        homeViewModel.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+                        homeViewModel.setMainImageUrl("/"+StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
                     }else {
                         homeViewModel.setMainImageUrl(a.getProduct().getMainPicture().getPath());
                     }

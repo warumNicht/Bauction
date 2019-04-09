@@ -48,9 +48,10 @@ public class UserServiceImpl implements UserService {
             User rootUser = this.userRepository.findById(AppConstants.ROOT_USER_ID).orElse(null);
             this.giveRolesToRoot(rootUser);
             this.userRepository.save(rootUser);
+        }else {
+            user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
+            this.userRepository.saveAndFlush(user);
         }
-        user.getAuthorities().add(this.roleRepository.findByAuthority("ROLE_USER"));
-        this.userRepository.saveAndFlush(user);
     }
 
     @Override

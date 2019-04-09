@@ -77,9 +77,8 @@ public class AuctionController extends BaseController{
         BiddingServiceModel bidding=new BiddingServiceModel(new Date(),participant,auction,
                 biddingStep, auction.getReachedPrice().add(biddingStep));
 
-        if(this.biddingService.registerBidding(bidding)){
-           this.auctionService.increaseCurrentPrice(id, biddingStep);
-        }
+        this.biddingService.registerBidding(bidding);
+        this.auctionService.increaseCurrentPrice(id, biddingStep);
 
         modelAndView.setViewName("redirect:/auctions/details/" + id);
         return modelAndView;

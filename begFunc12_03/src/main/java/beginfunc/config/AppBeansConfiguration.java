@@ -8,14 +8,13 @@ import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
 import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
 import beginfunc.domain.models.serviceModels.products.CoinServiceModel;
-import beginfunc.util.EmailUtil;
-import beginfunc.util.EmailUtilImpl;
+import beginfunc.services.contracts.EmailService;
+import beginfunc.services.EmailServiceImpl;
 import beginfunc.web.filters.LoggedInUserFilter;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +36,8 @@ public class AppBeansConfiguration {
     }
 
     @Bean
-    public EmailUtil emailUtil(){
-        return new EmailUtilImpl();
+    public EmailService emailUtil(){
+        return new EmailServiceImpl();
     }
 
     @Bean

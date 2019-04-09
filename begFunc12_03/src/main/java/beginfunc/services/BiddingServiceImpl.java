@@ -6,6 +6,7 @@ import beginfunc.repositories.BiddingRepository;
 import beginfunc.services.contracts.BiddingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,5 +41,15 @@ public class BiddingServiceImpl implements BiddingService {
     public Long getAuctionBiddingCount(String id) {
         Long count = this.biddingRepository.getAuctionBiddingCount(id);
         return count == null ? 0 : count;
+    }
+
+    @Override
+    public BiddingServiceModel findHighestBiddingOfAuction(String id) {
+        List<Bidding> highestBiddingOfAuction =
+                this.biddingRepository.findHighestBiddingOfAuction(id, PageRequest.of(0, 1));
+        if (highestBiddingOfAuction.isEmpty()){
+            return null;
+        }
+        return this.modelMapper.map(highestBiddingOfAuction.get(0),BiddingServiceModel.class);
     }
 }

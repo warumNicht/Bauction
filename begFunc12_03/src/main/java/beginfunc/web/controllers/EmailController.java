@@ -2,7 +2,7 @@ package beginfunc.web.controllers;
 
 import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.services.contracts.UserService;
-import beginfunc.util.EmailUtil;
+import beginfunc.services.contracts.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -17,12 +17,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/emails")
 public class EmailController extends BaseController {
     private final UserService userService;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
 
     @Autowired
-    public EmailController(UserService userService, EmailUtil emailUtil) {
+    public EmailController(UserService userService, EmailService emailService) {
         this.userService = userService;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
     }
 
     @GetMapping("/write/{id}")
@@ -43,7 +43,7 @@ public class EmailController extends BaseController {
                                        RedirectAttributes redirectAttributes, ModelAndView modelAndView){
         UserServiceModel recipient = this.userService.findUserById(recipientId);
 
-        if(this.emailUtil.sendEmail(recipient.getEmail(),subject,content)){
+        if(this.emailService.sendEmail(recipient.getEmail(),subject,content)){
             redirectAttributes.addFlashAttribute("message",
                     String.format("Email to %s sent successfully!", recipient.getUsername()));
         }else {

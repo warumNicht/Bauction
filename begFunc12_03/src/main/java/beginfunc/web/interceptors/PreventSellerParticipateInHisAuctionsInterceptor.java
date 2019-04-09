@@ -1,18 +1,13 @@
 package beginfunc.web.interceptors;
 
-import beginfunc.domain.entities.User;
-import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.web.controllers.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
 import java.util.LinkedHashMap;
 
 @Component

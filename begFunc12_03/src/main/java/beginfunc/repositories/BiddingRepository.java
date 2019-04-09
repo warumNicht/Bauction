@@ -1,6 +1,7 @@
 package beginfunc.repositories;
 
 import beginfunc.domain.entities.auctionRelated.Bidding;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,10 @@ public interface BiddingRepository extends JpaRepository<Bidding, String> {
             "WHERE b.auction.id LIKE :id " +
             "GROUP BY b.auction.id")
     Long getAuctionBiddingCount(@Param(value = "id") String id);
+
+    @Query(value = "SELECT b FROM Bidding b " +
+            "WHERE b.auction.id= :id " +
+            "ORDER BY b.reachedPrice DESC "
+            )
+    List<Bidding> findHighestBiddingOfAuction(@Param(value = "id")String id, Pageable limit);
 }

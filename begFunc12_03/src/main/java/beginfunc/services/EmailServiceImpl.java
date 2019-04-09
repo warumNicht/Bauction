@@ -1,6 +1,7 @@
-package beginfunc.util;
+package beginfunc.services;
 
 import beginfunc.constants.EmailCredentialsConstants;
+import beginfunc.services.contracts.EmailService;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -8,7 +9,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
-public class EmailUtilImpl implements EmailUtil {
+public class EmailServiceImpl implements EmailService {
 
     @Override
     public boolean sendEmail(String destinationEmail, String subject, String body) {

@@ -1,6 +1,5 @@
 package beginfunc.web.interceptors;
 
-import beginfunc.domain.entities.Role;
 import beginfunc.domain.entities.User;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.web.controllers.BaseController;
@@ -8,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component

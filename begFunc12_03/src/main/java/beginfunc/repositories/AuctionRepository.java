@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -18,6 +19,11 @@ import java.util.List;
 public interface AuctionRepository extends JpaRepository<Auction,String> {
 
     List<Auction> findAllByStatus(AuctionStatus status);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.status='Active' " +
+            "AND a.endDate < current_time")
+    List<Auction> findAllActivesAuctionsExceedingEndDate();
 
     @Modifying
     @Transactional
