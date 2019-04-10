@@ -17,4 +17,8 @@ public class ErrorMessagesConstants {
     public static final String NO_LOGGED_IN_USER_MESSAGE= "There is no logged in user!";
 
     public static final String NO_MATCHING_PASSWORDS_MESSAGE= "Passwords don't match!";
+
+    public static final String NO_POSITIVE_BIDDING_STEP_MESSAGE= "Bidding step must be positive!";
+
+    public static final String NO_POSITIVE_OFFER_MESSAGE= "Offered price must be positive!";
 }

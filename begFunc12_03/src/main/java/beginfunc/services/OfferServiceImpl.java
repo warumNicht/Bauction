@@ -88,5 +88,10 @@ public class OfferServiceImpl implements OfferService {
         this.offerRepository.invalidateOffersOfAuctionById(id);
     }
 
+    @Override
+    public void deleteOffersOfAuctionById(String id) {
+        this.offerRepository.deleteOffersOfAuctionById(id);
+    }
+
 
 }

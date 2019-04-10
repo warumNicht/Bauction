@@ -13,17 +13,21 @@ import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.services.contracts.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
 
 @Controller
@@ -98,8 +102,11 @@ public class AuctionCrudController extends BaseController{
     public ModelAndView deleteAuction(ModelAndView modelAndView, @PathVariable(value = "id") String id,
                                       @ModelAttribute(name = "auctionCreateModel") AuctionEditBindingModel model,
                                       @ModelAttribute(name = "coin") CoinBindingModel coin,
-                                      @ModelAttribute(name = "banknote") BanknoteBindingModel banknote){
+                                      @ModelAttribute(name = "banknote") BanknoteBindingModel banknote,
+                                      HttpServletRequest request, HttpSession session){
         AuctionServiceModel found = this.auctionService.findById(id);
+        String referer = request.getHeader("Referer");
+        session.setAttribute("urlBeforeDelete", referer);
         this.fillViewWithModels(found,modelAndView);
         modelAndView.addObject("auctionId",id);
         modelAndView.setViewName("auction/auction-delete");
@@ -107,14 +114,9 @@ public class AuctionCrudController extends BaseController{
     }
 
     @PostMapping("/delete/{id}")
-    public ModelAndView deleteAuctionPost(ModelAndView modelAndView, @PathVariable(value = "id") String id){
-        this.auctionService.deleteById(id);
-        User loggedInUser = super.getLoggedInUser();
-        if(loggedInUser.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_MODERATOR"))){
-            modelAndView.setViewName("redirect:/moderator/auctions/finished");
-        }else {
-            modelAndView.setViewName("redirect:/users/" + super.getLoggedInUserId() + "/auctions/waiting");
-        }
+    public ModelAndView deleteAuctionPost(ModelAndView modelAndView, @PathVariable(value = "id") String id, HttpSession session){
+        String urlToRedirect = this.getUrlToRedirect(session);
+        modelAndView.setViewName("redirect:/" + urlToRedirect);
         return modelAndView;
     }
 
@@ -157,6 +159,15 @@ public class AuctionCrudController extends BaseController{
                 this.convert(mainImage), this.convertMultipartArray(files));
         modelAndView.setViewName("redirect:/auctions/edit/" + id);
         return modelAndView;
+    }
+
+    private String getUrlToRedirect(HttpSession session) {
+        String urlBeforeDelete = (String) session.getAttribute("urlBeforeDelete");
+        if (urlBeforeDelete==null){
+            return "home";
+        }
+        int firstSlashIndex = urlBeforeDelete.indexOf("/", 8);
+        return urlBeforeDelete.substring(firstSlashIndex+1);
     }
 
     private void fillViewWithModels(AuctionServiceModel found, ModelAndView modelAndView) {

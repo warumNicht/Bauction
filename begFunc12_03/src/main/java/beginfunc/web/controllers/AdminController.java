@@ -102,7 +102,7 @@ public class AdminController extends BaseController{
         if(updated==null){
             throw new IllegalArgumentException("Removing role failed!");
         }
-        modelAndView.setViewName("redirect:/moderator/users/edit/" + id);
+        modelAndView.setViewName("redirect:/admin/users/edit/" + id);
         return modelAndView;
     }
 
@@ -117,7 +117,7 @@ public class AdminController extends BaseController{
         if(updated==null){
             throw new IllegalArgumentException("Adding role failed!");
         }
-        modelAndView.setViewName("redirect:/moderator/users/edit/" + id);
+        modelAndView.setViewName("redirect:/admin/users/edit/" + id);
         return modelAndView;
     }
 

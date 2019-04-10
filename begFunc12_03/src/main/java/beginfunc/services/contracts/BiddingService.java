@@ -12,4 +12,6 @@ public interface BiddingService {
     Long getAuctionBiddingCount(String id);
 
     BiddingServiceModel findHighestBiddingOfAuction(String id);
+
+    void deleteBiddingsOfAuctionById(String id);
 }

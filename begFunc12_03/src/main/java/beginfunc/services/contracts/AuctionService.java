@@ -50,4 +50,6 @@ public interface AuctionService {
     String getAuctionSellerId(String auctionId);
 
     List<AuctionServiceModel> findAllActivesAuctionsExceedingEndDate();
+
+    List<AuctionServiceModel> findAllFinishedAuctionsWithoutDeal();
 }

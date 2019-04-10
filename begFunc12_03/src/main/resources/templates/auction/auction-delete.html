@@ -26,12 +26,8 @@
                 </div>
                 <div class="col-1"></div>
 
-                <div class="col-5" sec:authorize="hasRole('ROLE_MODERATOR')">
-                    <a th:href="@{/moderator/auctions/finished}"  class="btn btn-primary w-100">Cancel</a>
-                </div>
-
-                <div class="col-5" sec:authorize="!hasRole('ROLE_MODERATOR')">
-                    <a th:href="@{/users/{id}/auctions/waiting(id=${#authentication.principal.id})}" id="cancelButton"  class="btn btn-primary w-100">Cancel</a>
+                <div class="col-5" >
+                    <a href="javascript:history.go(-1)" onMouuseOver="self.status.referrer;return true" id="cancelButton"  class="btn btn-primary w-100">Cancel</a>
                 </div>
             </div>
 

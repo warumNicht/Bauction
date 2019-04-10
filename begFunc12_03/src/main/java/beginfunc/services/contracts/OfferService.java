@@ -16,4 +16,6 @@ public interface OfferService {
     OfferServiceModel acceptOffer(String offerId);
 
     void invalidateOffersOfAuction(String id);
+
+    void deleteOffersOfAuctionById(String id);
 }

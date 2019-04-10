@@ -37,4 +37,10 @@ public interface OfferRepository extends JpaRepository<Offer,String> {
             "SET o.isValid=false " +
             "WHERE o.auction.id LIKE :id")
     void invalidateOffersOfAuctionById(@Param(value = "id") String auctionId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Offer o " +
+            "WHERE o.auction.id LIKE :id")
+    void deleteOffersOfAuctionById(@Param(value = "id") String auctionId);
 }

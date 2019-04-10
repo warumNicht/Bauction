@@ -24,8 +24,8 @@ import beginfunc.repositories.AuctionRepository;
 import beginfunc.services.contracts.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -40,14 +40,18 @@ import java.util.stream.Collectors;
 public class AuctionServiceImpl implements AuctionService {
     private final AuctionRepository auctionRepository;
     private final ProductService productService;
+    private final OfferService offerService;
+    private final BiddingService biddingService;
     private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public AuctionServiceImpl(AuctionRepository auctionRepository, ProductService productService,
-                              CategoryService categoryService, ModelMapper modelMapper) {
+                              OfferService offerService, BiddingService biddingService, CategoryService categoryService, ModelMapper modelMapper) {
         this.auctionRepository = auctionRepository;
         this.productService = productService;
+        this.offerService = offerService;
+        this.biddingService = biddingService;
         this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
@@ -99,10 +103,16 @@ public class AuctionServiceImpl implements AuctionService {
         this.updateAuction(auction);
     }
 
+    @Transactional
     @Override
     public void deleteById(String id) {
         Auction auction = this.auctionRepository.findById(id)
                 .orElseThrow(() -> new AuctionNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_AUCTION_MESSAGE));
+        if(auction.getType().equals(AuctionType.Fixed_Price)){
+            this.offerService.deleteOffersOfAuctionById(id);
+        }else {
+            this.biddingService.deleteBiddingsOfAuctionById(id);
+        }
         this.auctionRepository.deleteById(id);
     }
 
@@ -149,6 +159,13 @@ public class AuctionServiceImpl implements AuctionService {
                 .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
         return auctionServiceModels;
+    }
+
+    @Override
+    public List<AuctionServiceModel> findAllFinishedAuctionsWithoutDeal() {
+        return this.auctionRepository.findAllFinishedAuctionsWithoutDeal().stream()
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     @Override

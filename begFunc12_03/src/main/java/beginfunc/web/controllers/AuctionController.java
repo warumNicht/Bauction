@@ -1,5 +1,6 @@
 package beginfunc.web.controllers;
 
+import beginfunc.constants.ErrorMessagesConstants;
 import beginfunc.constants.StaticImagesConstants;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.participations.OfferServiceModel;
@@ -7,7 +8,8 @@ import beginfunc.domain.models.serviceModels.users.UserServiceModel;
 import beginfunc.domain.models.serviceModels.participations.BiddingServiceModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionDetailsBuyerViewModel;
 import beginfunc.domain.models.viewModels.auctions.AuctionDetailsViewModel;
-import beginfunc.error.AuctionNotFoundException;
+import beginfunc.error.NoPositiveBiddingStepException;
+import beginfunc.error.NoPositiveOfferException;
 import beginfunc.services.contracts.AuctionService;
 import beginfunc.services.contracts.BiddingService;
 import beginfunc.services.contracts.OfferService;
@@ -71,6 +73,9 @@ public class AuctionController extends BaseController{
     @PostMapping("/bidding/{id}")
     public ModelAndView makeBidding(@PathVariable(name = "id") String id, ModelAndView modelAndView,
                                     @RequestParam("price") BigDecimal biddingStep){
+        if(biddingStep.compareTo(BigDecimal.ZERO)<0){
+            throw new NoPositiveBiddingStepException(ErrorMessagesConstants.NO_POSITIVE_BIDDING_STEP_MESSAGE);
+        }
         AuctionServiceModel auction = this.auctionService.findById(id);
         UserServiceModel participant = this.modelMapper.map(super.getLoggedInUser(),UserServiceModel.class);
 
@@ -79,7 +84,6 @@ public class AuctionController extends BaseController{
 
         this.biddingService.registerBidding(bidding);
         this.auctionService.increaseCurrentPrice(id, biddingStep);
-
         modelAndView.setViewName("redirect:/auctions/details/" + id);
         return modelAndView;
     }
@@ -95,6 +99,9 @@ public class AuctionController extends BaseController{
     @PostMapping("/offers/{id}")
     public ModelAndView makeOffer(@PathVariable(name = "id") String id, ModelAndView modelAndView,
                                     @RequestParam("offerPrice") BigDecimal offeredPrice){
+        if(offeredPrice.compareTo(BigDecimal.ZERO)<0){
+            throw new NoPositiveOfferException(ErrorMessagesConstants.NO_POSITIVE_OFFER_MESSAGE);
+        }
         AuctionServiceModel auction = this.auctionService.findById(id);
         UserServiceModel participant = this.modelMapper.map(super.getLoggedInUser(),UserServiceModel.class);
         OfferServiceModel offer=new OfferServiceModel(new Date(),participant,auction,offeredPrice);

@@ -26,8 +26,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/", "/users/login", "/users/register").permitAll()
-                    .antMatchers( "/moderator/users/edit/"+AppConstants.ROOT_USER_ID).access("hasRole('NOBODY')")
-                    .antMatchers( "/moderator/**").access("hasAnyRole('ROOT','ADMIN')")
+                    .antMatchers( "/admin/users/edit/"+AppConstants.ROOT_USER_ID).access("hasRole('NOBODY')")
+                    .antMatchers( "/admin/**").access("hasAnyRole('ROOT','ADMIN')")
+                    .antMatchers( "/moderator/**").access("hasRole('MODERATOR')")
 
 
                 .antMatchers("/cssBau/**", "/js/**", "/favicon/**","/static-images/**").permitAll()

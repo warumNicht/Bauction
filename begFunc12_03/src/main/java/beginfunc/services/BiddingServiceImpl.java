@@ -52,4 +52,9 @@ public class BiddingServiceImpl implements BiddingService {
         }
         return this.modelMapper.map(highestBiddingOfAuction.get(0),BiddingServiceModel.class);
     }
+
+    @Override
+    public void deleteBiddingsOfAuctionById(String id) {
+        this.biddingRepository.deleteBiddingsOfAuctionById(id);
+    }
 }

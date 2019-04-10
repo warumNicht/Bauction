@@ -51,7 +51,7 @@ public class ModeratorController {
     }
 
     private List<AuctionModeratorViewModel> loadFinishedViewModels() {
-        List<AuctionServiceModel> auctions = this.auctionService.findAllAuctionsByStatus(AuctionStatus.Finished);
+        List<AuctionServiceModel> auctions = this.auctionService.findAllFinishedAuctionsWithoutDeal();
         return this.mapToViewModels(auctions);
     }
 

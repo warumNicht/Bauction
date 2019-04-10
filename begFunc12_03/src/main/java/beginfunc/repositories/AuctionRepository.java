@@ -68,4 +68,9 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
             "AND a.seller.id LIKE :id " +
             "AND a.buyer IS NULL ")
     List<Auction> getFinishedAuctionsOfUserWithoutDeal(@Param(value = "id") String userId);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.status='Finished' " +
+            "AND a.buyer IS NULL ")
+    List<Auction> findAllFinishedAuctionsWithoutDeal();
 }
