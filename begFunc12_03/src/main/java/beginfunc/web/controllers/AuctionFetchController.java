@@ -1,8 +1,6 @@
 package beginfunc.web.controllers;
 
-import beginfunc.constants.AppConstants;
 import beginfunc.constants.StaticImagesConstants;
-import beginfunc.domain.entities.productRelated.products.Coin;
 import beginfunc.domain.models.serviceModels.AuctionServiceModel;
 import beginfunc.domain.models.serviceModels.products.BanknoteServiceModel;
 import beginfunc.domain.models.serviceModels.products.BaseProductServiceModel;
@@ -18,10 +16,8 @@ import beginfunc.services.contracts.BiddingService;
 import beginfunc.services.contracts.OfferService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +53,7 @@ public class AuctionFetchController {
         if (found.getProduct().getMainPicture() != null) {
             model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
         } else {
-            model.setMainImageUrl("/"+StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+            model.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
         }
         model.setSeller(found.getSeller().getUsername());
         model.setTown(found.getProduct().getTown().getName());
@@ -120,22 +116,30 @@ public class AuctionFetchController {
     @GetMapping(value = "/user/{id}/actives", produces = "application/json")
     public Object fetchActiveAuctionsOfUser(@PathVariable(name = "id") String userId) {
         List<AuctionServiceModel> actives= this.auctionService.getActiveAuctionsOfUser(userId);
-        return this.mapAuctionServiceModels(actives);
+        return this.mapServiceToViewModels(actives);
     }
 
     @GetMapping(value = "/user/{id}/finishedWithDeal", produces = "application/json")
     public Object fetchFinishedAuctionsOfUserWithDeal(@PathVariable(name = "id") String userId) {
         List<AuctionServiceModel> actives= this.auctionService.getFinishedAuctionsOfUserWithDeal(userId);
-        return this.mapAuctionServiceModels(actives);
+        return this.mapServiceToViewModels(actives);
     }
 
     @GetMapping(value = "/user/{id}/finishedWithoutDeal", produces = "application/json")
     public Object fetchFinishedAuctionsOfUserWithoutDeal(@PathVariable(name = "id") String userId) {
         List<AuctionServiceModel> actives= this.auctionService.getFinishedAuctionsOfUserWithoutDeal(userId);
-        return this.mapAuctionServiceModels(actives);
+        return this.mapServiceToViewModels(actives);
     }
 
-    private List<AuctionHomeViewModel> mapAuctionServiceModels(List<AuctionServiceModel> auctionServiceModels){
+    @GetMapping(value = "/sort/{category}/{criteria}", produces = "application/json")
+    public Object fetchSortedAuctions(@PathVariable(name = "category") String category,
+                                      @PathVariable(name = "criteria") String criteria) {
+
+        List<AuctionServiceModel> actives=this.auctionService.getSortedAuctions(category, criteria);
+        return this.mapServiceToViewModels(actives);
+    }
+
+    private List<AuctionHomeViewModel> mapServiceToViewModels(List<AuctionServiceModel> auctionServiceModels){
         return auctionServiceModels.stream()
                 .map(a->{
                     AuctionHomeViewModel homeViewModel = this.modelMapper.map(a,AuctionHomeViewModel.class);
@@ -145,7 +149,7 @@ public class AuctionFetchController {
                     }
                     homeViewModel.setName(name);
                     if(a.getProduct().getMainPicture()==null){
-                        homeViewModel.setMainImageUrl("/"+StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+                        homeViewModel.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
                     }else {
                         homeViewModel.setMainImageUrl(a.getProduct().getMainPicture().getPath());
                     }

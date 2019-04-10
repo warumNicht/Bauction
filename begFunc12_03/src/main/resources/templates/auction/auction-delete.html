@@ -43,11 +43,38 @@
         $(document).ready(function () {
             $("input[type=text]").attr('disabled', true);
             $("input[type=number]").attr('disabled', true);
+            $("input[type=file]").attr('disabled', true);
             $("select").attr('disabled', true);
             $("textarea").attr('disabled', true);
             $("form button").prop("disabled", false);
 
         });
+
+        fetch('/images/fetch/auction/' + id)
+            .then((response) => response.json())
+            .then((json) => {
+                $('#imagesTitle').empty();
+                if (json.length === 0) {
+                    $('#imagesTitle').append('No images');
+                } else {
+                    $('#imagesTitle').append('Images');
+                    json.forEach((image) => {
+                        let currentArticle =
+                            '<div class="mb-3 mt-5">\n' +
+                            '<div class="row justify-content-center mb-3">\n' +
+                            '<div class="col-2"></div>\n' +
+                            '<div class="col-8">\n' +
+                            '<img class="edit-main-image" src="' + image.path + '" alt="">\n' +
+                            '</div>\n' +
+                            '<div class="col-2"></div>\n' +
+                            '</div>';
+
+                        $('#allImages').append(currentArticle);
+                    });
+                }
+
+            })
+            .catch((err) => console.log(err));
 
         $(document).ready(function () {
 

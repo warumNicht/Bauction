@@ -1,7 +1,7 @@
 package beginfunc.constants;
 
 public class StaticImagesConstants {
-    public static final String DEFAULT_AUCTION_MAIN_IMAGE= "static-images/defaultMainImage.png";
+    public static final String DEFAULT_AUCTION_MAIN_IMAGE= "/static-images/defaultMainImage.png";
 
     public static final String COMMENT_POSITIVE_IMAGE= "static-images/Positive.png";
     public static final String COMMENT_NEUTRAL_IMAGE= "static-images/Neutral.png";

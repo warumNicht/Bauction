@@ -24,6 +24,7 @@ import beginfunc.repositories.AuctionRepository;
 import beginfunc.services.contracts.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +62,7 @@ public class AuctionServiceImpl implements AuctionService {
                                              BaseCollectionBindingModel collectionBindingModel, HttpSession session, UserServiceModel user) throws IOException {
 
         AuctionServiceModel auctionToSave = this.modelMapper.map(model, AuctionServiceModel.class);
-        BaseProductServiceModel product=this.productService.createProduct(model, collectionBindingModel, session);
+        BaseProductServiceModel product = this.productService.createProduct(model, collectionBindingModel, session);
         auctionToSave.setProduct(product);
         auctionToSave.setSeller(user);
         auctionToSave.setCategory(this.categoryService.findByName(model.getCategory()));
@@ -78,14 +79,14 @@ public class AuctionServiceImpl implements AuctionService {
     public void editAuction(AuctionServiceModel auctionToEdit, AuctionEditBindingModel model,
                             CoinBindingModel coin, BanknoteBindingModel banknote,
                             File mainImage, File[] files) throws IOException {
-        BaseProductServiceModel changedProduct=
-                this.productService.getChangedProduct(auctionToEdit, model,coin, banknote, mainImage, files);
+        BaseProductServiceModel changedProduct =
+                this.productService.getChangedProduct(auctionToEdit, model, coin, banknote, mainImage, files);
         changedProduct.setId(auctionToEdit.getProduct().getId());
         auctionToEdit.setProduct(changedProduct);
         auctionToEdit.setType(AuctionType.valueOf(model.getType()));
         auctionToEdit.setWantedPrice(model.getWantedPrice());
 
-        if(!model.getCategory().equals(auctionToEdit.getCategory().getName())){
+        if (!model.getCategory().equals(auctionToEdit.getCategory().getName())) {
             CategoryServiceModel editedCategory = this.categoryService.findByName(model.getCategory());
             auctionToEdit.setCategory(editedCategory);
         }
@@ -108,32 +109,29 @@ public class AuctionServiceImpl implements AuctionService {
     public void deleteById(String id) {
         Auction auction = this.auctionRepository.findById(id)
                 .orElseThrow(() -> new AuctionNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_AUCTION_MESSAGE));
-        if(auction.getType().equals(AuctionType.Fixed_Price)){
-            this.offerService.deleteOffersOfAuctionById(id);
-        }else {
-            this.biddingService.deleteBiddingsOfAuctionById(id);
-        }
+        this.offerService.deleteOffersOfAuctionById(id);
+        this.biddingService.deleteBiddingsOfAuctionById(id);
         this.auctionRepository.deleteById(id);
     }
 
     @Override
     public List<AuctionServiceModel> getActiveAuctionsOfUser(String userId) {
         return this.auctionRepository.getActiveAuctionsOfUser(userId).stream()
-                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<AuctionServiceModel> getFinishedAuctionsOfUserWithDeal(String userId) {
         return this.auctionRepository.getFinishedAuctionsOfUserWithDeal(userId).stream()
-                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<AuctionServiceModel> getFinishedAuctionsOfUserWithoutDeal(String userId) {
         return this.auctionRepository.getFinishedAuctionsOfUserWithoutDeal(userId).stream()
-                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
     }
 
@@ -156,8 +154,8 @@ public class AuctionServiceImpl implements AuctionService {
     public List<AuctionServiceModel> findAllActivesAuctionsExceedingEndDate() {
         List<AuctionServiceModel> auctionServiceModels =
                 this.auctionRepository.findAllActivesAuctionsExceedingEndDate().stream()
-                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
-                .collect(Collectors.toList());
+                        .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
+                        .collect(Collectors.toList());
         return auctionServiceModels;
     }
 
@@ -169,10 +167,32 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    public List<AuctionServiceModel> getSortedAuctions(String category, String criteria) {
+        criteria=" a.reachedPrice "+criteria.toUpperCase();
+        List<Auction> sortedAuctions;
+        Sort sort;
+
+        if(criteria.toLowerCase().endsWith("ascending")){
+            sort=Sort.by("reachedPrice").ascending();
+        }else {
+            sort=Sort.by("reachedPrice").descending();
+        }
+
+        if(category.toLowerCase().equals("all")){
+            sortedAuctions=this.auctionRepository.getAllAuctionsSortedByPrice(sort);
+        }else {
+            sortedAuctions=this.auctionRepository.getAuctionsSortedByCategoryNameAndPrice(category, sort);
+        }
+        return sortedAuctions.stream()
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<AuctionServiceModel> getWaitingAuctionsOfUser(String userId) {
         List<Auction> waitingAuctionsOfUser = this.auctionRepository.getWaitingAuctionsOfUser(userId);
         return waitingAuctionsOfUser.stream()
-                .map(a->this.modelMapper.map(a,AuctionServiceModel.class))
+                .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                 .collect(Collectors.toList());
     }
 
@@ -190,7 +210,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void increaseCurrentPrice(String id, BigDecimal biddingStep) {
-        this.auctionRepository.increaseCurrentPrice(id,biddingStep);
+        this.auctionRepository.increaseCurrentPrice(id, biddingStep);
     }
 
     @Override
@@ -199,30 +219,21 @@ public class AuctionServiceImpl implements AuctionService {
         this.auctionRepository.save(auction);
     }
 
-    @Override
-    public void updateAuctionStatus(String id, AuctionStatus status) {
-        this.auctionRepository.updateStatus(id,status);
-    }
-
-//    @Scheduled(fixedRate = 5000)
-//    private void scheduleTaskWithFixedRate() {
-//       this.increaseAuctionViews("dd0b50ab-fac5-4c77-9bcc-12c80ca7614c");
-//    }
 
     private BaseProduct createBaseProductEntity(BaseProductServiceModel product) {
-        if(product instanceof CoinServiceModel){
-            return this.modelMapper.map(product,Coin.class);
-        }else if(product instanceof BanknoteServiceModel){
-            return this.modelMapper.map(product,BankNote.class);
-        }else {
-            return this.modelMapper.map(product,BaseProduct.class);
+        if (product instanceof CoinServiceModel) {
+            return this.modelMapper.map(product, Coin.class);
+        } else if (product instanceof BanknoteServiceModel) {
+            return this.modelMapper.map(product, BankNote.class);
+        } else {
+            return this.modelMapper.map(product, BaseProduct.class);
         }
     }
 
     private void setAuctionStatus(AuctionServiceModel auctionToSave, AuctionCreateBindingModel model) {
-        if(model.isStartLater()){
+        if (model.isStartLater()) {
             auctionToSave.setStatus(AuctionStatus.Waiting);
-        }else {
+        } else {
             auctionToSave.setStatus(AuctionStatus.Active);
             auctionToSave.setStartDate(new Date());
             auctionToSave.setEndDate(getDateAfterDays(7));
@@ -231,9 +242,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     private void setAuctionPrices(AuctionServiceModel auctionToSave, AuctionCreateBindingModel model) {
         BigDecimal wantedPrice = model.getWantedPrice();
-        if(wantedPrice!=null){
+        if (wantedPrice != null) {
             auctionToSave.setWantedPrice(wantedPrice);
-            if(!auctionToSave.getType().equals(AuctionType.Preserved_Price)){
+            if (!auctionToSave.getType().equals(AuctionType.Preserved_Price)) {
                 auctionToSave.setReachedPrice(wantedPrice);
             }
         }
@@ -241,12 +252,12 @@ public class AuctionServiceImpl implements AuctionService {
 
     private void correctModelMappersBug(Auction auctionToAdd) {
         BaseProduct product = auctionToAdd.getProduct();
-        if (product.getMainPicture()!=null){
+        if (product.getMainPicture() != null) {
             product.getMainPicture().setProduct(product);
         }
-        if(product.getPictures()!=null){
+        if (product.getPictures() != null) {
             product.getPictures().stream()
-                    .forEach(p->p.setProduct(product));
+                    .forEach(p -> p.setProduct(product));
         }
     }
 

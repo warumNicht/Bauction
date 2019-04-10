@@ -45,7 +45,6 @@ public class AuctionController extends BaseController{
         this.auctionService.increaseAuctionViews(id);
 
         AuctionDetailsViewModel model = this.modelMapper.map(found, AuctionDetailsViewModel.class);
-
         if(model.getBuyer()==null){
             model.setBuyer(new AuctionDetailsBuyerViewModel());
         }
@@ -59,7 +58,7 @@ public class AuctionController extends BaseController{
         if(found.getProduct().getMainPicture()!=null){
             model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
         }else {
-            model.setMainImageUrl("/"+StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+            model.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
         }
         model.setTown(found.getProduct().getTown().getName());
 

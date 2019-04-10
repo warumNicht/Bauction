@@ -92,6 +92,8 @@ public class ProductServiceImpl implements ProductService {
                 this.pictureService.savePicture(this.modelMapper.map(picture1,PictureServiceModel.class));
             }
         }
+        List<PictureServiceModel> allByProductId = this.pictureService.findAllByProductId(auctionToEdit.getProduct().getId());
+        product.setPictures(allByProductId);
         return product;
     }
 
@@ -113,7 +115,6 @@ public class ProductServiceImpl implements ProductService {
 
             currentProduct.setPictures(remainingPictures);
             this.baseProductRepository.save(currentProduct);
-//            this.pictureService.deleteImage(pictureToDelId);
         }
         PictureServiceModel productMainImage = this.createPicture(mainImage);
         product.setMainPicture(productMainImage);

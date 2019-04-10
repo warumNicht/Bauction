@@ -28,8 +28,6 @@ public interface AuctionService {
 
     void updateAuction (AuctionServiceModel model);
 
-    void updateAuctionStatus (String id, AuctionStatus status);
-
     List<AuctionServiceModel> getWaitingAuctionsOfUser(String userId);
 
     AuctionServiceModel createAuction(AuctionCreateBindingModel model, BaseCollectionBindingModel coin,
@@ -52,4 +50,6 @@ public interface AuctionService {
     List<AuctionServiceModel> findAllActivesAuctionsExceedingEndDate();
 
     List<AuctionServiceModel> findAllFinishedAuctionsWithoutDeal();
+
+    List<AuctionServiceModel> getSortedAuctions(String category, String criteria);
 }

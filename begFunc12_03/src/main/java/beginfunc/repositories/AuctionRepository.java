@@ -2,6 +2,7 @@ package beginfunc.repositories;
 
 import beginfunc.domain.entities.auctionRelated.Auction;
 import beginfunc.domain.entities.enums.AuctionStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Repository
 
-public interface AuctionRepository extends JpaRepository<Auction,String> {
+public interface AuctionRepository extends JpaRepository<Auction, String> {
 
     List<Auction> findAllByStatus(AuctionStatus status);
 
@@ -46,7 +47,7 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
             "SET a.reachedPrice=a.reachedPrice+ :biddingStep " +
             "WHERE a.id LIKE :id")
     void increaseCurrentPrice(@Param(value = "id") String id,
-                              @Param(value = "biddingStep")  BigDecimal biddingStep);
+                              @Param(value = "biddingStep") BigDecimal biddingStep);
 
     @Query(value = "SELECT a FROM Auction a " +
             "WHERE a.seller.id LIKE :id AND a.status='Waiting'")
@@ -55,13 +56,13 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
     @Query(value = "SELECT a FROM Auction a " +
             "WHERE a.status='Active' " +
             "AND a.seller.id LIKE :id")
-    List<Auction>  getActiveAuctionsOfUser(@Param(value = "id") String userId);
+    List<Auction> getActiveAuctionsOfUser(@Param(value = "id") String userId);
 
     @Query(value = "SELECT a FROM Auction a " +
             "WHERE a.status='Finished' " +
             "AND a.seller.id LIKE :id " +
             "AND a.buyer IS NOT NULL ")
-    List<Auction> getFinishedAuctionsOfUserWithDeal(@Param(value = "id")String userId);
+    List<Auction> getFinishedAuctionsOfUserWithDeal(@Param(value = "id") String userId);
 
     @Query(value = "SELECT a FROM Auction a " +
             "WHERE a.status='Finished' " +
@@ -73,4 +74,15 @@ public interface AuctionRepository extends JpaRepository<Auction,String> {
             "WHERE a.status='Finished' " +
             "AND a.buyer IS NULL ")
     List<Auction> findAllFinishedAuctionsWithoutDeal();
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.category.name= :category " +
+            "AND a.status = 'Active' ")
+    List<Auction> getAuctionsSortedByCategoryNameAndPrice(@Param(value = "category") String category,
+                                                          @Param(value = "criteria") Sort criteria);
+
+    @Query(value = "SELECT a FROM Auction a " +
+            "WHERE a.status = 'Active' ")
+    List<Auction> getAllAuctionsSortedByPrice(@Param(value = "criteria") Sort criteria);
+
 }

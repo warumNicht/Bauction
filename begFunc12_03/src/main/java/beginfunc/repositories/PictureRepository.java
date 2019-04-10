@@ -24,9 +24,9 @@ public interface PictureRepository extends JpaRepository<Picture,String> {
             "OR p.product.mainPicture IS NULL ")
     List<Picture> findAllByProductIdWithoutMain(@Param("productId") String productId);
 
-//    @Modifying
-//    @Transactional
-//    @Query(value = "DELETE FROM Picture p " +
-//            "WHERE p.product.id LIKE :productId ")
-//    void deleteAllByProductId(@Param("productId") String productId);
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM Picture p " +
+            "WHERE p.id LIKE :productId ")
+    void deleteById (@Param("productId") String id);
 }

@@ -57,35 +57,9 @@ allImages.style.display = "block";
 fetch('/images/fetch/main/'+id)
     .then((response) => response.json())
     .then((json) => {
-        $('#mainToInsert').append('<img class="edit-main-image" src="/'+ json[0] + '" alt="">');
+        $('#mainToInsert').append('<img class="edit-main-image" src="'+ json[0] + '" alt="">');
     })
     .catch((err) => console.log(err));
 
 
-fetch('/images/fetch/auction/' + id)
-    .then((response) => response.json())
-    .then((json) => {
-        $('#imagesTitle').empty();
-        if (json.length === 0) {
-            $('#imagesTitle').append('No images');
-        } else {
-            $('#imagesTitle').append('Images');
-            json.forEach((image) => {
-                let currentArticle =
-                    '<div class="mb-3 mt-5">\n' +
-                    '<div class="row justify-content-center mb-3">\n' +
-                    '<div class="col-2"></div>\n' +
-                    '<div class="col-8">\n' +
-                    '<img class="edit-main-image" src="' + image.path + '" alt="">\n' +
-                    '</div>\n' +
-                    '<div class="col-2"></div>\n' +
-                    '</div>\n' +
-                    '<a href="/images/delete/' + image.id + '/' + id + '" class="btn btn-danger w-25">Remove</a>\n' +
-                    '</div>';
 
-                $('#allImages').append(currentArticle);
-            });
-        }
-
-    })
-    .catch((err) => console.log(err));

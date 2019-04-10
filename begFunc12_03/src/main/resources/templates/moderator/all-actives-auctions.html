@@ -21,7 +21,7 @@
 
 
                     <div class="article-square">
-                        <img th:src="'/'+${auction.mainImageUrl}"/>
+                        <img th:src="${auction.mainImageUrl}"/>
                     </div>
                     <div th:text="${auction.name}"></div>
                     <div th:text="'Category: '+${auction.category}"></div>

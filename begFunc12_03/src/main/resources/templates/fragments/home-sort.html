@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="home-sort" class="print-container container-fluid w-75 text-center mb-5" id="sortDiv" style="display: none">
+    <div>
+        <div class="row">
+            <div class="col-4 text-center">
+                <label for="category">Select category</label>
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-4 text-center">
+                <label for="sortingType">Order by price</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <select name="category" class="form-control" id="category">
+
+                </select>
+            </div>
+            <div class="col-1">
+            </div>
+
+            <div class="col-4">
+
+                <select name="type" class="form-control" id="sortingType">
+                    <option value="ASC">Ascending</option>
+                    <option value="DESC">Descending</option>
+                </select>
+            </div>
+
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary text-white" onclick="sort()">Select</button>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5" id="emptyMessage">
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

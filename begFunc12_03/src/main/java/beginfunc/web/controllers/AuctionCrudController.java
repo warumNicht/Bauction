@@ -115,6 +115,7 @@ public class AuctionCrudController extends BaseController{
 
     @PostMapping("/delete/{id}")
     public ModelAndView deleteAuctionPost(ModelAndView modelAndView, @PathVariable(value = "id") String id, HttpSession session){
+        this.auctionService.deleteById(id);
         String urlToRedirect = this.getUrlToRedirect(session);
         modelAndView.setViewName("redirect:/" + urlToRedirect);
         return modelAndView;
