@@ -21,7 +21,7 @@
 
             <label for="auctionType">Type</label>
             <select name="type" class="form-control" id="auctionType" th:field="${auctionCreateModel.type}">
-                <option th:each="auctionType : ${T(beginfunc.domain.entities.enums.AuctionType).values()}"
+                <option th:each="auctionType : ${T(bauction.domain.entities.enums.AuctionType).values()}"
                         th:value="${auctionType}" th:text="${auctionType}"
                         th:selected="${#strings.equals(auctionCreateModel.getType(), auctionType) ? true : false}">
                 </option>

@@ -23,7 +23,7 @@
         <div class="col-5" th:classappend="${#fields.hasErrors('coin.grade')} ? 'text-danger'">
             <label for="grade">Preservation Grade</label>
             <select name="grade" class="form-control" id="grade" th:field="${coin.grade}">
-                <option th:each="grade : ${T(beginfunc.domain.entities.enums.PreservationGrade).values()}"
+                <option th:each="grade : ${T(bauction.domain.entities.enums.PreservationGrade).values()}"
                         th:value="${grade}" th:text="${grade}"
                         th:selected="${#strings.equals(auctionCreateModel.getType(), grade) ? true : false}">
                 </option>

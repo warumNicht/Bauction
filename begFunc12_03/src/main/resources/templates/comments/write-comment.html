@@ -44,7 +44,7 @@
                 </div>
                 <div class="col-8 px-0">
                     <select name="type" class="form-control " id="auctionType" th:field="*{estimation}">
-                        <option th:each="estim : ${T(beginfunc.domain.entities.enums.Estimation).values()}"
+                        <option th:each="estim : ${T(bauction.domain.entities.enums.Estimation).values()}"
                                 th:value="${estim}" th:text="${estim}">
                         </option>
                     </select>
