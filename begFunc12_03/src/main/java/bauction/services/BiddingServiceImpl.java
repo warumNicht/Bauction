@@ -1,7 +1,9 @@
 package bauction.services;
 
+import bauction.constants.ErrorMessagesConstants;
 import bauction.domain.entities.auctionRelated.Bidding;
 import bauction.domain.models.serviceModels.participations.BiddingServiceModel;
+import bauction.error.NoPositiveBiddingStepException;
 import bauction.repositories.BiddingRepository;
 import bauction.services.contracts.BiddingService;
 import org.modelmapper.ModelMapper;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,10 @@ public class BiddingServiceImpl implements BiddingService {
 
     @Override
     public void registerBidding(BiddingServiceModel biddingServiceModel) {
+
+        if(biddingServiceModel.getBiddingStep().compareTo(BigDecimal.ZERO)<0){
+            throw new NoPositiveBiddingStepException(ErrorMessagesConstants.NO_POSITIVE_BIDDING_STEP_MESSAGE);
+        }
         Bidding bidding = this.modelMapper.map(biddingServiceModel, Bidding.class);
         this.biddingRepository.saveAndFlush(bidding);
     }

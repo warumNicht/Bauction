@@ -8,19 +8,10 @@
 <div class="custom-file">
     <input type="file" class="custom-file-input" id="files"
            accept="image/*"
-           placeholder="Upload files..." name="files" multiple>
-    <label class="custom-file-label"
-           for="files"
-           th:text="${#bools.isTrue(session.productImages==null)} ? 'Upload files...' : 'Choose others...'"></label>
-</div>
+           placeholder="Upload files..." name="images" multiple>
 
-<div th:if="${#bools.isTrue(session.productImages!=null)}">
-    <label>Selected files:</label>
-    <p th:each="file, place : ${session.productImages}"
-       th:text="${place.index+1} +' - '+ ${file.getName()}">
-    </p>
+    <label class="custom-file-label" for="files"></label>
 </div>
-
 
 </body>
 </html>

@@ -58,10 +58,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public AuctionServiceModel createAuction(AuctionCreateBindingModel model,
-                                             BaseCollectionBindingModel collectionBindingModel, HttpSession session, UserServiceModel user) throws IOException {
+                                             BaseCollectionBindingModel collectionBindingModel, UserServiceModel user) throws IOException {
 
         AuctionServiceModel auctionToSave = this.modelMapper.map(model, AuctionServiceModel.class);
-        BaseProductServiceModel product = this.productService.createProduct(model, collectionBindingModel, session);
+        BaseProductServiceModel product = this.productService.createProduct(model, collectionBindingModel);
         auctionToSave.setProduct(product);
         auctionToSave.setSeller(user);
         auctionToSave.setCategory(this.categoryService.findByName(model.getCategory()));
@@ -76,10 +76,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void editAuction(AuctionServiceModel auctionToEdit, AuctionEditBindingModel model,
-                            CoinBindingModel coin, BanknoteBindingModel banknote,
-                            File mainImage, File[] files) throws IOException {
+                            CoinBindingModel coin, BanknoteBindingModel banknote) throws IOException {
         BaseProductServiceModel changedProduct =
-                this.productService.getChangedProduct(auctionToEdit, model, coin, banknote, mainImage, files);
+                this.productService.getChangedProduct(auctionToEdit, model, coin, banknote);
         changedProduct.setId(auctionToEdit.getProduct().getId());
         auctionToEdit.setProduct(changedProduct);
         auctionToEdit.setType(AuctionType.valueOf(model.getType()));

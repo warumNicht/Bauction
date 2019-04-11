@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/auctions/fetch")
 public class AuctionFetchController {
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+
     private final AuctionService auctionService;
     private final BiddingService biddingService;
     private final OfferService offerService;
@@ -41,52 +43,29 @@ public class AuctionFetchController {
     @GetMapping(value = "/{id}", produces = "application/json")
     public Object fetchAuctionMoreView(@PathVariable(name = "id") String id) {
         AuctionServiceModel found = this.auctionService.findById(id);
-        AuctionHomeMoreViewModel model = this.modelMapper.map(found, AuctionHomeMoreViewModel.class);
-        model.setName(found.getProduct().getName());
-        if (found.getEndDate() != null) {
-            SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-            String endDate = format.format(found.getEndDate());
-            model.setExpiresAt(endDate);
-        }
-        model.setCurrentPrice(String.format("%.2f ", found.getReachedPrice()) + '\u20ac');
-
-        if (found.getProduct().getMainPicture() != null) {
-            model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
-        } else {
-            model.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
-        }
-        model.setSeller(found.getSeller().getUsername());
-        model.setTown(found.getProduct().getTown().getName());
-        return model;
+        return this.createHomeMoreViewModel(found);
     }
-
 
     @GetMapping(value = "/biddings/{id}", produces = "application/json")
     public Object fetchAuctionBiddings(@PathVariable(name = "id") String id) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
-
-        List<AuctionBiddingViewModel> biddingViewModels = this.biddingService.findAllBiddingsOfAuction(id).stream()
+        return this.biddingService.findAllBiddingsOfAuction(id).stream()
                 .map(b -> {
                     AuctionBiddingViewModel biddingView = this.modelMapper.map(b, AuctionBiddingViewModel.class);
-                    String formedTime = format.format(b.getSubmittedOn());
+                    String formedTime = this.formatter.format(b.getSubmittedOn());
                     biddingView.setSubmittedOn(formedTime);
                     return biddingView;
                 })
                 .collect(Collectors.toList());
-        return biddingViewModels;
     }
 
     @GetMapping(value = "/offers/{id}", produces = "application/json")
     public Object fetchAuctionOffers(@PathVariable(name = "id") String id) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
-
-        List<AuctionOfferViewModel> offers = this.offerService.findAllOffersOfAuction(id).stream()
+        return this.offerService.findAllOffersOfAuction(id).stream()
                 .map(offer -> {
                     AuctionOfferViewModel model = this.modelMapper.map(offer, AuctionOfferViewModel.class);
-                    model.setSubmittedOn(format.format(offer.getSubmittedOn()));
+                    model.setSubmittedOn(this.formatter.format(offer.getSubmittedOn()));
                     return model;
                 }).collect(Collectors.toList());
-        return offers;
     }
 
     @GetMapping(value = "/biddings/count/{id}", produces = "application/json")
@@ -137,6 +116,25 @@ public class AuctionFetchController {
 
         List<AuctionServiceModel> actives=this.auctionService.getSortedAuctions(category, criteria);
         return this.mapServiceToViewModels(actives);
+    }
+
+    private AuctionHomeMoreViewModel createHomeMoreViewModel(AuctionServiceModel found) {
+        AuctionHomeMoreViewModel model = this.modelMapper.map(found, AuctionHomeMoreViewModel.class);
+        model.setName(found.getProduct().getName());
+        if (found.getEndDate() != null) {
+            String endDate = this.formatter.format(found.getEndDate());
+            model.setExpiresAt(endDate);
+        }
+        model.setCurrentPrice(String.format("%.2f ", found.getReachedPrice()) + '\u20ac');
+
+        if (found.getProduct().getMainPicture() != null) {
+            model.setMainImageUrl(found.getProduct().getMainPicture().getPath());
+        } else {
+            model.setMainImageUrl(StaticImagesConstants.DEFAULT_AUCTION_MAIN_IMAGE);
+        }
+        model.setSeller(found.getSeller().getUsername());
+        model.setTown(found.getProduct().getTown().getName());
+        return model;
     }
 
     private List<AuctionHomeViewModel> mapServiceToViewModels(List<AuctionServiceModel> auctionServiceModels){

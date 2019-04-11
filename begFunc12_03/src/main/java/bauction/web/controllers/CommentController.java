@@ -4,6 +4,8 @@ import bauction.domain.models.bindingModels.CommentBindingModel;
 import bauction.domain.models.serviceModels.deals.CommentServiceModel;
 import bauction.domain.models.serviceModels.deals.DealServiceModel;
 import bauction.domain.models.serviceModels.users.UserServiceModel;
+import bauction.error.DealNotFoundException;
+import bauction.error.UserNotFoundException;
 import bauction.services.contracts.DealService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,7 @@ public class CommentController extends BaseController {
                                          @Param(value = "dealMoment") String dealMoment,
                                          ModelAndView modelAndView) {
         if(bindingResult.hasErrors()){
-            model.setDealId(""+dealId);
+            model.setDealId(dealId);
             model.setAuctionName(auctionName);
             model.setDealMoment(dealMoment);
             model.setPartnerRole(partnerRole);
@@ -59,20 +61,18 @@ public class CommentController extends BaseController {
             modelAndView.setViewName("comments/write-comment");
             return modelAndView;
         }
-        DealServiceModel deal = this.dealService.findDealById(dealId);
         UserServiceModel loggedInUser = this.modelMapper.map(super.getLoggedInUser(),UserServiceModel.class);
+        this.dealService.registerComment(model,loggedInUser);
 
-        CommentServiceModel comment = this.modelMapper.map(model, CommentServiceModel.class);
-        comment.setAuthor(loggedInUser);
-        comment.setDate(new Date());
-
-        if(partnerRole.equals("Seller")){
-            deal.setBuyerComment(comment);
-        }else {
-            deal.setSellerComment(comment);
-        }
-        this.dealService.updateDeal(deal);
         modelAndView.setViewName("redirect:/users/profile/"+super.getLoggedInUserId());
+        return modelAndView;
+    }
+
+    @ExceptionHandler({DealNotFoundException.class})
+    public ModelAndView handleUserNotFound( UserNotFoundException e) {
+        ModelAndView modelAndView = new ModelAndView("error/error");
+        modelAndView.addObject("message", e.getMessage());
+        modelAndView.addObject("statusCode", e.getStatusCode());
         return modelAndView;
     }
 }

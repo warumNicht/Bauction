@@ -8,14 +8,8 @@
 <div class="custom-file">
     <input type="file" class="custom-file-input" id="mainImage"
            name="mainImage" accept="image/*" placeholder="Upload main image...">
-    <label class="custom-file-label" for="mainImage"
-           th:text="${#bools.isTrue(session.productMainImage==null)} ? 'Upload file...' : 'Choose other...'">
+    <label class="custom-file-label" for="mainImage">
     </label>
 </div>
-<div th:utext="${#bools.isTrue(session.productMainImage!=null)} ? ${'Selected file: '}
-            + ${session.productMainImage.getName()+'<p></p>'}">
-</div>
-
-
 </body>
 </html>

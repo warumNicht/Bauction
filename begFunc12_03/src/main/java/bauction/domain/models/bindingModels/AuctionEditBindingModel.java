@@ -2,6 +2,7 @@ package bauction.domain.models.bindingModels;
 
 import bauction.annotations.EnumValidator;
 import bauction.domain.entities.enums.AuctionType;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -35,6 +36,8 @@ public class AuctionEditBindingModel {
     private BigDecimal wantedPrice;
 
     private boolean startLater;
+    private MultipartFile mainImage;
+    private MultipartFile[] images;
 
 
     public String getName() {
@@ -91,5 +94,21 @@ public class AuctionEditBindingModel {
 
     public void setStartLater(boolean startLater) {
         this.startLater = startLater;
+    }
+
+    public MultipartFile getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(MultipartFile mainImage) {
+        this.mainImage = mainImage;
+    }
+
+    public MultipartFile[] getImages() {
+        return images;
+    }
+
+    public void setImages(MultipartFile[] images) {
+        this.images = images;
     }
 }

@@ -1,14 +1,17 @@
 package bauction.services;
 
+import bauction.constants.ErrorMessagesConstants;
 import bauction.domain.entities.auctionRelated.Offer;
 import bauction.domain.models.serviceModels.AuctionServiceModel;
 import bauction.domain.models.serviceModels.participations.OfferServiceModel;
+import bauction.error.NoPositiveOfferException;
 import bauction.repositories.OfferRepository;
 import bauction.services.contracts.OfferService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +30,9 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void registerOffer(OfferServiceModel offerServiceModel) {
+        if(offerServiceModel.getOfferedPrice().compareTo(BigDecimal.ZERO)<0){
+            throw new NoPositiveOfferException(ErrorMessagesConstants.NO_POSITIVE_OFFER_MESSAGE);
+        }
         Offer offer = this.modelMapper.map(offerServiceModel, Offer.class);
         offer.setExpirationTime(this.getTimeAfter24H());
         this.offerRepository.saveAndFlush(offer);

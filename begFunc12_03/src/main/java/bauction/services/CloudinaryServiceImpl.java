@@ -4,6 +4,7 @@ import bauction.services.contracts.CloudinaryService;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,9 +21,10 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public String uploadImage(File imageFile) throws IOException {
-        Map map = this.cloudinary.uploader().upload(imageFile, new HashMap());
-        String imageUrl = map.get("url").toString();
-        return imageUrl;
+    public String uploadImage(MultipartFile multipartFile) throws IOException {
+        File file = File.createTempFile("temp-file", multipartFile.getOriginalFilename());
+        multipartFile.transferTo(file);
+        Map map = this.cloudinary.uploader().upload(file, new HashMap());
+        return map.get("url").toString();
     }
 }

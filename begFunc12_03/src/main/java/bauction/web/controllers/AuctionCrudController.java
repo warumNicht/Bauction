@@ -41,11 +41,7 @@ public class AuctionCrudController extends BaseController{
     public ModelAndView createAuction(ModelAndView modelAndView,
                        @ModelAttribute(name = "auctionCreateModel") AuctionCreateBindingModel model,
                                       @ModelAttribute(name = "coin") CoinBindingModel coin,
-                                      @ModelAttribute(name = "banknote") BanknoteBindingModel banknote,
-                               HttpSession session) throws IOException, ServletException {
-
-        session.setAttribute("productImages", null);
-        session.setAttribute("productMainImage", null);
+                                      @ModelAttribute(name = "banknote") BanknoteBindingModel banknote) throws IOException, ServletException {
 
         modelAndView.addObject("auctionCreateModel",model);
         modelAndView.addObject("coin",coin);
@@ -60,19 +56,9 @@ public class AuctionCrudController extends BaseController{
                                           @Valid @ModelAttribute(name = "coin") CoinBindingModel coin,
                                           BindingResult coinBindingResult,
                                           @Valid @ModelAttribute(name = "banknote") BanknoteBindingModel banknote,
-                                          BindingResult banknoteBindingResult,
-                                   @RequestParam("mainImage") MultipartFile main,
-                                   @RequestParam("files") MultipartFile[] files,
-                                   HttpSession session) throws IOException, ServletException {
-        if(!files[0].isEmpty()){
-            session.setAttribute("productImages", this.convertMultipartArray(files));
-        }
-        if(!main.isEmpty()){
-            String originalFilename = main.getOriginalFilename();
-            session.setAttribute("productMainImage", this.convert(main));
-        }
-        UserServiceModel loggedInUser = this.modelMapper.map(super.getLoggedInUser(), UserServiceModel.class);
+                                          BindingResult banknoteBindingResult) throws IOException, ServletException {
 
+        UserServiceModel loggedInUser = this.modelMapper.map(super.getLoggedInUser(), UserServiceModel.class);
         if(bindingResult.hasErrors()||model.getCategory().equals("Coins")&&coinBindingResult.hasErrors()||
                 model.getCategory().equals("Banknotes")&&banknoteBindingResult.hasErrors()){
             modelAndView.addObject("auctionCreateModel",model);
@@ -82,11 +68,11 @@ public class AuctionCrudController extends BaseController{
             return modelAndView;
         }else {
             if(model.getCategory().equals("Coins")){
-                this.auctionService.createAuction(model,coin, session,loggedInUser);
+                this.auctionService.createAuction(model,coin,loggedInUser);
             }else if(model.getCategory().equals("Banknotes")){
-                this.auctionService.createAuction(model,banknote, session,loggedInUser);
+                this.auctionService.createAuction(model,banknote, loggedInUser);
             }else {
-                this.auctionService.createAuction(model, null, session,loggedInUser);
+                this.auctionService.createAuction(model, null,loggedInUser);
             }
         }
         modelAndView.setViewName("redirect:/home");
@@ -137,9 +123,7 @@ public class AuctionCrudController extends BaseController{
                                         BindingResult bindingResult,
                                         @Valid @ModelAttribute(name = "coin") CoinBindingModel coin, BindingResult coinBindingResult,
                                         @Valid @ModelAttribute(name = "banknote") BanknoteBindingModel banknote,
-                                        BindingResult banknoteBindingResult,
-                                        @RequestParam("mainImage") MultipartFile mainImage,
-                                        @RequestParam("files") MultipartFile[] files, ModelAndView modelAndView)  throws IOException, ServletException {
+                                        BindingResult banknoteBindingResult, ModelAndView modelAndView)  throws IOException, ServletException {
 
         if(bindingResult.hasErrors()||model.getCategory().equals("Coins")&&coinBindingResult.hasErrors()||
                 model.getCategory().equals("Banknotes")&&banknoteBindingResult.hasErrors()){
@@ -151,8 +135,7 @@ public class AuctionCrudController extends BaseController{
             return modelAndView;
         }
         AuctionServiceModel auctionToEdit = this.auctionService.findById(id);
-        this.auctionService.editAuction(auctionToEdit, model, coin, banknote,
-                this.convert(mainImage), this.convertMultipartArray(files));
+        this.auctionService.editAuction(auctionToEdit, model, coin, banknote);
         modelAndView.setViewName("redirect:/auctions/edit/" + id);
         return modelAndView;
     }
@@ -184,37 +167,5 @@ public class AuctionCrudController extends BaseController{
             modelAndView.addObject("coin",coin);
         }
     }
-
-
-    private File[] convertMultipartArray(MultipartFile[] files) throws IOException {
-        if(files==null||files.length==0||
-                files[0].getOriginalFilename().equals("")){
-            return null;
-        }
-        File[] res=new File[files.length];
-        for (int i = 0; i < files.length; i++) {
-            res[i]=this.convert(files[i]);
-        }
-        return res;
-    }
-
-    private File convert(MultipartFile file) throws IOException {
-        if(file.getOriginalFilename().equals("")){
-            return null;
-        }
-        File convertedFile = File.createTempFile("temp-file", file.getOriginalFilename());
-
-        FileOutputStream fos = new FileOutputStream(convertedFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convertedFile;
-    }
-
-
-
-
-
-
-
 
 }

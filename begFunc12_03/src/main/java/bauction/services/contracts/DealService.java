@@ -1,6 +1,8 @@
 package bauction.services.contracts;
 
+import bauction.domain.models.bindingModels.CommentBindingModel;
 import bauction.domain.models.serviceModels.deals.DealServiceModel;
+import bauction.domain.models.serviceModels.users.UserServiceModel;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ public interface DealService {
 
     List<DealServiceModel> allRecentDealsOfUser(String userId);
 
-    DealServiceModel updateDeal(DealServiceModel deal);
-
     List<DealServiceModel> allDealCommentsOfUser(String userId);
+
+    void registerComment(CommentBindingModel model, UserServiceModel loggedInUser);
 }
