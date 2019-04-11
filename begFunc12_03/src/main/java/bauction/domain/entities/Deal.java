@@ -8,21 +8,21 @@ import java.util.Date;
 @Entity
 @Table(name = "deals")
 public class Deal extends BaseEntity{
-    @Column(name = "deal_date_time")
+    @Column(name = "deal_date_time", nullable = false)
     private Date dateTime;
 
-    @Column(name = "deal_price")
+    @Column(name = "deal_price", nullable = false)
     private BigDecimal dealPrice;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
     private User seller;
     @ManyToOne
-    @JoinColumn(name = "buyer_id", referencedColumnName = "id")
+    @JoinColumn(name = "buyer_id", referencedColumnName = "id", nullable = false)
     private User buyer;
 
     @OneToOne
-    @JoinColumn(name = "auction_id", referencedColumnName = "id")
+    @JoinColumn(name = "auction_id", referencedColumnName = "id", nullable = false)
     private Auction auction;
 
     @OneToOne(cascade = CascadeType.ALL)

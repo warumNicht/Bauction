@@ -26,13 +26,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void addCategory(CategoryServiceModel categoryServiceModel) {
+    public CategoryServiceModel addCategory(CategoryServiceModel categoryServiceModel) {
         if(this.categoryRepository.existsByName(categoryServiceModel.getName())){
             throw new DuplicatedCategoryException(String.format(ErrorMessagesConstants.DUPLICATED_CATEGORY_MESSAGE,
                     categoryServiceModel.getName()));
         }
         Category category = this.modelMapper.map(categoryServiceModel, Category.class);
-        this.categoryRepository.saveAndFlush(category);
+        return this.modelMapper.map(this.categoryRepository.saveAndFlush(category),CategoryServiceModel.class);
     }
 
     @Override

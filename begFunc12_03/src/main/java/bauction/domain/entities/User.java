@@ -10,19 +10,19 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
-    @Column(name = "username",nullable = false,unique = true,updatable = false)
+    @Column(name = "username",nullable = false,unique = true)
     private String username;
 
-    @Column(name = "full_name",nullable = false,updatable = false)
+    @Column(name = "full_name",nullable = false)
     private String fullName;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email", nullable = false, updatable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "registration_date")
+    @Column(name = "registration_date", nullable = false)
     private Date registrationDate;
 
     @ManyToMany(targetEntity = Role.class,fetch = FetchType.EAGER, cascade = CascadeType.ALL)

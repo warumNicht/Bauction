@@ -14,11 +14,11 @@ import java.util.Date;
 @Table(name = "auctions")
 public  class Auction extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private AuctionType type;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private AuctionStatus status;
 
     @Column(name = "start_date")
@@ -27,25 +27,25 @@ public  class Auction extends BaseEntity {
     @Column(name = "end_date")
     private Date endDate;
 
-    @Column(name = "wanted_price")
+    @Column(name = "wanted_price",nullable = false)
     private BigDecimal wantedPrice;
 
-    @Column(name = "reached_price")
+    @Column(name = "reached_price", nullable = false)
     private BigDecimal reachedPrice;
 
     @Column(name = "views")
     private int views;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
+    @JoinColumn(name = "product_id",referencedColumnName = "id", nullable = false)
     private BaseProduct product;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id",referencedColumnName = "id")
+    @JoinColumn(name = "seller_id",referencedColumnName = "id", nullable = false)
     private User seller;
 
     @ManyToOne

@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel updateUser(UserServiceModel toEdit) {
         User user = this.modelMapper.map(toEdit, User.class);
-        User updated = this.userRepository.save(user);
+        User updated = this.userRepository.saveAndFlush(user);
         return this.modelMapper.map(updated, UserServiceModel.class);
     }
 

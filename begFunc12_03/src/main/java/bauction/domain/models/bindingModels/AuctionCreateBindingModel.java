@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class AuctionCreateBindingModel {
-    @Size(min = 2)
+    @Size(min = 2, max = 50)
     private String name;
 
     @NotNull

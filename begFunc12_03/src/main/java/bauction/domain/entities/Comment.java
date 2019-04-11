@@ -7,18 +7,18 @@ import java.util.Date;
 @Entity
 @Table(name = "comments")
 public class Comment extends BaseEntity{
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Date date;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false, length = 200)
     private String content;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "estimation")
+    @Column(name = "estimation", nullable = false)
     private Estimation estimation;
 
     @ManyToOne
-    @JoinColumn(name = "author_id",referencedColumnName = "id")
+    @JoinColumn(name = "author_id",referencedColumnName = "id", nullable = false)
     private User author;
 
 

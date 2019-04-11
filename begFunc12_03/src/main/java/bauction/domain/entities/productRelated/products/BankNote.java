@@ -7,10 +7,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "banknotes")
 public class BankNote extends BaseMoneyCollectionProduct {
-    @Column(name = "length")
+    @Column(name = "length", nullable = false)
     private Integer length;
 
-    @Column(name = "width")
+    @Column(name = "width", nullable = false)
     private Integer width;
 
     public BankNote() {

@@ -11,10 +11,10 @@ import java.util.List;
 @Table(name = "products")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class BaseProduct extends BaseEntity {
-    @Column(name = "name")
+    @Column(name = "name", nullable = false,length = 50)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 500)
     private String description;
 
     @ManyToOne

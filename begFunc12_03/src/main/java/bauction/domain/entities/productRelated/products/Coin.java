@@ -7,13 +7,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "coins")
 public class Coin extends BaseMoneyCollectionProduct {
-    @Column(name = "metal")
+    @Column(name = "metal", nullable = false, length = 50)
     private String metal;
 
-    @Column(name = "weight")
+    @Column(name = "weight", nullable = false)
     private Double weight;
 
-    @Column(name = "diameter")
+    @Column(name = "diameter", nullable = false)
     private Double diameter;
 
     public Coin() {

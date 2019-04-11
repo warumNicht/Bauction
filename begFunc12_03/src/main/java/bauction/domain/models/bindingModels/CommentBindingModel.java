@@ -14,16 +14,6 @@ public class CommentBindingModel {
     private String auctionName;
     private String partnerRole;
 
-    public CommentBindingModel() {
-    }
-
-    public CommentBindingModel(String dealId, String dealMoment, String auctionName, String partnerRole) {
-        this.dealId = dealId;
-        this.dealMoment = dealMoment;
-        this.auctionName = auctionName;
-        this.partnerRole = partnerRole;
-    }
-
     @NotNull
     @NotEmpty
     @Size(min = 10, max = 200)
@@ -35,6 +25,16 @@ public class CommentBindingModel {
     @NotEmpty
     @EnumValidator(enumClass = Estimation.class,message = "Estimation not valid!")
     private String estimation;
+
+    public CommentBindingModel() {
+    }
+
+    public CommentBindingModel(String dealId, String dealMoment, String auctionName, String partnerRole) {
+        this.dealId = dealId;
+        this.dealMoment = dealMoment;
+        this.auctionName = auctionName;
+        this.partnerRole = partnerRole;
+    }
 
     public String getDealId() {
         return dealId;

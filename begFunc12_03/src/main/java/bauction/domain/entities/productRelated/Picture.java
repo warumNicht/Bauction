@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "pictures")
 public class Picture extends BaseEntity {
-    @Column(name = "path")
+    @Column(name = "path", nullable = false)
     private String path;
 
     @ManyToOne

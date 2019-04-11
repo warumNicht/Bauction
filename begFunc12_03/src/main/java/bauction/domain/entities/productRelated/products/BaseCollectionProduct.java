@@ -8,15 +8,15 @@ import javax.persistence.*;
 @Table(name = "collection_product")
 public abstract class BaseCollectionProduct extends BaseProduct {
 
-    @Column(name = "year_of_issue")
+    @Column(name = "year_of_issue", nullable = false)
     private Integer yearOfIssue;
 
 
-    @Column(name = "grade")
+    @Column(name = "grade",nullable = false)
     @Enumerated(value = EnumType.STRING)
     private PreservationGrade grade;
 
-    @Column(name = "country")
+    @Column(name = "country", nullable = false)
     private String country;
 
     public BaseCollectionProduct() {
