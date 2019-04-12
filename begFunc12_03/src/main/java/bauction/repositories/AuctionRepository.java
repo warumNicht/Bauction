@@ -8,28 +8,31 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Repository
-
 public interface AuctionRepository extends JpaRepository<Auction, String> {
 
     List<Auction> findAllByStatus(AuctionStatus status);
 
-    @Query(value = "SELECT a FROM Auction a " +
-            "WHERE a.status='Active' " +
-            "AND a.endDate < current_time")
-    List<Auction> findAllActivesAuctionsExceedingEndDate();
+//    @Query(value = "SELECT a FROM Auction a " +
+//            "WHERE a.status='Active' " +
+//            "AND a.endDate < current_time")
+//    List<Auction> findAllActivesAuctionsExceedingEndDate();
+
+    List<Auction> findAllByStatusAndEndDateBefore(AuctionStatus status, Date date);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE Auction a " +
             "SET a.views=a.views+1 " +
             "WHERE a.id LIKE :id")
-    void increaseViews(@Param(value = "id") String id);
+    Integer increaseViews(@Param(value = "id") String id);
 
     @Modifying
     @Transactional

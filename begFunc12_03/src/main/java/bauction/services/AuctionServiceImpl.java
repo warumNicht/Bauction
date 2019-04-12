@@ -90,8 +90,7 @@ public class AuctionServiceImpl implements AuctionService {
         }
         Auction auction = this.modelMapper.map(auctionToEdit, Auction.class);
         this.correctModelMappersBug(auction);
-        this.auctionRepository.save(auction);
-        System.out.println();
+        this.auctionRepository.saveAndFlush(auction);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionServiceModel> findAllActivesAuctionsExceedingEndDate() {
         List<AuctionServiceModel> auctionServiceModels =
-                this.auctionRepository.findAllActivesAuctionsExceedingEndDate().stream()
+                this.auctionRepository.findAllByStatusAndEndDateBefore(AuctionStatus.Active,new Date()).stream()
                         .map(a -> this.modelMapper.map(a, AuctionServiceModel.class))
                         .collect(Collectors.toList());
         return auctionServiceModels;
@@ -214,7 +213,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public void updateAuction(AuctionServiceModel model) {
         Auction auction = this.modelMapper.map(model, Auction.class);
-        this.auctionRepository.save(auction);
+        this.auctionRepository.saveAndFlush(auction);
     }
 
 
