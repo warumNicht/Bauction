@@ -5,6 +5,7 @@ import bauction.domain.entities.auctionRelated.Offer;
 import bauction.domain.models.serviceModels.AuctionServiceModel;
 import bauction.domain.models.serviceModels.participations.OfferServiceModel;
 import bauction.error.NoPositiveOfferException;
+import bauction.error.OfferNotFoundException;
 import bauction.repositories.OfferRepository;
 import bauction.services.contracts.OfferService;
 import org.modelmapper.ModelMapper;
@@ -23,7 +24,7 @@ public class OfferServiceImpl implements OfferService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper, ModelMapper modelMapper2) {
+    public OfferServiceImpl(OfferRepository offerRepository, ModelMapper modelMapper) {
         this.offerRepository = offerRepository;
         this.modelMapper = modelMapper;
     }
@@ -68,7 +69,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferServiceModel acceptOffer(String offerId) {
-        Offer offer = this.offerRepository.findById(offerId).orElse(null);
+        Offer offer = this.offerRepository.findById(offerId)
+                .orElseThrow(()->new OfferNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_OFFER_MESSAGE));
         offer.setAccepted(true);
         Offer accepted = this.offerRepository.save(offer);
         this.offerRepository.invalidateOffersOfAuctionById(offer.getAuction().getId());

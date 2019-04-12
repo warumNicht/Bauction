@@ -69,11 +69,6 @@ public class AuctionServiceTests {
 
     @Before
     public void init(){
-        this.userRepository.deleteAll();
-        this.townRepository.deleteAll();
-        this.auctionRepository.deleteAll();
-        this.categoryRepository.deleteAll();
-
         this.modelMapper=new ModelMapper();
         this.auctionService=new AuctionServiceImpl(this.auctionRepository, this.productService,
                 this.offerService,this.biddingService,this.categoryService,this.modelMapper );

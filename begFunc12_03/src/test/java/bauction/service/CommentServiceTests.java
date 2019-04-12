@@ -30,7 +30,6 @@ import java.util.List;
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class CommentServiceTests {
-    private final String COMMENT_CONTENT ="All happen very good";
 
     @Autowired
     private CommentRepository commentRepository;
@@ -52,13 +51,13 @@ public class CommentServiceTests {
     @Test
     public void registerComment_withCorrectData_works(){
         CommentServiceModel commentServiceModel =
-                new CommentServiceModel(new Date(), COMMENT_CONTENT, Estimation.Positive, this.testUser);
+                new CommentServiceModel(new Date(), TestConstants.COMMENT_CONTENT, Estimation.Positive, this.testUser);
 
         this.commentService.registerComment(commentServiceModel);
         List<Comment> all = this.commentRepository.findAll();
 
         Assert.assertEquals(all.size(),1);
-        Assert.assertEquals(all.get(0).getContent(), COMMENT_CONTENT);
+        Assert.assertEquals(all.get(0).getContent(), TestConstants.COMMENT_CONTENT);
     }
 
     @Test(expected = Exception.class)

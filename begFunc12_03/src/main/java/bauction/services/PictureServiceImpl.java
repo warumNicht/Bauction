@@ -39,19 +39,13 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    public void renamePicture(PictureServiceModel pictureServiceModel) {
-        Picture picture = this.modelMapper.map(pictureServiceModel, Picture.class);
-        this.pictureRepository.save(picture);
-    }
-
-    @Override
     public void deleteImage(String imageId) {
         this.pictureRepository.deleteById(imageId);
     }
 
     @Override
     public void savePicture(PictureServiceModel pictureServiceModel) {
-        this.pictureRepository.save(this.modelMapper.map(pictureServiceModel,Picture.class));
+        this.pictureRepository.saveAndFlush(this.modelMapper.map(pictureServiceModel,Picture.class));
     }
 
 }

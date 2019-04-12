@@ -11,7 +11,7 @@ public class Picture extends BaseEntity {
     private String path;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
+    @JoinColumn(name = "product_id",referencedColumnName = "id", nullable = false)
     private BaseProduct product;
 
     public Picture() {

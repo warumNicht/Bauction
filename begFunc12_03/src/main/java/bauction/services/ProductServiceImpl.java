@@ -81,10 +81,10 @@ public class ProductServiceImpl implements ProductService {
         product.setName(model.getName());
         product.setDescription(model.getDescription());
 
-        if(!model.getMainImage().getOriginalFilename().equals("")){
+        if(model.getMainImage()!=null&&!model.getMainImage().getOriginalFilename().equals("")){
             this.changeProductMainPicture(product, auctionToEdit, model.getMainImage());
         }
-        if(!model.getImages()[0].getOriginalFilename().equals("")){
+        if(model.getImages()!=null&&!model.getImages()[0].getOriginalFilename().equals("")){
             Auction auction = this.modelMapper.map(auctionToEdit, Auction.class);
             BaseProduct currentProduct = auction.getProduct();
             List<PictureServiceModel> productPictures = this.createProductPictures(model.getImages());
@@ -143,13 +143,13 @@ public class ProductServiceImpl implements ProductService {
         product.setTown(this.townService.findByNameOrElseCreateByName(townName));
 
 
-        if(!model.getMainImage().getOriginalFilename().equals("")){
+        if(model.getMainImage()!=null&&!model.getMainImage().getOriginalFilename().equals("")){
             PictureServiceModel productMainImage = this.createPicture(model.getMainImage());
             product.setMainPicture(productMainImage);
             productMainImage.setProduct(product);
         }
 
-        if(!model.getImages()[0].getOriginalFilename().equals("")){
+        if(model.getImages()!=null&&!model.getImages()[0].getOriginalFilename().equals("")){
             List<PictureServiceModel> productImages = this.createProductPictures(model.getImages());
             product.setPictures(productImages);
             for (PictureServiceModel productImage : productImages) {

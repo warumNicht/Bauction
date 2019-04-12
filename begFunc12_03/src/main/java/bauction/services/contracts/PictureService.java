@@ -9,8 +9,6 @@ public interface PictureService {
 
     List<PictureServiceModel> findAllByWithoutMain(String productId);
 
-    void renamePicture(PictureServiceModel pictureServiceModel);
-
     void deleteImage(String imageId);
 
     void savePicture(PictureServiceModel pictureServiceModel);

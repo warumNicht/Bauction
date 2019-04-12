@@ -12,6 +12,8 @@ public class ErrorMessagesConstants {
 
     public static final String NOT_EXISTENT_DEAL_MESSAGE= "Deal does not exists!";
 
+    public static final String NOT_EXISTENT_OFFER_MESSAGE= "Offer does not exists!";
+
     public static final String DUPLICATED_USERNAME_MESSAGE= "User with username %s already exists!";
 
     public static final String DUPLICATED_CATEGORY_MESSAGE= "Category %s already exists!";
