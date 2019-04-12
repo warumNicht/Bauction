@@ -68,7 +68,7 @@ public class CategoryServiceTests {
         this.categoryService.addCategory(new CategoryServiceModel());
     }
 
-    @Test(expected = DuplicatedCategoryException.class)
+    @Test(expected = Exception.class)
     public void saveDuplicatedCategory(){
         this.categoryService.addCategory(this.testCategory);
         this.categoryService.addCategory(this.testCategory);
@@ -85,7 +85,7 @@ public class CategoryServiceTests {
         Assert.assertEquals(all.size(),2);
     }
 
-    @Test(expected = CategoryNotFoundException.class)
+    @Test(expected = Exception.class)
     public void findByName_withInexistentData_throwsException(){
         CategoryServiceModel actual = this.categoryService.findByName(CATEGORY_TEST_NAME_COINS);
     }

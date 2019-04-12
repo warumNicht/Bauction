@@ -9,6 +9,7 @@ import bauction.services.contracts.BiddingService;
 import bauction.services.contracts.DealService;
 import bauction.services.contracts.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ScheduleFinishedAuctions {
         this.biddingService = biddingService;
     }
 
-//    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3600000)
     private void terminateUnfinishedAuctions(){
         List<AuctionServiceModel> auctions = this.auctionService.findAllActivesAuctionsExceedingEndDate();
         for (AuctionServiceModel auction : auctions) {

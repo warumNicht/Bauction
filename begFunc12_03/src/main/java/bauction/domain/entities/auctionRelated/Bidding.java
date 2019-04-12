@@ -9,10 +9,10 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "biddings")
 public class Bidding extends BaseAuctionParticipation{
-    @Column(name = "bidding_step")
+    @Column(name = "bidding_step", nullable = false)
     private BigDecimal biddingStep;
 
-    @Column(name = "reached_price")
+    @Column(name = "reached_price", nullable = false)
     private BigDecimal reachedPrice;
 
 

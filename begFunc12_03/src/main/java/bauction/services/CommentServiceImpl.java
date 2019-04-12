@@ -21,11 +21,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentServiceModel registerComment(CommentServiceModel commentServiceModel) {
-        try {
-            Comment comment = this.modelMapper.map(commentServiceModel, Comment.class);
-            return this.modelMapper.map(this.commentRepository.saveAndFlush(comment),CommentServiceModel.class);
-        }catch (Exception e){
-            return null;
-        }
+        Comment comment = this.modelMapper.map(commentServiceModel, Comment.class);
+        return this.modelMapper.map(this.commentRepository.saveAndFlush(comment), CommentServiceModel.class);
     }
 }

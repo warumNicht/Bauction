@@ -43,19 +43,6 @@ import java.util.List;
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class AuctionServiceTests {
-    private final String SELLER_USERNAME="Ivan";
-    private final String SELLER_FULL_NAME="Ivan Ivanov";
-    private final String SELLER_EMAIL="van40@vsi4ko.bg";
-    private final String SELLER_PASSWORD="1234";
-
-    private final String CATEGORY="Coins";
-    private final String TOWN="Sofia";
-
-    private final String PRODUCT_NAME="Windsutzscheibe";
-    private final String PRODUCT_DESCRIPTION="Sehr gut gehaltene";
-    private final BigDecimal AUCTION_WANTED_PRICE=BigDecimal.TEN;
-    private final BigDecimal AUCTION_REACHED_PRICE=BigDecimal.ONE;
-
     @Autowired
     private AuctionRepository auctionRepository;
     @Autowired
@@ -82,6 +69,11 @@ public class AuctionServiceTests {
 
     @Before
     public void init(){
+        this.userRepository.deleteAll();
+        this.townRepository.deleteAll();
+        this.auctionRepository.deleteAll();
+        this.categoryRepository.deleteAll();
+
         this.modelMapper=new ModelMapper();
         this.auctionService=new AuctionServiceImpl(this.auctionRepository, this.productService,
                 this.offerService,this.biddingService,this.categoryService,this.modelMapper );
@@ -89,35 +81,6 @@ public class AuctionServiceTests {
         this.testAuctionServiceModel=this.createTestAuction();
         this.user =this.testAuctionServiceModel.getSeller();
         this.category=testAuctionServiceModel.getCategory();
-    }
-
-    private AuctionServiceModel createTestAuction() {
-        BaseProductServiceModel product = new BaseProductServiceModel();
-        product.setName(PRODUCT_NAME);
-        product.setDescription(PRODUCT_DESCRIPTION);
-        TownServiceModel sofia = this.modelMapper.
-                map(this.townRepository.saveAndFlush(new Town(TOWN)), TownServiceModel.class);
-        product.setTown(sofia);
-
-        AuctionServiceModel auction = new AuctionServiceModel();
-        auction.setProduct(product);
-        auction.setWantedPrice(AUCTION_WANTED_PRICE);
-        auction.setReachedPrice(AUCTION_REACHED_PRICE);
-        auction.setType(AuctionType.Standard);
-        auction.setStatus(AuctionStatus.Waiting);
-        auction.setViews(0L);
-
-        User user=new User();
-        user.setUsername(SELLER_USERNAME);
-        user.setEmail(SELLER_EMAIL);
-        user.setFullName(SELLER_FULL_NAME);
-        user.setRegistrationDate(new Date());
-        user.setPassword(SELLER_PASSWORD);
-        auction.setSeller(this.modelMapper.map(this.userRepository.saveAndFlush(user),UserServiceModel.class));
-
-        Category coins = this.categoryRepository.saveAndFlush(new Category(CATEGORY));
-        auction.setCategory(this.modelMapper.map(coins,CategoryServiceModel.class));
-        return auction;
     }
 
     @Test
@@ -211,17 +174,17 @@ public class AuctionServiceTests {
     @Test
     public void createAuction_withCorrectData_works() throws IOException {
         AuctionCreateBindingModel model = new AuctionCreateBindingModel();
-        model.setCategory(CATEGORY);
-        model.setTown(TOWN);
-        model.setDescription(PRODUCT_DESCRIPTION);
+        model.setCategory(TestConstants.CATEGORY);
+        model.setTown(TestConstants.TOWN);
+        model.setDescription(TestConstants.PRODUCT_DESCRIPTION);
         model.setType("Fixed_Price");
-        model.setName(PRODUCT_NAME);
-        model.setWantedPrice(AUCTION_WANTED_PRICE);
+        model.setName(TestConstants.PRODUCT_NAME);
+        model.setWantedPrice(TestConstants.AUCTION_WANTED_PRICE);
 
         Mockito.when(this.productService.createProduct(model,null))
                 .thenReturn(this.testAuctionServiceModel.getProduct());
 
-        Mockito.when(this.categoryService.findByName(CATEGORY))
+        Mockito.when(this.categoryService.findByName(TestConstants.CATEGORY))
                 .thenReturn(this.category);
 
         AuctionServiceModel actual = this.auctionService.createAuction(model, null, this.user);
@@ -241,11 +204,11 @@ public class AuctionServiceTests {
         AuctionServiceModel auctionToEdit = this.modelMapper.map(saved, AuctionServiceModel.class);
 
         AuctionEditBindingModel editModel = new AuctionEditBindingModel();
-        editModel.setCategory(CATEGORY);
-        editModel.setTown(TOWN);
-        editModel.setDescription(PRODUCT_DESCRIPTION);
+        editModel.setCategory(TestConstants.CATEGORY);
+        editModel.setTown(TestConstants.TOWN);
+        editModel.setDescription(TestConstants.PRODUCT_DESCRIPTION);
         editModel.setType("Standard");
-        editModel.setName(PRODUCT_NAME);
+        editModel.setName(TestConstants.PRODUCT_NAME);
         editModel.setWantedPrice(BigDecimal.valueOf(50));
 
         Mockito.when(this.productService.getChangedProduct(auctionToEdit,editModel,null, null))
@@ -359,7 +322,7 @@ public class AuctionServiceTests {
         toSave2.setReachedPrice(BigDecimal.valueOf(50));
         Auction saved2 = this.auctionRepository.saveAndFlush(toSave2);
 
-        List<AuctionServiceModel> asc = this.auctionService.getSortedAuctions(CATEGORY, "ascending");
+        List<AuctionServiceModel> asc = this.auctionService.getSortedAuctions(TestConstants.CATEGORY, "ascending");
         Assert.assertEquals(asc.size(),2);
         Assert.assertEquals(asc.get(0).getReachedPrice(),BigDecimal.ONE);
         Assert.assertEquals(asc.get(1).getReachedPrice(),BigDecimal.valueOf(50));
@@ -376,10 +339,41 @@ public class AuctionServiceTests {
         toSave2.setReachedPrice(BigDecimal.valueOf(50));
         Auction saved2 = this.auctionRepository.saveAndFlush(toSave2);
 
-        List<AuctionServiceModel> asc = this.auctionService.getSortedAuctions(CATEGORY, "descending");
+        List<AuctionServiceModel> asc = this.auctionService.getSortedAuctions(TestConstants.CATEGORY, "descending");
         Assert.assertEquals(asc.size(),2);
         Assert.assertEquals(asc.get(0).getReachedPrice(),BigDecimal.valueOf(50));
         Assert.assertEquals(asc.get(1).getReachedPrice(),BigDecimal.ONE);
+    }
+
+
+
+    private AuctionServiceModel createTestAuction() {
+        BaseProductServiceModel product = new BaseProductServiceModel();
+        product.setName(TestConstants.PRODUCT_NAME);
+        product.setDescription(TestConstants.PRODUCT_DESCRIPTION);
+        TownServiceModel sofia = this.modelMapper.
+                map(this.townRepository.saveAndFlush(new Town(TestConstants.TOWN)), TownServiceModel.class);
+        product.setTown(sofia);
+
+        AuctionServiceModel auction = new AuctionServiceModel();
+        auction.setProduct(product);
+        auction.setWantedPrice(TestConstants.AUCTION_WANTED_PRICE);
+        auction.setReachedPrice(TestConstants.AUCTION_REACHED_PRICE);
+        auction.setType(AuctionType.Standard);
+        auction.setStatus(AuctionStatus.Waiting);
+        auction.setViews(0L);
+
+        User user=new User();
+        user.setUsername(TestConstants.TEST_USER_USERNAME);
+        user.setEmail(TestConstants.TEST_USER_EMAIL);
+        user.setFullName(TestConstants.TEST_USER_FULL_NAME);
+        user.setRegistrationDate(new Date());
+        user.setPassword(TestConstants.TEST_USER_PASSWORD);
+        auction.setSeller(this.modelMapper.map(this.userRepository.saveAndFlush(user),UserServiceModel.class));
+
+        Category coins = this.categoryRepository.saveAndFlush(new Category(TestConstants.CATEGORY));
+        auction.setCategory(this.modelMapper.map(coins,CategoryServiceModel.class));
+        return auction;
     }
 
 }

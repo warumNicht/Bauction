@@ -1,5 +1,6 @@
 package bauction.service;
 
+import bauction.TestConstants;
 import bauction.domain.entities.User;
 import bauction.domain.models.serviceModels.users.UserServiceModel;
 import bauction.error.DuplicatedUserException;
@@ -18,6 +19,7 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
@@ -26,18 +28,13 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserServiceTests {
-    private final String TEST_USER_USERNAME="Pesho";
-    private final String TEST_USER_FULL_NAME="Pesho Peshev";
-    private final String TEST_USER_PASSWORD="1aW2";
-    private final String TEST_USER_EMAIL="pesho@abv.bg";
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
 
-    private BCryptPasswordEncoder encoder;
     private UserService userService;
     private ModelMapper modelMapper;
     private UserServiceModel testUser;
@@ -47,19 +44,18 @@ public class UserServiceTests {
     @Before
     public void init(){
         this.modelMapper=new ModelMapper();
-        this.encoder=new BCryptPasswordEncoder();
         this.userService=new UserServiceImpl(this.userRepository,this.roleRepository,
-                this.modelMapper , this.encoder);
+                this.modelMapper , new BCryptPasswordEncoder());
         this.testUser=this.initTestUser();
         this.testUserEntity=this.modelMapper.map(this.testUser,User.class);
     }
 
     private UserServiceModel initTestUser() {
         UserServiceModel user = new UserServiceModel();
-        user.setFullName(TEST_USER_FULL_NAME);
-        user.setUsername(TEST_USER_USERNAME);
-        user.setEmail(TEST_USER_EMAIL);
-        user.setPassword(TEST_USER_PASSWORD);
+        user.setFullName(TestConstants.TEST_USER_FULL_NAME);
+        user.setUsername(TestConstants.TEST_USER_USERNAME);
+        user.setEmail(TestConstants.TEST_USER_EMAIL);
+        user.setPassword(TestConstants.TEST_USER_PASSWORD);
         user.setRegistrationDate(new Date());
         return user;
     }
@@ -70,9 +66,9 @@ public class UserServiceTests {
 
         UserServiceModel actual = this.modelMapper.map(this.userRepository.findAll().get(0), UserServiceModel.class);
 
-        Assert.assertEquals(actual.getUsername(),TEST_USER_USERNAME);
-        Assert.assertEquals(actual.getFullName(),TEST_USER_FULL_NAME);
-        Assert.assertEquals(actual.getEmail(),TEST_USER_EMAIL);
+        Assert.assertEquals(actual.getUsername(),TestConstants.TEST_USER_USERNAME);
+        Assert.assertEquals(actual.getFullName(),TestConstants.TEST_USER_FULL_NAME);
+        Assert.assertEquals(actual.getEmail(),TestConstants.TEST_USER_EMAIL);
     }
 
     @Test(expected = Exception.class)
