@@ -44,10 +44,10 @@ public class CommentController extends BaseController {
         return modelAndView;
     }
 
-    @PostMapping("/write/{id}")
-    public ModelAndView writeCommentPost(@PathVariable(name = "id") String dealId,
-                                         @Valid @ModelAttribute(name = "model") CommentBindingModel model,
+    @PostMapping("/write")
+    public ModelAndView writeCommentPost(@Valid @ModelAttribute(name = "model") CommentBindingModel model,
                                          BindingResult bindingResult,
+                                         @Param(value = "dealId") String dealId,
                                          @Param(value = "partnerRole") String partnerRole,
                                          @Param(value = "auctionName") String auctionName,
                                          @Param(value = "dealMoment") String dealMoment,

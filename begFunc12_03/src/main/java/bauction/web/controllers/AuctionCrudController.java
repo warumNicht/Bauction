@@ -1,5 +1,6 @@
 package bauction.web.controllers;
 
+import bauction.constants.AppConstants;
 import bauction.domain.models.bindingModels.AuctionCreateBindingModel;
 import bauction.domain.models.bindingModels.AuctionEditBindingModel;
 import bauction.domain.models.bindingModels.collectionProducts.BanknoteBindingModel;
@@ -15,14 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Controller
@@ -58,7 +56,7 @@ public class AuctionCrudController extends BaseController{
                                           @Valid @ModelAttribute(name = "banknote") BanknoteBindingModel banknote,
                                           BindingResult banknoteBindingResult) throws IOException, ServletException {
 
-        UserServiceModel loggedInUser = this.modelMapper.map(super.getLoggedInUser(), UserServiceModel.class);
+        UserServiceModel loggedInUser = super.getLoggedInUserService();
         if(bindingResult.hasErrors()||model.getCategory().equals("Coins")&&coinBindingResult.hasErrors()||
                 model.getCategory().equals("Banknotes")&&banknoteBindingResult.hasErrors()){
             modelAndView.addObject("auctionCreateModel",model);
@@ -67,9 +65,9 @@ public class AuctionCrudController extends BaseController{
             modelAndView.setViewName("auction/auction-create");
             return modelAndView;
         }else {
-            if(model.getCategory().equals("Coins")){
+            if(model.getCategory().equals(AppConstants.CATEGORY_COINS)){
                 this.auctionService.createAuction(model,coin,loggedInUser);
-            }else if(model.getCategory().equals("Banknotes")){
+            }else if(model.getCategory().equals(AppConstants.CATEGORY_BANKNOTES)){
                 this.auctionService.createAuction(model,banknote, loggedInUser);
             }else {
                 this.auctionService.createAuction(model, null,loggedInUser);

@@ -12,6 +12,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(
                         String.format(ErrorMessagesConstants.NOT_EXISTENT_USERNAME_MESSAGE, username)));
@@ -92,6 +93,16 @@ public class UserServiceImpl implements UserService {
     public boolean existsUserByUsername(String username) {
         User user = this.userRepository.findByUsername(username).orElse(null);
         return user != null;
+    }
+
+
+
+    @Override
+    public UserServiceModel findUserByUsername(String username) {
+        User user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(
+                        String.format(ErrorMessagesConstants.NOT_EXISTENT_USERNAME_MESSAGE, username)));
+        return this.modelMapper.map(user,UserServiceModel.class);
     }
 
     private void giveRolesToRoot(User user) {

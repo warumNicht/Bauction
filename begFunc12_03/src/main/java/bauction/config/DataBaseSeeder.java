@@ -1,6 +1,7 @@
 package bauction.config;
 
 
+import bauction.constants.AppConstants;
 import bauction.domain.entities.Role;
 import bauction.domain.entities.auctionRelated.Category;
 import bauction.repositories.CategoryRepository;
@@ -25,16 +26,16 @@ public class DataBaseSeeder {
     public void seed() {
         if (this.roleRepository.count()==0) {
             Role root = new Role();
-            root.setAuthority("ROLE_ROOT");
+            root.setAuthority(AppConstants.ROLE_ROOT);
 
             Role admin = new Role();
-            admin.setAuthority("ROLE_ADMIN");
+            admin.setAuthority(AppConstants.ROLE_ADMIN);
 
             Role user = new Role();
-            user.setAuthority("ROLE_USER");
+            user.setAuthority(AppConstants.ROLE_USER);
 
             Role moderator = new Role();
-            moderator.setAuthority("ROLE_MODERATOR");
+            moderator.setAuthority(AppConstants.ROLE_MODERATOR);
 
             this.roleRepository.saveAndFlush(root);
             this.roleRepository.saveAndFlush(admin);
@@ -43,11 +44,11 @@ public class DataBaseSeeder {
         }
 
         if(this.categoryRepository.count()==0){
-            this.categoryRepository.saveAndFlush(new Category("Books"));
-            this.categoryRepository.saveAndFlush(new Category("AutoParts"));
-            this.categoryRepository.saveAndFlush(new Category("Allgemein"));
-            this.categoryRepository.saveAndFlush(new Category("Coins"));
-            this.categoryRepository.saveAndFlush(new Category("Banknotes"));
+            this.categoryRepository.saveAndFlush(new Category(AppConstants.CATEGORY_ALLGEMEIN));
+            this.categoryRepository.saveAndFlush(new Category(AppConstants.CATEGORY_BOOKS));
+            this.categoryRepository.saveAndFlush(new Category(AppConstants.CATEGORY_AUTO_PARTS));
+            this.categoryRepository.saveAndFlush(new Category(AppConstants.CATEGORY_COINS));
+            this.categoryRepository.saveAndFlush(new Category(AppConstants.CATEGORY_BANKNOTES));
         }
     }
 }

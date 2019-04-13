@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
     UserServiceModel updateUser(UserServiceModel toEdit);
 
     boolean existsUserByUsername(String username);
+
+    UserServiceModel findUserByUsername(String username);
 }

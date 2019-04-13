@@ -76,8 +76,8 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setTown(this.townService.findByNameOrElseCreateByName(model.getTown()));
         product.setMainPicture(auctionToEdit.getProduct().getMainPicture());
-        product.setPictures(new ArrayList<>());
-        product.getPictures().addAll(auctionToEdit.getProduct().getPictures());
+        product.setPictures(auctionToEdit.getProduct().getPictures());
+//        product.getPictures().addAll(auctionToEdit.getProduct().getPictures());
         product.setName(model.getName());
         product.setDescription(model.getDescription());
 

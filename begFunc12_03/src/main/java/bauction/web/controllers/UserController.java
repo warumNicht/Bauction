@@ -94,6 +94,13 @@ public class UserController{
         return modelAndView;
     }
 
+    @PostMapping("/profile/{id}")
+    public ModelAndView profilePost(@PathVariable(name = "id") String   username, ModelAndView modelAndView){
+        UserServiceModel userByUsername = this.userService.findUserByUsername(username);
+        modelAndView.setViewName("redirect:/users/profile/"+ userByUsername.getId());
+        return modelAndView;
+    }
+
     @GetMapping("/{id}/auctions/waiting")
     public ModelAndView viewWaitingAuctions(@PathVariable(name = "id") String id,ModelAndView modelAndView){
 
@@ -106,6 +113,13 @@ public class UserController{
                 .collect(Collectors.toList());
         modelAndView.addObject("waitingAuctions", waitingAuctionViewModels);
         modelAndView.setViewName("user/waiting-auctions");
+        return modelAndView;
+    }
+
+    @PostMapping("/{id}/auctions/waiting")
+    public ModelAndView viewWaitingAuctionsPost(@PathVariable(name = "id") String   username, ModelAndView modelAndView){
+        UserServiceModel userByUsername = this.userService.findUserByUsername(username);
+        modelAndView.setViewName("redirect:/users/"+ userByUsername.getId() + "/auctions/waiting");
         return modelAndView;
     }
 

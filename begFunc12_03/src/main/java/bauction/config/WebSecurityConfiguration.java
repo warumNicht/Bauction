@@ -24,7 +24,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/", "/users/login", "/users/register").permitAll()
                     .antMatchers( "/admin/users/edit/"+AppConstants.ROOT_USER_ID).access("hasRole('NOBODY')")
                     .antMatchers( "/admin/**").access("hasAnyRole('ROOT','ADMIN')")
-                    .antMatchers( "/moderator/**").access("hasRole('MODERATOR')")
+                    .antMatchers( "/moderator/**").access("hasAnyRole('ROOT','ADMIN','MODERATOR')")
 
 
                 .antMatchers("/cssBau/**", "/js/**", "/favicon/**","/static-images/**").permitAll()

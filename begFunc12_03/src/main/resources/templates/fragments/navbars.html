@@ -89,10 +89,12 @@
     </div>
 
     <th:block  th:fragment="logged-ul-first-part">
-        <li class="nav-item">
-            <a class="nav-link nav-link-white active"
-               th:href="@{/users/profile/{id}(id=${#authentication.principal.id})}"
-               th:text="${ #authentication.principal.username+ '''s profile'}"></a>
+        <li class="nav-item" >
+            <form th:action="@{/users/profile/{id}(id=${#authentication.principal.username})}" th:method="post">
+                <button class="btn btn-link nav-link nav-link-white active"
+                        th:text="${ #authentication.principal.username+ '''s profile'}"></button>
+            </form>
+
         </li>
 
         <li class="nav-item">
@@ -112,7 +114,7 @@
             </div>
         </li>
 
-        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_MODERATOR')">
+        <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_ROOT', 'ROLE_MODERATOR')">
             <a class="nav-link dropdown-toggle text-white" href="#" id="moderatorNavbarDropdown"
                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Moderator
@@ -130,7 +132,9 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="UserNavbarDropdown2">
                 <a class="dropdown-item" th:href="@{/auctions/create}">Create Auction</a>
-                <a class="dropdown-item" th:href="@{/users/{id}/auctions/waiting(id=${#authentication.principal.id})}">Edit waiting</a>
+                <form th:action="@{/users/{id}/auctions/waiting(id=${#authentication.principal.username})}" th:method="post">
+                <button class="dropdown-item" >Edit waiting</button>
+                </form>
             </div>
         </li>
         <li class="nav-item">

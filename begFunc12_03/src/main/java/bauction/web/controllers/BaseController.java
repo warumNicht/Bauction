@@ -2,15 +2,24 @@ package bauction.web.controllers;
 
 import bauction.constants.ErrorMessagesConstants;
 import bauction.domain.entities.User;
+import bauction.domain.models.serviceModels.users.UserServiceModel;
 import bauction.error.AuctionNotFoundException;
 import bauction.error.NoLoggedUserException;
+import bauction.services.contracts.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 public abstract class BaseController {
+    @Autowired
+    private UserService userService;
+
+
 
     @ExceptionHandler({AuctionNotFoundException.class})
     public ModelAndView handleProductNotFound(AuctionNotFoundException e) {
@@ -45,6 +54,21 @@ public abstract class BaseController {
 
     protected User getLoggedInUser(){
         Authentication authentication = this.getAuthentication();
+        Object principal = authentication.getPrincipal();
+        User authenticated = (User) authentication.getPrincipal();
+        return authenticated;
+    }
+
+    protected UserServiceModel getLoggedInUserService(){
+        Authentication authentication = this.getAuthentication();
+        String name = authentication.getName();
+        return this.userService.findUserByUsername(name);
+
+    }
+
+    protected User getLoggedInUserByUsername(){
+        Authentication authentication = this.getAuthentication();
+        Object principal = authentication.getPrincipal();
         User authenticated = (User) authentication.getPrincipal();
         return authenticated;
     }
@@ -58,4 +82,9 @@ public abstract class BaseController {
     }
 
 
+    protected String getLoggedInByUsername() {
+        Authentication authentication = this.getAuthentication();
+        String name = authentication.getName();
+        return name;
+    }
 }

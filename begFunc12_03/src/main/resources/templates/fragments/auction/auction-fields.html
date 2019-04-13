@@ -48,6 +48,7 @@
         <div class="col-5" th:classappend="${#fields.hasErrors('auctionCreateModel.category')} ? 'text-danger'">
 
             <label for="category">Select category</label>
+            <div th:text="${auctionCreateModel.category}" id="insertCat" style="display: none"></div>
             <select name="category" class="form-control" id="category" th:field="${auctionCreateModel.category}"
                     onChange="showCollectionFields()">
                 <option th:each="category : ${categories}"

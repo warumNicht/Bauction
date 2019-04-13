@@ -24,6 +24,7 @@ public class TestConstants {
 
     public static final BigDecimal AUCTION_WANTED_PRICE=BigDecimal.TEN;
     public static final BigDecimal AUCTION_REACHED_PRICE=BigDecimal.ONE;
+    public static final String AUCTION_TYPE="Standard";
 
     public static final BigDecimal OFFER_PRICE_VALID=BigDecimal.TEN;
     public static final BigDecimal OFFER_PRICE_INVALID=BigDecimal.valueOf(-5);

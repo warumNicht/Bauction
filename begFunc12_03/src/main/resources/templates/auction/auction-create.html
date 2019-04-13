@@ -29,13 +29,15 @@
         <hr class="bg-exodia hr-2 mt-5"/>
     </main>
 
-    <script th:inline="javascript">
+    <script >
 
         $(document).ready(function () {
-            // let selectedCategory=document.getElementById('selectedCategory').innerText;
-            let auction = [[${auctionCreateModel}]];
-            console.log(auction);
-            let selectedCategory = auction.category;
+            let selectedCategory=document.getElementById('insertCat').innerText;
+            console.log(selectedCategory);
+            // let selectedCategory='';
+            // let auction = [[${auctionCreateModel}]];
+            // console.log(auction);
+            // let selectedCategory = auction.category;
             console.log(selectedCategory);
 
             fetch('/categories/all')

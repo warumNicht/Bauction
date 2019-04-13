@@ -13,7 +13,7 @@
         <hr class="bg-exodia hr-2"/>
         <h1 class="text-center text-exodia mb-5" th:text="${'Write comment to ' +model.partnerRole}"></h1>
 
-        <form th:action="@{/comments/write/{id}(id=${model.dealId})}" th:method="post"
+        <form th:action="@{/comments/write}" th:method="post"
               th:object="${model}"
               class="container-fluid w-50 justify-content-between text-left px-0">
 
@@ -22,6 +22,8 @@
                     <h4>Deal: </h4>
                 </div>
                 <div class="col-8 form-control" th:text="${model.dealMoment}" readonly></div>
+                <input  th:value="${model.dealId}"
+                        type="hidden" name="dealId"/>
                 <input  th:value="${model.partnerRole}"
                        type="hidden" name="partnerRole"/>
                 <input  th:value="${model.auctionName}"

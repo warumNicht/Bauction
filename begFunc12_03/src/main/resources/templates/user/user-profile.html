@@ -22,9 +22,10 @@
         </div>
         <hr class="bg-exodia hr-2"/>
 
-        <div class="col">
+        <div class="col" >
             <div class="row justify-content-around">
-                    <a th:href="@{/users/{id}/auctions/waiting(id=${userProfile.id})}" class="btn btn-success">View waiting auctions</a>
+                    <a th:href="@{/users/{id}/auctions/waiting(id=${userProfile.id})}"
+                       th:if="${#authentication.principal.id==userProfile.id}" class="btn btn-success">View waiting auctions</a>
                     <button  class="btn btn-primary" onclick="showUserAuctions('actives')">Active auctions</button>
                     <button class="btn btn-primary" onclick="showUserAuctions('finishedWithDeal')">Finished auctions with deals</button>
                 <button class="btn btn-primary" onclick="showUserAuctions('finishedWithoutDeal')">Finished auctions without deals</button>
