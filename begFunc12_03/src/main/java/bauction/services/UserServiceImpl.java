@@ -54,14 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceModel loginUser(UserServiceModel userServiceModel) {
-        return this.userRepository.findByUsername(userServiceModel.getUsername())
-                .filter(u -> u.getPassword().equals(DigestUtils.sha256Hex(userServiceModel.getPassword())))
-                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
-                .orElse(null);
-    }
-
-    @Override
     public UserServiceModel findUserById(String id) {
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(ErrorMessagesConstants.NOT_EXISTENT_USER_ID_MESSAGE));

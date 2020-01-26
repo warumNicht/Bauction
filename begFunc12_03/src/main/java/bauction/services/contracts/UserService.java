@@ -8,8 +8,6 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     void registerUser(UserServiceModel userServiceModel);
 
-    UserServiceModel loginUser(UserServiceModel userServiceModel);
-
     UserServiceModel findUserById(String id);
 
     List<UserServiceModel> findAllUsersWithoutTheLoggedIn(String loggedInId);
